@@ -64,6 +64,13 @@ namespace SortVis
             foreach (var gen in MefGenerators)
             {
                 gen.Value.Name = gen.Metadata.Name;
+                var rg = gen.Value as RandomGenerator;
+                if (rg != null)
+                {
+                    rg.Seed = Properties.Settings.Default.RandomSeed == 0
+                        ? (new Random()).Next()
+                        : Properties.Settings.Default.RandomSeed;
+                }
                 _generators.Add(gen.Value);
             }
 

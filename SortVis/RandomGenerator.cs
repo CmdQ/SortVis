@@ -15,7 +15,7 @@ namespace SortVis
 
         RandomGenerator()
         {
-            _max = 16384;
+            _max = (1 << 14) - 1;
         }
 
         /// <summary>
@@ -39,11 +39,16 @@ namespace SortVis
         }
 
         /// <summary>
+        /// Gets or sets a seed value for the random numbers.
+        /// </summary>
+        public int Seed { get; set; }
+
+        /// <summary>
         /// Generate numbers.
         /// </summary>
         protected override void Generate()
         {
-            var rand = new Random();
+            var rand = new Random(Seed);
 
             for (int i = Count - 1; i >= 0; --i)
             {
