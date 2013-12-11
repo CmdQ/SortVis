@@ -20,6 +20,9 @@ namespace SortVis
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
+        private static Color _finishedGreen = Color.LawnGreen;
+        private static Color _grayBlock = Color.FromArgb(64, 64, 64);
+
         private int[] _numbers;
         private CircularArray<int> _swapped;
         private bool? _stable;
@@ -310,11 +313,8 @@ namespace SortVis
         {
             // I want to use these colors.
             var background = Color.White;
-            var block = finished ? Color.LawnGreen : Color.FromArgb(64, 64, 64);
-            var compared = Color.Cyan;
-            var swapped = Color.SeaGreen;
 
-            var blockBrush = new SolidBrush(block);
+            var blockBrush = new SolidBrush(finished ? _finishedGreen : _grayBlock);
 
             var bm = new Bitmap(size.Width, size.Height);
             using (var g = Graphics.FromImage(bm))
@@ -331,18 +331,9 @@ namespace SortVis
                 {
                     var num = numbers[i];
 
-                    if (range > 0.0f)
-                    {
-                        g.FillRectangle(blockBrush,
-                        i * width, 0,
-                        width, range > 0.0f ? (num - min.Value) / range * size.Height : size.Height / 2);
-                    }
-                    else
-                    {
-                        g.FillRectangle(blockBrush,
-                        i * width, 0,
-                        width, size.Height / 2);
-                    }
+                    g.FillRectangle(blockBrush,
+                    i * width, 0,
+                    width, range > 0.0f ? (num - min.Value) / range * size.Height : size.Height / 2);
                 }
             }
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
