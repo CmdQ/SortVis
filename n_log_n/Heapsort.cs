@@ -20,6 +20,7 @@ namespace n_log_n
         protected override void SortIt()
         {
             Heapify();
+            SortedFrom = SortedTo = _n;
             for (int i = _n - 1; i >= 0 && !Abort.IsCancellationRequested; --i)
             {
                 ExtractMax();
@@ -29,7 +30,7 @@ namespace n_log_n
         private void ExtractMax()
         {
             Swap(0, _n - 1);
-            --_n;
+            SortedFrom = --_n;
             BubbleDown(0);
         }
 

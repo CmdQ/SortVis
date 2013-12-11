@@ -26,8 +26,9 @@ namespace n_squared
                 var org = Comparer;
                 Comparer = Comparer.Invert();
                 Heapify();
+                SortedTo = 1;
                 Comparer = org;
-                InsertionSort.Sort(Numbers, 0, Numbers.Length, org.Compare, Shift, Write, Abort);
+                InsertionSort.Sort(Numbers, 1, Numbers.Length, org.Compare, Shift, Write, Abort, t => SortedTo = t);
             }
         }
 

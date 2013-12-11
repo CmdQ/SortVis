@@ -19,6 +19,7 @@ namespace SortVis
         protected override void SortIt()
         {
             int n = Numbers.Length;
+            SortedFrom = SortedTo = n;
             do
             {
                 int newN = 1;
@@ -30,7 +31,7 @@ namespace SortVis
                         newN = i + 1;
                     }
                 }
-                n = newN;
+                SortedFrom = n = newN;
             } while (!Abort.IsCancellationRequested && n > 1);
         }
     }

@@ -34,6 +34,10 @@ namespace n_squared
                         Shift(j, j + gap);
                     }
                     Write(temp, j + gap);
+                    if (gap == 1)
+                    {
+                        SortedTo = i;
+                    }
                 }
                 if (Abort.IsCancellationRequested)
                 {
