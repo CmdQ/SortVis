@@ -430,6 +430,9 @@ namespace SortVis
                 catch (OperationCanceledException)
                 {
                 }
+                catch (BarrierPostPhaseException)
+                {
+                }
             }
         }
 
