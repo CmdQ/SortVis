@@ -25,11 +25,13 @@ namespace n_squared
         /// <param name="shift">A function that does shifting of values.</param>
         /// <param name="write">A function to write a value to a position.</param>
         /// <param name="abort">To see whether we want to cancel sorting.</param>
+        /// <param name="updateRange">Give this to have a sorted range updated.</param>
         public static void Sort<T>(T[] numbers, int lo, int hi,
             Func<T,T,int> compare = null,
             Action<int, int> shift = null,
             Action<T, int> write = null,
-            CancellationToken? abort = null)
+            CancellationToken? abort = null,
+            Action<int> updateRange = null)
         {
             compare = compare ?? Comparer<T>.Default.Compare;
             shift = shift ?? ((from, to) => numbers[to] = numbers[from]);
@@ -45,6 +47,11 @@ namespace n_squared
                     shift(lo + j, lo + j + 1);
                 }
                 write(temp, lo + j + 1);
+
+                if (updateRange != null)
+                {
+                    updateRange(i);
+                }
             }
         }
 
@@ -53,7 +60,7 @@ namespace n_squared
         /// </summary>
         protected override void SortIt()
         {
-            Sort(Numbers, 0, Numbers.Length, CompareNum, Shift, Write, Abort);
+            Sort(Numbers, 0, Numbers.Length, CompareNum, Shift, Write, Abort, t => SortedTo = t);
         }
     }
 }
