@@ -68,8 +68,12 @@ namespace n_log_n
             for (mi = lo; mi < hi; ++mi)
             {
                 Write(store[mi], mi);
+                if (lo == 0 && hi >= Numbers.Length)
+                {
+                    SortedTo = mi;
+                }
             }
-            Writes += (hi - lo) << 1;
+            Writes += hi - lo;
         }
     }
 }
