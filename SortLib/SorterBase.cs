@@ -33,8 +33,6 @@ namespace SortVis
         private int _writes;
         private int _compares;
         private long _milliseconds;
-        private bool _finished;
-
 
         /// <summary>
         /// Construct a sorter with default comparer.
@@ -223,7 +221,6 @@ namespace SortVis
         {
             Reset();
 
-            _finished = false;
             var sw = Stopwatch.StartNew();
             SortIt();
             sw.Stop();
@@ -237,7 +234,10 @@ namespace SortVis
 
             CheckSortedness();
 
-            _finished = !Abort.IsCancellationRequested;
+            if (!Abort.IsCancellationRequested)
+            {
+                SortedTo = Numbers.Length;
+            }
         }
 
         /// <summary>
@@ -327,16 +327,18 @@ namespace SortVis
         /// </summary>
         /// <param name="numbers">The numbers to draw.</param>
         /// <param name="size">The size of the output bitmap.</param>
-        /// <param name="finished">Set <c>true</c> when finished.</param>
+        /// <param name="sortedFrom">The index where the sorted part begins.</param>
+        /// <param name="sortedTo">The index where the sorted part ends.</param>
         /// <param name="min">A precomputed minimum, use <c>null</c> to be computed.</param>
         /// <param name="max">A precomputed maximum, use <c>null</c> to be computed.</param>
         /// <returns>A bitmap that can be displayed.</returns>
-        public static Bitmap Draw(int[] numbers, Size size, bool finished = false, float? min = null, float? max = null)
+        public static Bitmap Draw(int[] numbers, Size size, int sortedFrom = 0, int sortedTo = 0, float? min = null, float? max = null)
         {
             // I want to use these colors.
             var background = Color.White;
 
-            var blockBrush = new SolidBrush(finished ? _finishedGreen : _grayBlock);
+            var blockBrush = new SolidBrush(_grayBlock);
+            var finishedBrush = new SolidBrush(_finishedGreen);
 
             var bm = new Bitmap(size.Width, size.Height);
             using (var g = Graphics.FromImage(bm))
@@ -353,7 +355,7 @@ namespace SortVis
                 {
                     var num = numbers[i];
 
-                    g.FillRectangle(blockBrush,
+                    g.FillRectangle(i >= sortedFrom && i < sortedTo ? finishedBrush : blockBrush,
                     i * width, 0,
                     width, range > 0.0f ? (num - min.Value) / range * size.Height : size.Height / 2);
                 }
@@ -374,7 +376,7 @@ namespace SortVis
             var swapBrush = new SolidBrush(_swapColor);
             var sortedBrush = new SolidBrush(_finishedGreen);
 
-            var bm = Draw(Numbers, size, _finished, _min, _max);
+            var bm = Draw(Numbers, size, SortedFrom, SortedTo, _min, _max);
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
             using (var g = Graphics.FromImage(bm))
             {
