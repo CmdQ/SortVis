@@ -22,6 +22,7 @@ namespace SortVis
 
         private static Color _finishedGreen = Color.LawnGreen;
         private static Color _grayBlock = Color.FromArgb(64, 64, 64);
+        private static Color _swapColor = Color.OrangeRed;
 
         private int[] _numbers;
         private CircularArray<int> _swapped;
@@ -196,6 +197,26 @@ namespace SortVis
         }
 
         /// <summary>
+        /// Tells, which range of a sorter is already sorted.
+        /// </summary>
+        /// <see cref="SortedTo"/>
+        protected int SortedFrom
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Tells, which range of a sorter is already sorted.
+        /// </summary>
+        /// <see cref="SortedFrom"/>
+        protected int SortedTo
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Sorts a list of <see cref="int"/>s.
         /// </summary>
         public void Sort()
@@ -227,6 +248,7 @@ namespace SortVis
             _swapped = new CircularArray<int>(2);
             Writes = Compares = 0;
             Milliseconds = 0L;
+            SortedFrom = SortedTo = 0;
         }
 
         /// <summary>
@@ -349,7 +371,9 @@ namespace SortVis
         /// </returns>
         public Bitmap Draw(Size size)
         {
-            var blockBrush = new SolidBrush(Color.SeaGreen);
+            var swapBrush = new SolidBrush(_swapColor);
+            var sortedBrush = new SolidBrush(_finishedGreen);
+
             var bm = Draw(Numbers, size, _finished, _min, _max);
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
             using (var g = Graphics.FromImage(bm))
@@ -360,17 +384,26 @@ namespace SortVis
 
                 for (int i = 0; i < Numbers.Length; ++i)
                 {
-                    if (!_swapped.Contains(i))
+                    Brush brush;
+                    if (_swapped.Contains(i))
+                    {
+                        brush = swapBrush;
+                    }
+                    else if (i >= SortedFrom && i < SortedTo)
+                    {
+                        brush = sortedBrush;
+                    }
+                    else
                     {
                         continue;
                     }
-                    var num = Numbers[i];
-                    g.FillRectangle(blockBrush,
+                    g.FillRectangle(brush,
                     i * width, 0,
-                    width, range > 0.0f ? (num - _min) / range * size.Height : size.Height / 2);
+                    width, range > 0.0f ? (Numbers[i] - _min) / range * size.Height : size.Height / 2);
                 }
             }
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
             return bm;
         }
 
