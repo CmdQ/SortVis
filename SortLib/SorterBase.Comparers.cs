@@ -47,11 +47,10 @@ namespace SortVis
 
         private bool CheckIfStable(int maxNum)
         {
-            // TODO 7
             var nums = (
                 from a in Enumerable.Range(1, maxNum)
                 from b in Enumerable.Range(1, maxNum)
-                select a * 10 + b).Take(7).ToArray();
+                select a * 10 + b).Take(Math.Max(7, ConsideredBig)).ToArray();
 
             // Do this in another instance, otherwise we get nasty race conditions.
             var thisSorter = (SorterBase)Activator.CreateInstance(GetType());

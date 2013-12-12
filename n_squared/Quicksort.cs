@@ -34,6 +34,14 @@ namespace n_squared
 #endif
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="QuickSort"/> class.
+        /// </summary>
+        public QuickSort()
+        {
+            ConsideredBig = 8;
+        }
+
+        /// <summary>
         /// Do the actual sorting work.
         /// </summary>
         protected override void SortIt()
@@ -51,7 +59,7 @@ namespace n_squared
             {
                 return;
             }
-            if (hi - lo <= 7)
+            if (hi - lo < ConsideredBig)
             {
                 InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
                 return;

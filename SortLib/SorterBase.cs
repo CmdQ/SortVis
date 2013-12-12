@@ -39,6 +39,7 @@ namespace SortVis
         /// </summary>
         public SorterBase()
         {
+            ConsideredBig = 1;
             _stable = null;
             _numbers = null;
             Comparer = Comparer<int>.Default;
@@ -209,6 +210,16 @@ namespace SortVis
         /// </summary>
         /// <see cref="SortedFrom"/>
         protected int SortedTo
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Lengths of this length are not considered small, i.e. the "real"
+        /// algorithm works on them instead of a specialized sort for small arrays.
+        /// </summary>
+        protected int ConsideredBig
         {
             get;
             set;
@@ -429,9 +440,11 @@ namespace SortVis
                 }
                 catch (OperationCanceledException)
                 {
+                    // TODO
                 }
                 catch (BarrierPostPhaseException)
                 {
+                    // TODO
                 }
             }
         }
