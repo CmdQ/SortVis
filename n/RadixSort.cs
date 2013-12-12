@@ -26,7 +26,8 @@ namespace n
                 int front = 0;
                 int back = n - 1;
 
-                for (int i = 0; front <= back; ++i)
+                int i;
+                for (i = 0; front <= back; ++i)
                 {
                     if (Abort.IsCancellationRequested)
                     {
@@ -47,7 +48,7 @@ namespace n
                     continue;
                 }
 
-                for (int i = 0; i < front; ++i)
+                for (i = 0; i < front; ++i)
                 {
                     if (Abort.IsCancellationRequested)
                     {
@@ -55,13 +56,13 @@ namespace n
                     }
                     Write(swap[i], i);
                 }
-                for (int i = n - 1; i > back; --i)
+                for (; i < n; ++i)
                 {
                     if (Abort.IsCancellationRequested)
                     {
                         return;
                     }
-                    Write(swap[front++], i);
+                    Write(swap[n - (i - front) - 1], i);
                 }
             }
         }
