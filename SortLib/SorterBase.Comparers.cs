@@ -1,6 +1,8 @@
 ﻿using SortLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SortVis
 {
@@ -38,50 +40,51 @@ namespace SortVis
         /// <returns><c>true</c> if stable, <c>false</c> otherwise.</returns>
         protected virtual bool CheckIfStable()
         {
-            var saveE = SteppedExecution;
-            SteppedExecution = null;
-            var safeC = Comparer;
-
-            try
-            {
-                return CheckIfStable(3) && CheckIfStable(4);
-            }
-            finally
-            {
-                SteppedExecution = saveE;
-                Comparer = safeC;
-            }
+            var three = Task.Factory.StartNew(() => { return CheckIfStable(3); });
+            var four  = Task.Factory.StartNew(() => { return CheckIfStable(4); });
+            return three.Result && four.Result;
         }
 
         private bool CheckIfStable(int maxNum)
         {
+            // TODO 7
             var nums = (
                 from a in Enumerable.Range(1, maxNum)
                 from b in Enumerable.Range(1, maxNum)
                 select a * 10 + b).Take(7).ToArray();
 
-            return CheckIfStable(nums, nums.Length, 0);
+            // Do this in another instance, otherwise we get nasty race conditions.
+            var thisSorter = (SorterBase)Activator.CreateInstance(GetType());
+            thisSorter.Numbers = nums;
+            return thisSorter.RecursiveCheckIfStable(0);
         }
 
-        private bool CheckIfStable(int[] nums, int n, int i)
+        private bool RecursiveCheckIfStable(int i)
         {
+            int n = Numbers.Length;
             if (i >= n - 1)
             {
-                return CheckIfStable(nums);
+                return CheckIfStable(Numbers);
             }
 
-            CheckIfStable(nums, n, i + 1);
+            if (!RecursiveCheckIfStable(i + 1))
+            {
+                return false;
+            }
             for (int j = i + 1; j < n; ++j)
             {
-                int temp = nums[i];
-                nums[i] = nums[j];
-                nums[j] = temp;
-                CheckIfStable(nums, n, i + 1);
-                nums[j] = nums[i];
-                nums[i] = temp;
+                int temp = Numbers[i];
+                Numbers[i] = Numbers[j];
+                Numbers[j] = temp;
+                if (!RecursiveCheckIfStable(i + 1))
+                {
+                    return false;
+                }
+                Numbers[j] = Numbers[i];
+                Numbers[i] = temp;
             }
 
-            return CheckIfStable(nums);
+            return CheckIfStable(Numbers);
         }
 
         private bool CheckIfStable(int[] nums)
