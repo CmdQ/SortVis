@@ -117,8 +117,7 @@ namespace SortVis
 
         private void BtnAll_Click(object sender, EventArgs e)
         {
-            BtnAll.Enabled = false;
-            BtnAbort.Enabled = true;
+            EnableUI(false);
 
             _cts = new CancellationTokenSource();
             var barrier = new Barrier(_sorters.Count, DrawArrays);
@@ -146,8 +145,7 @@ namespace SortVis
             {
                 ui.Post(delegate
                 {
-                    BtnAll.Enabled = true;
-                    BtnAbort.Enabled = false;
+                    EnableUI(true);
                     DrawArrays(null);
                     DgvSorters.Refresh();
                 }, null);
@@ -204,6 +202,29 @@ namespace SortVis
         #endregion
 
         #region Private helpers
+
+        private void EnableUI(bool onOff)
+        {
+            var toDisable = new List<Control>()
+            {
+                BtnAll,
+                NumCount,
+                CmbGenerator,
+            };
+            var toEnable = new List<Control>()
+            {
+                BtnAbort,
+            };
+
+            foreach (var disable in toDisable)
+            {
+                disable.Enabled = onOff;
+            }
+            foreach (var enable in toEnable)
+            {
+                enable.Enabled = !onOff;
+            }
+        }
 
         private BigO GetLambda(Assembly assembly)
         {
