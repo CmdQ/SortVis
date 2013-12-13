@@ -40,22 +40,43 @@ namespace SortVis
         /// <returns><c>true</c> if stable, <c>false</c> otherwise.</returns>
         protected virtual bool CheckIfStable()
         {
+            if (ConsideredBig > 8)
+            {
+                throw new StackOverflowException("The length of the stable sort check array will become too long, "
+                + "as test run time increases with the factorial.");
+            }
+
             var three = Task.Run(() => { return CheckIfStable(3); });
-            var four  = Task.Run(() => { return CheckIfStable(4); });
+            var four = Task.Run(() => { return CheckIfStable(4); });
             return three.Result && four.Result;
         }
 
         private bool CheckIfStable(int maxNum)
         {
-            var nums = (
-                from a in Enumerable.Range(1, maxNum)
-                from b in Enumerable.Range(1, maxNum)
-                select a * 10 + b).Take(Math.Max(7, ConsideredBig)).ToArray();
+            var nums = DoubleNums(maxNum).Take(Math.Max(7, ConsideredBig)).ToArray();
 
             // Do this in another instance, otherwise we get nasty race conditions.
             var thisSorter = (SorterBase)Activator.CreateInstance(GetType());
             thisSorter.Numbers = nums;
             return thisSorter.RecursiveCheckIfStable(0);
+        }
+
+        private IEnumerable<int> DoubleNums(int maxNum)
+        {
+            if (maxNum < 2 || maxNum > 9)
+            {
+                throw new ArgumentOutOfRangeException("maxNum", "Must be larger than 1 and less than 10.");
+            }
+            while (true)
+            {
+                foreach (int ten in Enumerable.Range(1, maxNum))
+                {
+                    foreach (int one in Enumerable.Range(1, maxNum))
+                    {
+                        yield return ten * 10 + one;
+                    }
+                }
+            }
         }
 
         private bool RecursiveCheckIfStable(int i)
