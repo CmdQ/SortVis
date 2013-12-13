@@ -42,8 +42,10 @@ namespace SortVis
         {
             if (ConsideredBig > 8)
             {
-                throw new StackOverflowException("The length of the stable sort check array will become too long, "
+                var soe = new StackOverflowException("The length of the stable sort check array will become too long, "
                 + "as test run time increases with the factorial.");
+                throw new NotImplementedException("Stable check will not work here. Devise your own test or decrease "
+                + "what is considered a length worthy of running the full-blown algorithm.", soe);
             }
 
             var three = Task.Run(() => { return CheckIfStable(3); });
