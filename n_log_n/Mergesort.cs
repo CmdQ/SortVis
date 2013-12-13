@@ -23,8 +23,9 @@ namespace n_log_n
             for (int len = 1; len < n; len <<= 1)
             {
                 int len2 = len << 1;
-                for (int i = 0; !Abort.IsCancellationRequested && i < n; i += len2)
+                for (int i = 0; i < n; i += len2)
                 {
+                    Abort.ThrowIfCancellationRequested();
                     int ilen = i + len;
                     if (ilen >= n)
                     {
@@ -42,8 +43,9 @@ namespace n_log_n
             // Copy always the smaller element.
             int l = lo;
             int h = mi;
-            while (!Abort.IsCancellationRequested && l < mi && h < hi)
+            while (l < mi && h < hi)
             {
+                Abort.ThrowIfCancellationRequested();
                 if (CompareInArray(l, h) <= 0)
                 {
                     store[cursor++] = Numbers[l++];
@@ -67,6 +69,7 @@ namespace n_log_n
             // Write back.
             for (mi = lo; mi < hi; ++mi)
             {
+                Abort.ThrowIfCancellationRequested();
                 Write(store[mi], mi);
                 if (lo == 0 && hi >= Numbers.Length)
                 {

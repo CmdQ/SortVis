@@ -25,12 +25,13 @@ namespace n_squared
 
             foreach (int gap in hs)
             {
-                for (int i = gap; !Abort.IsCancellationRequested && i < n; ++i)
+                for (int i = gap; i < n; ++i)
                 {
                     int temp = Numbers[i];
                     int j = i - gap;
-                    for (; !Abort.IsCancellationRequested && j >= 0 && CompareNum(Numbers[j], temp) > 0; j -= gap)
+                    for (; j >= 0 && CompareNum(Numbers[j], temp) > 0; j -= gap)
                     {
+                        Abort.ThrowIfCancellationRequested();
                         Shift(j, j + gap);
                     }
                     Write(temp, j + gap);
@@ -38,10 +39,6 @@ namespace n_squared
                     {
                         SortedTo = i;
                     }
-                }
-                if (Abort.IsCancellationRequested)
-                {
-                    break;
                 }
             }
         }

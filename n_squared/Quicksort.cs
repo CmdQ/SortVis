@@ -55,10 +55,8 @@ namespace n_squared
 
         private void SortIt(int lo, int hi)
         {
-            if (Abort.IsCancellationRequested)
-            {
-                return;
-            }
+            Abort.ThrowIfCancellationRequested();
+
             if (hi - lo < ConsideredBig)
             {
                 InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
@@ -85,8 +83,9 @@ namespace n_squared
             Swap(pivot, --hi);
             pivot = hi;
 
-            while (lo < hi && !Abort.IsCancellationRequested)
+            while (lo < hi)
             {
+                Abort.ThrowIfCancellationRequested();
                 while (CompareInArray(lo, pivot) <= 0)
                 {
                     if (++lo == hi)

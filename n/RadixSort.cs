@@ -29,10 +29,7 @@ namespace n
                 int i;
                 for (i = 0; front <= back; ++i)
                 {
-                    if (Abort.IsCancellationRequested)
-                    {
-                        return;
-                    }
+                    Abort.ThrowIfCancellationRequested();
                     if ((Numbers[i] & (1 << b)) == 0)
                     {
                         swap[front++] = Numbers[i];
@@ -50,18 +47,12 @@ namespace n
 
                 for (i = 0; i < front; ++i)
                 {
-                    if (Abort.IsCancellationRequested)
-                    {
-                        return;
-                    }
+                    Abort.ThrowIfCancellationRequested();
                     Write(swap[i], i);
                 }
                 for (; i < n; ++i)
                 {
-                    if (Abort.IsCancellationRequested)
-                    {
-                        return;
-                    }
+                    Abort.ThrowIfCancellationRequested();
                     Write(swap[n - (i - front) - 1], i);
                 }
             }

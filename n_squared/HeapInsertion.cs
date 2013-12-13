@@ -35,8 +35,9 @@ namespace n_squared
         private void Reverse()
         {
             int n = Numbers.Length;
-            for (int i = n / 2; i >= 0 && !Abort.IsCancellationRequested; --i)
+            for (int i = n / 2; i >= 0; --i)
             {
+                Abort.ThrowIfCancellationRequested();
                 Swap(i, n - i - 1);
             }
         }

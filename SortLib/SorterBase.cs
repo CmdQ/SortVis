@@ -232,22 +232,25 @@ namespace SortVis
         {
             Reset();
 
-            var sw = Stopwatch.StartNew();
-            SortIt();
-            sw.Stop();
-            Milliseconds = sw.ElapsedMilliseconds;
-
-            if (SteppedExecution != null)
+            try
             {
-                SteppedExecution.RemoveParticipant();
-            }
-            _swapped.Clear();
+                var sw = Stopwatch.StartNew();
+                SortIt();
+                sw.Stop();
+                Milliseconds = sw.ElapsedMilliseconds;
 
-            CheckSortedness();
+                if (SteppedExecution != null)
+                {
+                    SteppedExecution.RemoveParticipant();
+                }
+                _swapped.Clear();
 
-            if (!Abort.IsCancellationRequested)
-            {
+                CheckSortedness();
+
                 SortedTo = Numbers.Length;
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
@@ -427,7 +430,6 @@ namespace SortVis
         {
             if (SteppedExecution != null)
             {
-                try
                 {
                     if (Abort != null)
                     {
@@ -438,14 +440,6 @@ namespace SortVis
                         SteppedExecution.SignalAndWait();
                     }
                 }
-                catch (OperationCanceledException)
-                {
-                    Trace.TraceInformation("Sorting was canceled by the user.");
-                }
-                //catch (BarrierPostPhaseException)
-                //{
-                //    // TODO
-                //}
             }
         }
 

@@ -38,12 +38,16 @@ namespace n_squared
             write = write ?? ((val, pos) => numbers[pos] = val);
 
             int n = hi - lo;
-            for (int i = 1; i < n && (abort == null || !abort.Value.IsCancellationRequested); ++i)
+            for (int i = 1; i < n; ++i)
             {
                 T temp = numbers[lo + i];
                 int j = i - 1;
-                for (; j >= 0 && compare(numbers[lo + j], temp) > 0 && (abort == null || !abort.Value.IsCancellationRequested); j--)
+                for (; j >= 0 && compare(numbers[lo + j], temp) > 0; j--)
                 {
+                    if (abort != null)
+                    {
+                        abort.Value.ThrowIfCancellationRequested();
+                    }
                     shift(lo + j, lo + j + 1);
                 }
                 write(temp, lo + j + 1);
