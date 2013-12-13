@@ -40,8 +40,8 @@ namespace SortVis
         /// <returns><c>true</c> if stable, <c>false</c> otherwise.</returns>
         protected virtual bool CheckIfStable()
         {
-            var three = Task.Factory.StartNew(() => { return CheckIfStable(3); });
-            var four  = Task.Factory.StartNew(() => { return CheckIfStable(4); });
+            var three = Task.Run(() => { return CheckIfStable(3); });
+            var four  = Task.Run(() => { return CheckIfStable(4); });
             return three.Result && four.Result;
         }
 
