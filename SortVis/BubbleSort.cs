@@ -22,17 +22,19 @@ namespace SortVis
             SortedFrom = SortedTo = n;
             do
             {
+                SortedFrom = n;
                 int newN = 1;
-                for (int i = 0; !Abort.IsCancellationRequested && i < n - 1; ++i)
+                for (int i = 0; i < n - 1; ++i)
                 {
+                    Abort.ThrowIfCancellationRequested();
                     if (CompareInArray(i, i + 1) > 0)
                     {
                         Swap(i, i + 1);
                         newN = i + 1;
                     }
                 }
-                SortedFrom = n = newN;
-            } while (!Abort.IsCancellationRequested && n > 1);
+                n = newN;
+            } while (n > 1);
         }
     }
 }

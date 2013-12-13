@@ -21,8 +21,9 @@ namespace n_log_n
         {
             Heapify();
             SortedFrom = SortedTo = _n;
-            for (int i = _n - 1; i >= 0 && !Abort.IsCancellationRequested; --i)
+            for (int i = _n - 1; i >= 0; --i)
             {
+                Abort.ThrowIfCancellationRequested();
                 ExtractMax();
             }
         }
@@ -40,8 +41,9 @@ namespace n_log_n
         protected void Heapify()
         {
             _n = Numbers.Length;
-            for (int i = (_n - 1) / 2; i >= 0 && !Abort.IsCancellationRequested; --i)
+            for (int i = (_n - 1) / 2; i >= 0; --i)
             {
+                Abort.ThrowIfCancellationRequested();
                 BubbleDown(i);
             }
         }

@@ -193,10 +193,7 @@ namespace SortVis
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_cts != null && !_cts.IsCancellationRequested && _cts.Token.CanBeCanceled)
-            {
-                _cts.Cancel();
-            }
+            BtnAbort_Click(this, e);
         }
 
         #endregion

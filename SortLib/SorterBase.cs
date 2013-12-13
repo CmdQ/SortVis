@@ -440,12 +440,12 @@ namespace SortVis
                 }
                 catch (OperationCanceledException)
                 {
-                    // TODO
+                    Trace.TraceInformation("Sorting was canceled by the user.");
                 }
-                catch (BarrierPostPhaseException)
-                {
-                    // TODO
-                }
+                //catch (BarrierPostPhaseException)
+                //{
+                //    // TODO
+                //}
             }
         }
 

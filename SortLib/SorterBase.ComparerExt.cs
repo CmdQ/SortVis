@@ -13,7 +13,6 @@ namespace SortLib
 
             public InvertedComparer(Comparer<T> comp)
             {
-                // TODO: Complete member initialization
                 this._comparer = comp;
             }
 
