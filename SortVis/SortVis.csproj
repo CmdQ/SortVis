@@ -50,7 +50,6 @@
     <Compile Include="DataGridViewRowExtensions.cs" />
     <Compile Include="Median3Generator.cs" />
     <Compile Include="DescendingGenerator.cs" />
-    <Compile Include="BubbleSort.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>

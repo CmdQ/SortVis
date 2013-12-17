@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BigO.cs" />
+    <Compile Include="BubbleSort.cs" />
     <Compile Include="CircularArray.cs" />
     <Compile Include="IGenerator.cs" />
     <Compile Include="ISorter.cs" />
@@ -47,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
