@@ -1,5 +1,4 @@
 ﻿using SortLib;
-using System;
 using System.ComponentModel.Composition;
 
 namespace SortVis

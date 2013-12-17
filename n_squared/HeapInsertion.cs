@@ -1,8 +1,6 @@
 ﻿using n_log_n;
 using SortLib;
 using SortVis;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
 namespace n_squared
