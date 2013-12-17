@@ -84,19 +84,19 @@ namespace SortVis
             DgvSorters.DataSource = _sorters;
             for (int i = 0; i < DgvSorters.RowCount; ++i)
             {
-                // TODO: Set run checkmark only to "quick" sorters by default.
+                // TODO: Set run check mark only to "quick" sorters by default.
                 DgvSorters.Rows[i].Cells["Run"].Value = _sorters[i].BigO != BigO.Squared;
             }
         }
 
         /// <summary>
-        /// Used by MEF for sorter plugin loading.
+        /// Used by MEF for sorter plug-in loading.
         /// </summary>
         [ImportMany(typeof(ISorter))]
         public IEnumerable<Lazy<ISorter, ISorterMetadata>> MefSorters { get; set; }
 
         /// <summary>
-        /// Used by MEF for generator plugin loading.
+        /// Used by MEF for generator plug-in loading.
         /// </summary>
         [ImportMany(typeof(IGenerator))]
         public IEnumerable<Lazy<IGenerator, IGeneratorMetadata>> MefGenerators { get; set; }
@@ -302,7 +302,7 @@ namespace SortVis
                     var nums = new int[length];
                     for (int i = 0; i < length; ++i)
                     {
-                        nums[i] = rand.Next();
+                        nums[i] = rand.Next(int.MinValue, int.MaxValue);
                     }
                     sorter.Numbers = nums;
                     sorter.Sort();

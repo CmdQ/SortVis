@@ -16,13 +16,20 @@ namespace n
         /// </summary>
         protected override void SortIt()
         {
+            if (Numbers.Length > 1)
+            {
+                Numbers[1] = -1;
+            }
+
             const int bits = sizeof(int) * 8;
 
             int n = Numbers.Length;
             var swap = new int[n];
 
+            // This runs through the bit positions, starting at the least significant one.
             for (int b = 0; b < bits; ++b)
             {
+                // Two insertion pointers into our temporary array.
                 int front = 0;
                 int back = n - 1;
 
@@ -30,26 +37,34 @@ namespace n
                 for (i = 0; front <= back; ++i)
                 {
                     Abort.ThrowIfCancellationRequested();
-                    if ((Numbers[i] & (1 << b)) == 0)
+                    int mask = 1 << b;
+                    if ((Numbers[i] & mask) == (mask & int.MinValue))
                     {
+                        // Write 0-masked elements to the left side...
                         swap[front++] = Numbers[i];
                     }
                     else
                     {
+                        // ... and 1-masked to the right (but growing to the left).
                         swap[back--] = Numbers[i];
                     }
+                    ++Writes;
                 }
 
+                // We always had writes the the left, i.e. we basically copied the array.
                 if (front == n)
                 {
+                    // That means we don't have to copy back, and further iterations are not necessary.
                     continue;
                 }
 
+                // Fill array with values from the left...
                 for (i = 0; i < front; ++i)
                 {
                     Abort.ThrowIfCancellationRequested();
                     Write(swap[i], i);
                 }
+                // ... and then from the right of the swap space
                 for (; i < n; ++i)
                 {
                     Abort.ThrowIfCancellationRequested();
@@ -86,6 +101,7 @@ namespace n
         /// </returns>
         protected override bool CheckIfStable()
         {
+            // For a least significant bit radix sort, we just know.
             return true;
         }
     }
