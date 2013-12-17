@@ -23,15 +23,10 @@ namespace n_log_n
             for (int len = 1; len < n; len <<= 1)
             {
                 int len2 = len << 1;
-                for (int i = 0; i < n; i += len2)
+                for (int i = 0; i < n - len; i += len2)
                 {
                     Abort.ThrowIfCancellationRequested();
-                    int ilen = i + len;
-                    if (ilen >= n)
-                    {
-                        break;
-                    }
-                    Merge(store, i, ilen, Math.Min(i + len2, n));
+                    Merge(store, i, i + len, Math.Min(i + len2, n));
                 }
             }
         }

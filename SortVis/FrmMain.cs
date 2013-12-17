@@ -80,7 +80,7 @@ namespace SortVis
             DgvSorters.DataSource = _sorters;
             for (int i = 0; i < DgvSorters.RowCount; ++i)
             {
-                // TODO
+                // TODO: Set run checkmark only to "quick" sorters by default.
                 DgvSorters.Rows[i].Cells["Run"].Value = _sorters[i].BigO != BigO.Squared;
             }
         }
@@ -126,7 +126,7 @@ namespace SortVis
             var ui = SynchronizationContext.Current;
             for (int i = 0; i < _sorters.Count; ++i)
             {
-                var run = true;//TODO
+                var run = true; //TODO: Get run flag.
                 if (run)
                 {
                     var sorter = _sorters[i];
