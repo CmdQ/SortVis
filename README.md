@@ -13,12 +13,16 @@ twice). If you internally do writes to a temporary array, increment the property
 
 Additionally, these three writing functions synchronize the sorter threads and trigger drawing of the arrays.
 
-The run time information is derived from the assembly, a sorter is put in.
-
 For starters take a look at the popular—but bad—teaching example `BubbleSort`.
 
-Plugin mechanism
+Plug-in mechanism
 ----------------
 
 When adding a new sorter it will be
 discovered automatically. On the other hand it will not be loaded if it is defective.
+
+Big-O run time
+--------------
+
+The run time information is taken from the `LambdaAttribute` on the assembly, a sorter is put in.
+So watch where you put the code.
