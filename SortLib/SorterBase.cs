@@ -323,6 +323,10 @@ namespace SortVis
         /// </summary>
         /// <param name="from">Source slot.</param>
         /// <param name="to">Destination slot.</param>
+        /// <remarks>When implementing a sorter, use this to shift elements (e.g. as in insertion sort when
+        /// making room for the element to be inserted).</remarks>
+        /// <seealso cref="Write"/>
+        /// <seealso cref="Swap"/>
         protected void Shift(int from, int to)
         {
             _swapped.Add(from, to);
@@ -336,6 +340,10 @@ namespace SortVis
         /// </summary>        
         /// <param name="value">Value to put.</param>
         /// <param name="pos">Slot to write to.</param>
+        /// <remarks>When implementing a sorter, use this to write a value to a position (e.g. like the
+        /// inserted element in insertion sort).</remarks>
+        /// <seealso cref="Shift"/>
+        /// <seealso cref="Swap"/>
         protected void Write(int value, int pos)
         {
             Numbers[pos] = value;
@@ -349,6 +357,9 @@ namespace SortVis
         /// </summary>
         /// <param name="i">1st slot.</param>
         /// <param name="j">2nd slot.</param>
+        /// <remarks>When implementing a sorter, use this to swap two values (e.g. as in bubble sort).</remarks>
+        /// <seealso cref="Write"/>
+        /// <seealso cref="Shift"/>
         protected void Swap(int i, int j)
         {
             if (i == j)
