@@ -33,6 +33,8 @@ namespace SortVis
         private int _writes;
         private int _compares;
         private long _milliseconds;
+        private int _sortedFrom;
+        private int _sortedTo;
 
         /// <summary>
         /// Construct a sorter with default comparer.
@@ -201,8 +203,21 @@ namespace SortVis
         /// <see cref="SortedTo"/>
         protected int SortedFrom
         {
-            get;
-            set;
+            get
+            {
+                return _sortedFrom;
+            }
+            set
+            {
+                if (value != _sortedFrom)
+                {
+                    _sortedFrom = value;
+                    if (SortedTo < value)
+                    {
+                        SortedTo = value;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -211,8 +226,21 @@ namespace SortVis
         /// <see cref="SortedFrom"/>
         protected int SortedTo
         {
-            get;
-            set;
+            get
+            {
+                return _sortedTo;
+            }
+            set
+            {
+                if (value != _sortedTo)
+                {
+                    _sortedTo = value;
+                    if (SortedFrom > value)
+                    {
+                        SortedFrom = value;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -247,6 +275,7 @@ namespace SortVis
 
                 CheckSortedness();
 
+                SortedFrom = 0;
                 SortedTo = Numbers.Length;
             }
             catch (OperationCanceledException)
@@ -262,7 +291,7 @@ namespace SortVis
             _swapped = new CircularArray<int>(2);
             Writes = Compares = 0;
             Milliseconds = 0L;
-            SortedFrom = SortedTo = 0;
+            SortedTo = 0;
         }
 
         /// <summary>

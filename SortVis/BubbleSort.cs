@@ -19,7 +19,6 @@ namespace SortVis
         protected override void SortIt()
         {
             int n = Numbers.Length;
-            SortedFrom = SortedTo = n;
             do
             {
                 SortedFrom = n;

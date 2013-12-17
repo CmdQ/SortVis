@@ -20,7 +20,7 @@ namespace n_log_n
         protected override void SortIt()
         {
             Heapify();
-            SortedFrom = SortedTo = _n;
+            SortedTo = _n;
             for (int i = _n - 1; i >= 0; --i)
             {
                 Abort.ThrowIfCancellationRequested();
