@@ -21,17 +21,27 @@ namespace n_squared
         {
             if (Numbers.Length > 1)
             {
+                // This heapify puts large values near the beginning...
                 Heapify();
+                // ... so we reverse afterwards.
                 Reverse();
+
+                // Then we use an inverse comparer...
                 var org = Comparer;
                 Comparer = Comparer.Invert();
+                // ... so that this heapify puts small values near the beginning.
                 Heapify();
+                // We now have done some work and know that the first position is final.
                 SortedTo = 1;
+                // So with the original comparer, we make use of insertion sort, which does well on partially sorted fields.
                 Comparer = org;
                 InsertionSort.Sort(Numbers, 1, Numbers.Length, org.Compare, Shift, Write, Abort, t => SortedTo = t);
             }
         }
 
+        /// <summary>
+        /// Reverse an array making use of our <see cref="SorterBase.Swap"/>.
+        /// </summary>
         private void Reverse()
         {
             int n = Numbers.Length;

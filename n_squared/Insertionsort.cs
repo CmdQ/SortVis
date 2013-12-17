@@ -33,24 +33,30 @@ namespace n_squared
             CancellationToken? abort = null,
             Action<int> updateRange = null)
         {
+            // If we didn'T get special (counting) tools, we use defaults.
             compare = compare ?? Comparer<T>.Default.Compare;
             shift = shift ?? ((from, to) => numbers[to] = numbers[from]);
             write = write ?? ((val, pos) => numbers[pos] = val);
 
             int n = hi - lo;
+            // Everything to the left of n is considered sorted. A single element is always sorted.
             for (int i = 1; i < n; ++i)
             {
-                T temp = numbers[lo + i];
+                // This is the first non-sorted element.
+                T toInsert = numbers[lo + i];
+                // Make room for one element to the left of i...
                 int j = i - 1;
-                for (; j >= 0 && compare(numbers[lo + j], temp) > 0; j--)
+                for (; j >= 0 && compare(numbers[lo + j], toInsert) > 0; j--)
                 {
                     if (abort != null)
                     {
                         abort.Value.ThrowIfCancellationRequested();
                     }
+                    // ... by shifting all bigger elements one to the right.
                     shift(lo + j, lo + j + 1);
                 }
-                write(temp, lo + j + 1);
+                // Then put the element in the free spot.
+                write(toInsert, lo + j + 1);
 
                 if (updateRange != null)
                 {

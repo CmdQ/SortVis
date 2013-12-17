@@ -15,26 +15,28 @@ namespace n_squared
     public class ShellSort : SorterBase
     {
         /// <summary>
-        /// Do the actual sorting work.
+        /// Do the actual sorting work. Without the gap sizes, it would be the same as <see cref="InsertionSort"/>.
         /// </summary>
         protected override void SortIt()
         {
             int n = Numbers.Length;
+            // We need all gap sizes that are smaller than the number of items to sort in decreasing order.
             var hs = Steps().TakeWhile(h => h < n).ToArray();
             Array.Reverse(hs);
 
             foreach (int gap in hs)
             {
+                // A gap size of 1 (last iteration) makes this insertion sort, but it has to do less work then.
                 for (int i = gap; i < n; ++i)
                 {
-                    int temp = Numbers[i];
+                    int toInsert = Numbers[i];
                     int j = i - gap;
-                    for (; j >= 0 && CompareNum(Numbers[j], temp) > 0; j -= gap)
+                    for (; j >= 0 && CompareNum(Numbers[j], toInsert) > 0; j -= gap)
                     {
                         Abort.ThrowIfCancellationRequested();
                         Shift(j, j + gap);
                     }
-                    Write(temp, j + gap);
+                    Write(toInsert, j + gap);
                     if (gap == 1)
                     {
                         SortedTo = i;
