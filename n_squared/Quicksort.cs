@@ -31,6 +31,8 @@ namespace n_squared
 
         private Tuple<int,int>[] _pivots;
         private PivotComarer _pivotCompare;
+#else
+        private Random _rand;
 #endif
 
         /// <summary>
@@ -39,6 +41,9 @@ namespace n_squared
         public QuickSort()
         {
             ConsideredBig = 8;
+#if !MEDIAN_OF_3
+            _rand = new Random();
+#endif
         }
 
         /// <summary>
@@ -70,14 +75,17 @@ namespace n_squared
 
         private int Partition(int lo, int hi)
         {
-            int pivot = lo + (hi - lo) / 2;
+            // Deterministic middle element, easily tricked.
+            //int pivot = lo + (hi - lo) / 2;
 
 #if MEDIAN_OF_3
             _pivots[0] = Tuple.Create(Numbers[0], 0);
             _pivots[1] = Tuple.Create(Numbers[pivot], pivot);
             _pivots[2] = Tuple.Create(Numbers[hi - 1], hi - 1);
             InsertionSort.Sort(_pivots, 0, 3, _pivotCompare.Compare);
-            pivot = _pivots[1].Item2;
+            int pivot = _pivots[1].Item2;
+#else
+            int pivot = _rand.Next(lo, hi);
 #endif
 
             Swap(pivot, --hi);

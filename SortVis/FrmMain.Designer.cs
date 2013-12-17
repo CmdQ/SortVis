@@ -144,7 +144,7 @@
             this.DgvSorters.Location = new System.Drawing.Point(12, 39);
             this.DgvSorters.Name = "DgvSorters";
             this.DgvSorters.RowHeadersVisible = false;
-            this.DgvSorters.RowTemplate.Height = 100;
+            this.DgvSorters.RowTemplate.Height = 64;
             this.DgvSorters.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.DgvSorters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DgvSorters.Size = new System.Drawing.Size(863, 548);
