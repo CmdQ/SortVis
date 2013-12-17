@@ -50,11 +50,15 @@ namespace SortVis
             {
                 sorter.Value.Name = sorter.Metadata.Name;
                 sorter.Value.BigO = GetLambda(sorter.Value.GetType().Assembly);
+#if !DEBUG
                 if (SortingCorrect(sorter.Value))
+#endif
                 {
                     _sorters.Add(sorter.Value);
                 }
+#if !DEBUG
                 else
+#endif
                 {
                     Trace.TraceInformation("Not adding {0}, because it does not work correctly.", sorter.Value.Name);
                 }
