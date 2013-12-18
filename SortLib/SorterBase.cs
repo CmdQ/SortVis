@@ -271,16 +271,18 @@ namespace SortVis
                 {
                     SteppedExecution.RemoveParticipant();
                 }
-                _swapped.Clear();
 
                 CheckSortedness();
 
+                // If we come here, the full range is correctly sorted.
                 SortedFrom = 0;
                 SortedTo = Numbers.Length;
             }
             catch (OperationCanceledException)
             {
             }
+
+            _swapped.Clear();
         }
 
         /// <summary>
