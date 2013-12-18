@@ -48,9 +48,26 @@ namespace SortVis
                 + "what is considered a length worthy of running the full-blown algorithm.", soe);
             }
 
-            var three = Task.Run(() => { return CheckIfStable(3); });
-            var four = Task.Run(() => { return CheckIfStable(4); });
-            return three.Result && four.Result;
+            try
+            {
+                var three = Task.Run(() => { return CheckIfStable(3); });
+                var four = Task.Run(() => { return CheckIfStable(4); });
+                return three.Result && four.Result;
+            }
+            catch (AggregateException ae)
+            {
+                var worthy = (
+                    from ie in ae.InnerExceptions
+                    where ie is NotSortedException
+                    select ie).FirstOrDefault();
+
+                if (worthy != null)
+                {
+                    // Of several exceptions I'd like to see this first.
+                    throw worthy;
+                }
+                throw ae.InnerException;
+            }
         }
 
         private bool CheckIfStable(int maxNum)
