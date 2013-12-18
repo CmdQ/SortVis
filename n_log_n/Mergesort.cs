@@ -66,9 +66,9 @@ namespace n_log_n
             {
                 Abort.ThrowIfCancellationRequested();
                 Write(store[mi], mi);
-                if (lo == 0 && hi >= Numbers.Length)
+                if (lo == 0)
                 {
-                    SortedTo = mi;
+                    SortedTo = mi + 1;
                 }
             }
             Writes += hi - lo;
