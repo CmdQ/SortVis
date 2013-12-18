@@ -16,11 +16,6 @@ namespace n
         /// </summary>
         protected override void SortIt()
         {
-            if (Numbers.Length > 1)
-            {
-                Numbers[1] = -1;
-            }
-
             const int bits = sizeof(int) * 8;
 
             int n = Numbers.Length;
