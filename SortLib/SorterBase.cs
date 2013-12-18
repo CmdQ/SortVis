@@ -403,6 +403,11 @@ namespace SortVis
                 max = max ?? numbers.Max();
                 float range = max.Value - min.Value;
 
+                if (numbers == null || numbers.Length == 0)
+                {
+                    return bm;
+                }
+
                 float width = (float)size.Width / numbers.Length;
 
                 for (int i = 0; i < numbers.Length; ++i)
@@ -435,6 +440,11 @@ namespace SortVis
             using (var g = Graphics.FromImage(bm))
             {
                 float range = _max - _min;
+
+                if (Numbers == null || Numbers.Length == 0)
+                {
+                    return bm;
+                }
 
                 float width = (float)size.Width / Numbers.Length;
 
