@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="EqualGenerator.cs" />
     <Compile Include="DataGridViewRowExtensions.cs" />
+    <Compile Include="GaussianNoise.cs" />
     <Compile Include="Median3Generator.cs" />
     <Compile Include="DescendingGenerator.cs" />
     <Compile Include="FrmMain.cs">

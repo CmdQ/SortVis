@@ -79,7 +79,7 @@ namespace SortVis
             }
 
             CmbGenerator.Items.AddRange((from gen in _generators orderby gen.Name select gen.Name).ToArray());
-            CmbGenerator.SelectedIndex = CmbGenerator.Items.IndexOf(_generators.Single(g => g is RandomGenerator).Name);
+            CmbGenerator.SelectedIndex = CmbGenerator.Items.IndexOf(_generators.Single(g => g is RandomGenerator && !(g is GaussianNoise)).Name);
 
             DgvSorters.DataSource = _sorters;
             for (int i = 0; i < DgvSorters.RowCount; ++i)

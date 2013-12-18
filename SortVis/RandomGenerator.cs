@@ -13,7 +13,10 @@ namespace SortVis
     {
         private int _max;
 
-        RandomGenerator()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RandomGenerator"/> class.
+        /// </summary>
+        protected RandomGenerator()
         {
             _max = (1 << 14) - 1;
         }
