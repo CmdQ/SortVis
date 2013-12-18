@@ -124,8 +124,12 @@ namespace SortVis
             EnableUI(false);
 
             _cts = new CancellationTokenSource();
-            var barrier = new Barrier(_sorters.Count, DrawArrays);
-            var tasks = new List<Task>(_sorters.Count);
+            var barrier = new Barrier(0, DrawArrays);
+            var tasks = new List<Task>(_sorters.Count)
+            {
+                // Dummy task, so that the continuation below is run for sure.
+                Task.Run(() => { return; }),
+            };
 
             var ui = SynchronizationContext.Current;
             for (int i = 0; i < _sorters.Count; ++i)
@@ -136,6 +140,7 @@ namespace SortVis
                     var sorter = _sorters[i];
                     sorter.Abort = _cts.Token;
                     sorter.SteppedExecution = barrier;
+                    sorter.SteppedExecution.AddParticipant();
                     sorter.Numbers = _numbers;
                     tasks.Add(Task.Factory.StartNew(() =>
                     {
