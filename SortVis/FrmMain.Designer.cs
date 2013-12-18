@@ -45,7 +45,8 @@
             this.BtnAll = new System.Windows.Forms.Button();
             this.BtnAbort = new System.Windows.Forms.Button();
             this.DgvSorters = new System.Windows.Forms.DataGridView();
-            this.Run = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.iSorterBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ClmRun = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ClmnBigO = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.stableDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -53,7 +54,6 @@
             this.writesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.millisecondsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArrayBitmap = new System.Windows.Forms.DataGridViewImageColumn();
-            this.iSorterBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.NumCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvSorters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iSorterBindingSource)).BeginInit();
@@ -132,7 +132,7 @@
             this.DgvSorters.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DgvSorters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvSorters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Run,
+            this.ClmRun,
             this.nameDataGridViewTextBoxColumn,
             this.ClmnBigO,
             this.stableDataGridViewCheckBoxColumn,
@@ -152,12 +152,16 @@
             this.DgvSorters.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DgvSorters_ColumnWidthChanged);
             this.DgvSorters.RowHeightChanged += new System.Windows.Forms.DataGridViewRowEventHandler(this.DgvSorters_RowHeightChanged);
             // 
-            // Run
+            // iSorterBindingSource
             // 
-            this.Run.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Run.HeaderText = "Run";
-            this.Run.Name = "Run";
-            this.Run.Width = 33;
+            this.iSorterBindingSource.DataSource = typeof(SortLib.ISorter);
+            // 
+            // ClmRun
+            // 
+            this.ClmRun.DataPropertyName = "Run";
+            this.ClmRun.HeaderText = "Run";
+            this.ClmRun.Name = "ClmRun";
+            this.ClmRun.Width = 33;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -220,10 +224,6 @@
             this.ArrayBitmap.Name = "ArrayBitmap";
             this.ArrayBitmap.ReadOnly = true;
             // 
-            // iSorterBindingSource
-            // 
-            this.iSorterBindingSource.DataSource = typeof(SortLib.ISorter);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,7 +253,7 @@
         private System.Windows.Forms.Button BtnAbort;
         private System.Windows.Forms.DataGridView DgvSorters;
         private System.Windows.Forms.BindingSource iSorterBindingSource;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Run;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ClmRun;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ClmnBigO;
         private System.Windows.Forms.DataGridViewCheckBoxColumn stableDataGridViewCheckBoxColumn;

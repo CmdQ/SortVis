@@ -17,7 +17,7 @@ namespace SortVis
             private const string _message = "The result of {0} is not correctly sorted.";
 
             /// <summary>
-            /// Default construct with defaul message.
+            /// Default construct with default message.
             /// </summary>
             /// <param name="sorterName">Name of the sorter that failed.</param>
             public NotSortedException(string sorterName)

@@ -50,17 +50,20 @@ namespace SortVis
             {
                 sorter.Value.Name = sorter.Metadata.Name;
                 sorter.Value.BigO = GetLambda(sorter.Value.GetType().Assembly);
-#if !DEBUG
-                if (SortingCorrect(sorter.Value))
+
+                if (SortingCorrect(sorter.Value)
+#if DEBUG
+                    || true
 #endif
+                )
                 {
+                    sorter.Value.Run = sorter.Value.BigO != BigO.Squared
+                        || sorter.Value.Name == "Quicksort";
                     _sorters.Add(sorter.Value);
                 }
-#if !DEBUG
                 else
-#endif
                 {
-                    Trace.TraceInformation("Not adding {0}, because it does not work correctly.", sorter.Value.Name);
+                    Trace.TraceInformation("{0} does not work correctly.", sorter.Value.Name);
                 }
             }
 
@@ -82,11 +85,6 @@ namespace SortVis
             CmbGenerator.SelectedIndex = CmbGenerator.Items.IndexOf(_generators.Single(g => g is RandomGenerator && !(g is GaussianNoise)).Name);
 
             DgvSorters.DataSource = _sorters;
-            for (int i = 0; i < DgvSorters.RowCount; ++i)
-            {
-                // TODO: Set run check mark only to "quick" sorters by default.
-                DgvSorters.Rows[i].Cells["Run"].Value = _sorters[i].BigO != BigO.Squared;
-            }
         }
 
         /// <summary>
@@ -134,10 +132,9 @@ namespace SortVis
             var ui = SynchronizationContext.Current;
             for (int i = 0; i < _sorters.Count; ++i)
             {
-                var run = true; //TODO: Get run flag.
-                if (run)
+                var sorter = _sorters[i];
+                if (sorter.Run)
                 {
-                    var sorter = _sorters[i];
                     sorter.Abort = _cts.Token;
                     sorter.SteppedExecution = barrier;
                     sorter.SteppedExecution.AddParticipant();
