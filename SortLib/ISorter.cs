@@ -56,6 +56,11 @@ namespace SortLib
         long Milliseconds { get; }
 
         /// <summary>
+        /// Sets whether to run a sorter or not.
+        /// </summary>
+        bool Run { get; set; }
+
+        /// <summary>
         /// Tells whether this sorter is stable.
         /// </summary>
         bool Stable { get; }

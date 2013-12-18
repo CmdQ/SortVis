@@ -3,6 +3,9 @@ using System;
 
 namespace SortVis
 {
+    /// <summary>
+    /// Partially provides functionality from <see cref="ISorter"/> to use by inheriting.
+    /// </summary>
     public abstract partial class SorterBase : ISorter
     {
         /// <summary>
@@ -37,6 +40,15 @@ namespace SortVis
         /// Gets or sets the worst-case runtime class.
         /// </summary>
         public BigO BigO
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Sets whether to run a sorter or not.
+        /// </summary>
+        public bool Run
         {
             get;
             set;
