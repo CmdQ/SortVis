@@ -45,7 +45,6 @@
             this.BtnAll = new System.Windows.Forms.Button();
             this.BtnAbort = new System.Windows.Forms.Button();
             this.DgvSorters = new System.Windows.Forms.DataGridView();
-            this.iSorterBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ClmRun = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ClmnBigO = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,6 +53,7 @@
             this.writesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.millisecondsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArrayBitmap = new System.Windows.Forms.DataGridViewImageColumn();
+            this.iSorterBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.NumCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvSorters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iSorterBindingSource)).BeginInit();
@@ -149,12 +149,9 @@
             this.DgvSorters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DgvSorters.Size = new System.Drawing.Size(863, 548);
             this.DgvSorters.TabIndex = 6;
+            this.DgvSorters.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvSorters_ColumnHeaderMouseClick);
             this.DgvSorters.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DgvSorters_ColumnWidthChanged);
             this.DgvSorters.RowHeightChanged += new System.Windows.Forms.DataGridViewRowEventHandler(this.DgvSorters_RowHeightChanged);
-            // 
-            // iSorterBindingSource
-            // 
-            this.iSorterBindingSource.DataSource = typeof(SortLib.ISorter);
             // 
             // ClmRun
             // 
@@ -223,6 +220,10 @@
             this.ArrayBitmap.HeaderText = "Array state";
             this.ArrayBitmap.Name = "ArrayBitmap";
             this.ArrayBitmap.ReadOnly = true;
+            // 
+            // iSorterBindingSource
+            // 
+            this.iSorterBindingSource.DataSource = typeof(SortLib.ISorter);
             // 
             // FrmMain
             // 

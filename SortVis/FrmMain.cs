@@ -202,6 +202,22 @@ namespace SortVis
             BtnAbort_Click(this, e);
         }
 
+        private void DgvSorters_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var allChecked = _sorters.All(s => s.Run);
+            var oneChecked = _sorters.Any(s => s.Run);
+            if (oneChecked && !allChecked || !oneChecked)
+            {
+                _sorters.ForEach(s => s.Run = true);
+            }
+            else
+            {
+                _sorters.ForEach(s => s.Run = false);
+            }
+            DgvSorters.RefreshEdit();
+            DgvSorters.Refresh();
+        }
+
         #endregion
 
         #region Private helpers
@@ -243,8 +259,11 @@ namespace SortVis
                 for (int i = 0; i < _sorters.Count; ++i)
                 {
                     var sorter = _sorters[i];
-                    var imc = DgvSorters.Rows[i].SingleImageCell();
-                    imc.Value = sorter.Draw(_drawSize);
+                    if (sorter.Run)
+                    {
+                        var imc = DgvSorters.Rows[i].SingleImageCell();
+                        imc.Value = sorter.Draw(_drawSize);
+                    }
                 }
                 ResumeLayout();
             }
