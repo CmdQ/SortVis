@@ -26,6 +26,7 @@ namespace SortVis
         private CancellationTokenSource _cts;
         private int[] _numbers;
         private Size _drawSize;
+        private int _sorterRunning;
 
         #endregion
 
@@ -45,6 +46,7 @@ namespace SortVis
             _container = new CompositionContainer(catalog);
             _container.ComposeParts(this);
 
+            _sorterRunning = -1;
             _sorters = new List<ISorter>();
             foreach (var sorter in MefSorters)
             {
@@ -120,6 +122,7 @@ namespace SortVis
         private void BtnAll_Click(object sender, EventArgs e)
         {
             EnableUI(false);
+            _sorterRunning = int.MaxValue;
 
             _cts = new CancellationTokenSource();
             var barrier = new Barrier(0, DrawArrays);
@@ -142,7 +145,6 @@ namespace SortVis
                     tasks.Add(Task.Factory.StartNew(() =>
                     {
                         sorter.Sort();
-                        sorter.SteppedExecution = null;
                     }, _cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current));
                 }
             }
@@ -210,12 +212,50 @@ namespace SortVis
             DgvSorters.Refresh();
         }
 
+        private void DgvSorters_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || _sorterRunning >= 0)
+            {
+                // We don't care about a double click in the header.
+                return;
+            }
+
+            _sorterRunning = e.RowIndex;
+            EnableUI(false);
+            var ui = SynchronizationContext.Current;
+
+            _cts = new CancellationTokenSource();
+            var sorter = _sorters[e.RowIndex];
+            bool saveState = sorter.Run;
+            sorter.Run = true;
+            sorter.Abort = _cts.Token;
+            sorter.SteppedExecution = new Barrier(1, DrawArrays);
+            sorter.Numbers = _numbers;
+            Task.Run(() => sorter.Sort(), _cts.Token).ContinueWith(t =>
+                {
+                    ui.Post(delegate
+                    {
+                        DrawArrays(null);
+                        sorter.Run = saveState;
+                        EnableUI(true);
+                        DgvSorters.Refresh();
+                    }, null);
+                    _cts.Dispose();
+                    _cts = null;
+                });
+        }
+
         #endregion
 
         #region Private helpers
 
         private void EnableUI(bool onOff)
         {
+            if (onOff)
+            {
+                _sorterRunning = -1;
+            }
+
             var toDisable = new List<Control>()
             {
                 BtnAll,
@@ -247,17 +287,31 @@ namespace SortVis
         {
             try
             {
-                SuspendLayout();
-                for (int i = 0; i < _sorters.Count; ++i)
+                if (_sorterRunning >= 0 && _sorterRunning < int.MaxValue)
                 {
-                    var sorter = _sorters[i];
-                    if (sorter.Run)
+                    var imc = DgvSorters.Rows[_sorterRunning].SingleImageCell();
+                    imc.Value = _sorters[_sorterRunning].Draw(_drawSize);
+                }
+                else
+                {
+                    try
                     {
-                        var imc = DgvSorters.Rows[i].SingleImageCell();
-                        imc.Value = sorter.Draw(_drawSize);
+                        SuspendLayout();
+                        for (int i = 0; i < _sorters.Count; ++i)
+                        {
+                            var sorter = _sorters[i];
+                            if (sorter.Run)
+                            {
+                                var imc = DgvSorters.Rows[i].SingleImageCell();
+                                imc.Value = sorter.Draw(_drawSize);
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        ResumeLayout();
                     }
                 }
-                ResumeLayout();
             }
             catch (IndexOutOfRangeException)
             {

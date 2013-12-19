@@ -270,6 +270,7 @@ namespace SortVis
                 if (SteppedExecution != null)
                 {
                     SteppedExecution.RemoveParticipant();
+                    SteppedExecution = null;
                 }
 
                 CheckSortedness();

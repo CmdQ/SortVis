@@ -149,6 +149,7 @@
             this.DgvSorters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DgvSorters.Size = new System.Drawing.Size(863, 548);
             this.DgvSorters.TabIndex = 6;
+            this.DgvSorters.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvSorters_CellMouseDoubleClick);
             this.DgvSorters.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvSorters_ColumnHeaderMouseClick);
             this.DgvSorters.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DgvSorters_ColumnWidthChanged);
             this.DgvSorters.RowHeightChanged += new System.Windows.Forms.DataGridViewRowEventHandler(this.DgvSorters_RowHeightChanged);
