@@ -1,4 +1,12 @@
-﻿using SortLib;
+﻿// Define your strategy here.
+#define MEDIAN_RAND
+
+#if !(MEDIAN_OF_3 || MEDIAN_RAND || MEDIAN_MIDDLE)
+#warning Define one of the above median strategies for quicksort.
+#define MEDIAN_LAST
+#endif
+
+using SortLib;
 using SortVis;
 using System;
 using System.ComponentModel.Composition;
@@ -14,11 +22,11 @@ namespace n_squared
     public class QuickSort : SorterBase
     {
 #if MEDIAN_OF_3
-        private class PivotComarer : Comparer<Tuple<int,int>>
+        private class PivotComarer : System.Collections.Generic.Comparer<Tuple<int,int>>
         {
-            private Comparer<int> _comparer;
+            private System.Collections.Generic.Comparer<int> _comparer;
 
-            public PivotComarer(Comparer<int> Comparer)
+            public PivotComarer(System.Collections.Generic.Comparer<int> Comparer)
             {
                 this._comparer = Comparer;
             }
@@ -31,7 +39,7 @@ namespace n_squared
 
         private Tuple<int,int>[] _pivots;
         private PivotComarer _pivotCompare;
-#else
+#elif MEDIAN_RAND
         private Random _rand;
 #endif
 
@@ -41,7 +49,7 @@ namespace n_squared
         public QuickSort()
         {
             ConsideredBig = 8;
-#if !MEDIAN_OF_3
+#if MEDIAN_RAND
             _rand = new Random();
 #endif
         }
@@ -98,9 +106,11 @@ namespace n_squared
         /// <returns>The position of the chosen pivot element.</returns>
         private int Partition(int lo, int hi)
         {
+#if MEDIAN_LAST
+            int pivot = --hi;
+#elif MEDIAN_MIDDLE || MEDIAN_OF_3
             // Deterministic middle element, easily tricked.
-            //int pivot = lo + (hi - lo) / 2;
-
+            int pivot = lo + (hi - lo) / 2;
 #if MEDIAN_OF_3
             // Extract the first, the last and the value in the middle into a tiny array remembering the positions.
             _pivots[0] = Tuple.Create(Numbers[0], 0);
@@ -109,15 +119,19 @@ namespace n_squared
             // Sort them wrt. the values.
             InsertionSort.Sort(_pivots, 0, 3, _pivotCompare.Compare);
             // The median of 3 is then the position of the tuple in the middle.
-            int pivot = _pivots[1].Item2;
-#else
+            pivot = _pivots[1].Item2;
+#endif//MEDIAN_OF_3
+#elif MEDIAN_RAND
             // A randomly chosen pivot cannot be tricked and results almost always in O(n*log(n)) run time.
             int pivot = _rand.Next(lo, hi);
             // It should also be faster than sorting 3 values every time.
 #endif
+
+#if !MEDIAN_LAST
             // Swap the pivot to the right and concentrate on the values to the left of it.
             Swap(pivot, --hi);
             pivot = hi;
+#endif
 
             while (lo < hi)
             {
