@@ -124,6 +124,8 @@ namespace SortVis
             EnableUI(false);
             _sorterRunning = int.MaxValue;
 
+            bool fast = ModifierKeys == Keys.Shift;
+
             _cts = new CancellationTokenSource();
             var barrier = new Barrier(0, DrawArrays);
             var tasks = new List<Task>(_sorters.Count)
@@ -139,8 +141,11 @@ namespace SortVis
                 if (sorter.Run)
                 {
                     sorter.Abort = _cts.Token;
-                    sorter.SteppedExecution = barrier;
-                    sorter.SteppedExecution.AddParticipant();
+                    if (!fast)
+                    {
+                        sorter.SteppedExecution = barrier;
+                        sorter.SteppedExecution.AddParticipant();
+                    }
                     sorter.Numbers = _numbers;
                     tasks.Add(Task.Factory.StartNew(() =>
                     {
@@ -220,6 +225,8 @@ namespace SortVis
                 return;
             }
 
+            bool fast = ModifierKeys == Keys.Alt;
+
             _sorterRunning = e.RowIndex;
             EnableUI(false);
             var ui = SynchronizationContext.Current;
@@ -227,7 +234,10 @@ namespace SortVis
             _cts = new CancellationTokenSource();
             var sorter = _sorters[e.RowIndex];
             sorter.Abort = _cts.Token;
-            sorter.SteppedExecution = new Barrier(1, DrawArrays);
+            if (!fast)
+            {
+                sorter.SteppedExecution = new Barrier(1, DrawArrays);
+            }
             sorter.Numbers = _numbers;
             Task.Run(() => sorter.Sort(), _cts.Token).ContinueWith(t =>
                 {
