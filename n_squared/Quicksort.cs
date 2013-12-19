@@ -21,6 +21,32 @@ namespace n_squared
     [ExportMetadata("Name", "Quicksort")]
     public class QuickSort : SorterBase
     {
+        /// <summary>
+        /// Provides a place to store some code that must be executed when a block finishes (use with <c>using</c>).
+        /// </summary>
+        private class FinalAction : IDisposable
+        {
+            private readonly Action _finalAction;
+
+            /// <summary>
+            /// Registers code to be executed when this instance will be disposed.
+            /// </summary>
+            /// <param name="finalAction">The swap action to do on dying.</param>
+            public FinalAction(Action finalAction)
+            {
+                _finalAction = finalAction;
+            }
+
+            /// <summary>
+            /// Performs application-defined tasks associated with freeing, releasing,
+            /// or resetting unmanaged resources.
+            /// </summary>
+            public void Dispose()
+            {
+                _finalAction();
+            }
+        }
+
 #if MEDIAN_OF_3
         private class PivotComarer : System.Collections.Generic.Comparer<Tuple<int,int>>
         {
@@ -133,35 +159,34 @@ namespace n_squared
             pivot = hi;
 #endif
 
-            while (lo < hi)
+            using (var rs = new FinalAction(() => Swap(lo, pivot)))
             {
-                Abort.ThrowIfCancellationRequested();
-                while (CompareInArray(lo, pivot) <= 0)
+                while (lo < hi)
                 {
-                    // Increase the "left" pointer while its values are smaller than the pivot.
-                    if (++lo == hi)
+                    Abort.ThrowIfCancellationRequested();
+                    while (CompareInArray(lo, pivot) <= 0)
                     {
-                        // Pointers joined.
-                        goto partition_done;
+                        // Increase the "left" pointer while its values are smaller than the pivot.
+                        if (++lo == hi)
+                        {
+                            // Pointers joined.
+                            return lo;
+                        }
                     }
+                    do
+                    {
+                        // Decrease the "right" pointer while its values are greater than the pivot.
+                        if (--hi == lo)
+                        {
+                            // Pointers joined.
+                            return lo;
+                        }
+                    } while (CompareInArray(hi, pivot) >= 0);
+
+                    // "Left" now points to a big element in the left part and "right" points to a small element.
+                    Swap(lo++, hi);
                 }
-                do
-                {
-                    // Decrease the "right" pointer while its values are greater than the pivot.
-                    if (--hi == lo)
-                    {
-                        // Pointers joined.
-                        goto partition_done;
-                    }
-                } while (CompareInArray(hi, pivot) >= 0);
-
-                // "Left" now points to a big element in the left part and "right" points to a small element.
-                Swap(lo++, hi);
             }
-
-        partition_done:
-            // We still have to swap our pivot in the middle of the two parts.
-            Swap(lo, pivot);
 
             return lo;
         }
