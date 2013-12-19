@@ -204,16 +204,8 @@ namespace SortVis
 
         private void DgvSorters_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            var allChecked = _sorters.All(s => s.Run);
-            var oneChecked = _sorters.Any(s => s.Run);
-            if (oneChecked && !allChecked || !oneChecked)
-            {
-                _sorters.ForEach(s => s.Run = true);
-            }
-            else
-            {
-                _sorters.ForEach(s => s.Run = false);
-            }
+            bool b = !_sorters.All(s => s.Run);
+            _sorters.ForEach(s => s.Run = b);
             DgvSorters.RefreshEdit();
             DgvSorters.Refresh();
         }
