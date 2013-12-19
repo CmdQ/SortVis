@@ -53,6 +53,8 @@ namespace n_log_n
 
             if (l == h)
             {
+                // We wrote the whole left half to the swap space, i.e. our whole range is sorted.
+                Writes += l - lo;
                 return;
             }
 
@@ -60,6 +62,8 @@ namespace n_log_n
             Array.Copy(Numbers, l, store, cursor, mi - l);
             cursor += mi - l;
             Array.Copy(Numbers, h, store, cursor, hi - h);
+            // This costs that many write to swap space.
+            Writes += hi - lo;
 
             // Write back.
             for (mi = lo; mi < hi; ++mi)
@@ -71,7 +75,6 @@ namespace n_log_n
                     SortedTo = mi + 1;
                 }
             }
-            Writes += hi - lo;
         }
     }
 }
