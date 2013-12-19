@@ -438,13 +438,13 @@ namespace SortVis
             var swapBrush = new SolidBrush(_swapColor);
             var sortedBrush = new SolidBrush(_finishedGreen);
 
-            var bm = Draw(Run ? Numbers : null, size, SortedFrom, SortedTo, _min, _max);
+            var bm = Draw(Numbers, size, SortedFrom, SortedTo, _min, _max);
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
             using (var g = Graphics.FromImage(bm))
             {
                 float range = _max - _min;
 
-                if (Numbers == null || Numbers.Length == 0 || !Run)
+                if (Numbers == null || Numbers.Length == 0)
                 {
                     return bm;
                 }

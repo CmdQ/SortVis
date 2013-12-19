@@ -226,8 +226,6 @@ namespace SortVis
 
             _cts = new CancellationTokenSource();
             var sorter = _sorters[e.RowIndex];
-            bool saveState = sorter.Run;
-            sorter.Run = true;
             sorter.Abort = _cts.Token;
             sorter.SteppedExecution = new Barrier(1, DrawArrays);
             sorter.Numbers = _numbers;
@@ -236,7 +234,6 @@ namespace SortVis
                     ui.Post(delegate
                     {
                         DrawArrays(null);
-                        sorter.Run = saveState;
                         EnableUI(true);
                         DgvSorters.Refresh();
                     }, null);
