@@ -37,14 +37,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CmbGenerator = new System.Windows.Forms.ComboBox();
             this.NumCount = new System.Windows.Forms.NumericUpDown();
             this.BtnAll = new System.Windows.Forms.Button();
             this.BtnAbort = new System.Windows.Forms.Button();
             this.DgvSorters = new System.Windows.Forms.DataGridView();
+            this.iSorterBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ClmRun = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ClmnBigO = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,7 +54,6 @@
             this.writesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.millisecondsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArrayBitmap = new System.Windows.Forms.DataGridViewImageColumn();
-            this.iSorterBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.NumCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvSorters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iSorterBindingSource)).BeginInit();
@@ -156,6 +156,10 @@
             this.DgvSorters.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DgvSorters_ColumnWidthChanged);
             this.DgvSorters.RowHeightChanged += new System.Windows.Forms.DataGridViewRowEventHandler(this.DgvSorters_RowHeightChanged);
             // 
+            // iSorterBindingSource
+            // 
+            this.iSorterBindingSource.DataSource = typeof(SortLib.ISorter);
+            // 
             // ClmRun
             // 
             this.ClmRun.DataPropertyName = "Run";
@@ -190,8 +194,9 @@
             // comparesDataGridViewTextBoxColumn
             // 
             this.comparesDataGridViewTextBoxColumn.DataPropertyName = "Compares";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.comparesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Format = "#,##0";
+            this.comparesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.comparesDataGridViewTextBoxColumn.HeaderText = "Compares";
             this.comparesDataGridViewTextBoxColumn.Name = "comparesDataGridViewTextBoxColumn";
             this.comparesDataGridViewTextBoxColumn.ReadOnly = true;
@@ -200,8 +205,9 @@
             // writesDataGridViewTextBoxColumn
             // 
             this.writesDataGridViewTextBoxColumn.DataPropertyName = "Writes";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.writesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "#,##0";
+            this.writesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.writesDataGridViewTextBoxColumn.HeaderText = "Writes";
             this.writesDataGridViewTextBoxColumn.Name = "writesDataGridViewTextBoxColumn";
             this.writesDataGridViewTextBoxColumn.ReadOnly = true;
@@ -210,8 +216,9 @@
             // millisecondsDataGridViewTextBoxColumn
             // 
             this.millisecondsDataGridViewTextBoxColumn.DataPropertyName = "Milliseconds";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.millisecondsDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "#,##0";
+            this.millisecondsDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.millisecondsDataGridViewTextBoxColumn.HeaderText = "Milliseconds";
             this.millisecondsDataGridViewTextBoxColumn.Name = "millisecondsDataGridViewTextBoxColumn";
             this.millisecondsDataGridViewTextBoxColumn.ReadOnly = true;
@@ -223,10 +230,6 @@
             this.ArrayBitmap.HeaderText = "Array state";
             this.ArrayBitmap.Name = "ArrayBitmap";
             this.ArrayBitmap.ReadOnly = true;
-            // 
-            // iSorterBindingSource
-            // 
-            this.iSorterBindingSource.DataSource = typeof(SortLib.ISorter);
             // 
             // FrmMain
             // 
