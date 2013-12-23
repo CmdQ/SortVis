@@ -13,7 +13,7 @@ twice). If you internally do writes to a temporary array, increment the property
 
 Additionally, these three writing functions synchronize the sorter threads and trigger drawing of the arrays.
 
-For starters take a look at the popular—but bad—teaching example `BubbleSort`.
+For starters take a look at the popularï¿½but badï¿½teaching example `BubbleSort`.
 
 Plug-in mechanism
 ----------------
@@ -31,10 +31,10 @@ Running
 -------
 
 Select a number generator and the length of the array that should be sorted. Then select which ones should
-participate by checking the first column and click “Start all”. You can also run only a single sorter by
+participate by checking the first column and click ï¿½Start allï¿½. You can also run only a single sorter by
 double-clicking its row.
 
-An (un)check all functionality is available when clicking on the “Run” table header.
+An (un)check all functionality is available when clicking on the ï¿½Runï¿½ table header.
 
-To run the sorters without animation—thus much faster and more suitable for a benchmark—click the start button
-holding shift. To run a single sorter without animation hold Alt when double-clicking.
+To run the sorters without animationï¿½thus much faster and more suitable for a benchmarkï¿½click the start button
+holding Shift. To run a single sorter without animation hold Alt when double-clicking.
