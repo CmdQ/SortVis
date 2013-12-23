@@ -37,9 +37,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CmbGenerator = new System.Windows.Forms.ComboBox();
             this.NumCount = new System.Windows.Forms.NumericUpDown();
             this.BtnAll = new System.Windows.Forms.Button();
@@ -80,7 +80,7 @@
             0});
             this.NumCount.Location = new System.Drawing.Point(775, 12);
             this.NumCount.Maximum = new decimal(new int[] {
-            1000000,
+            9999999,
             0,
             0,
             0});
@@ -99,6 +99,7 @@
             0,
             0});
             this.NumCount.ValueChanged += new System.EventHandler(this.NumCount_ValueChanged);
+            this.NumCount.Enter += new System.EventHandler(this.NumCount_Enter);
             // 
             // BtnAll
             // 
@@ -114,6 +115,7 @@
             // BtnAbort
             // 
             this.BtnAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnAbort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.BtnAbort.Enabled = false;
             this.BtnAbort.Location = new System.Drawing.Point(800, 593);
             this.BtnAbort.Name = "BtnAbort";
@@ -188,8 +190,8 @@
             // comparesDataGridViewTextBoxColumn
             // 
             this.comparesDataGridViewTextBoxColumn.DataPropertyName = "Compares";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.comparesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.comparesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.comparesDataGridViewTextBoxColumn.HeaderText = "Compares";
             this.comparesDataGridViewTextBoxColumn.Name = "comparesDataGridViewTextBoxColumn";
             this.comparesDataGridViewTextBoxColumn.ReadOnly = true;
@@ -198,8 +200,8 @@
             // writesDataGridViewTextBoxColumn
             // 
             this.writesDataGridViewTextBoxColumn.DataPropertyName = "Writes";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.writesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.writesDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle8;
             this.writesDataGridViewTextBoxColumn.HeaderText = "Writes";
             this.writesDataGridViewTextBoxColumn.Name = "writesDataGridViewTextBoxColumn";
             this.writesDataGridViewTextBoxColumn.ReadOnly = true;
@@ -208,8 +210,8 @@
             // millisecondsDataGridViewTextBoxColumn
             // 
             this.millisecondsDataGridViewTextBoxColumn.DataPropertyName = "Milliseconds";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.millisecondsDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.millisecondsDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
             this.millisecondsDataGridViewTextBoxColumn.HeaderText = "Milliseconds";
             this.millisecondsDataGridViewTextBoxColumn.Name = "millisecondsDataGridViewTextBoxColumn";
             this.millisecondsDataGridViewTextBoxColumn.ReadOnly = true;
@@ -228,8 +230,10 @@
             // 
             // FrmMain
             // 
+            this.AcceptButton = this.BtnAll;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.BtnAbort;
             this.ClientSize = new System.Drawing.Size(887, 628);
             this.Controls.Add(this.DgvSorters);
             this.Controls.Add(this.BtnAbort);

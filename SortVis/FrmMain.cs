@@ -196,6 +196,11 @@ namespace SortVis
             Redraw();
         }
 
+        private void NumCount_Enter(object sender, EventArgs e)
+        {
+            NumCount.Select(0, 255);
+        }
+
         private void BtnAbort_Click(object sender, EventArgs e)
         {
             if (_cts != null && _cts.Token.CanBeCanceled)
@@ -211,6 +216,10 @@ namespace SortVis
 
         private void DgvSorters_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.ColumnIndex > 0)
+            {
+                return;
+            }
             bool b = !_sorters.All(s => s.Run);
             _sorters.ForEach(s => s.Run = b);
             DgvSorters.RefreshEdit();
