@@ -37,4 +37,4 @@ double-clicking its row.
 An (un)check all functionality is available when clicking on the “Run” table header.
 
 To run the sorters without animation—thus much faster and more suitable for a benchmark—click the start button
-holding shift. To run a single sorter without animation hold Alt when double-clicking.
+holding Shift. To run a single sorter without animation hold Alt when double-clicking.
