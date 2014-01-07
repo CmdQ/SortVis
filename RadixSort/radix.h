@@ -40,6 +40,11 @@ namespace SortVis
             int const bits = numeric_limits<value_type>::digits;
             auto const n = distance(first, last);
 
+            if (n < 2)
+            {
+                return;
+            }
+
             vector<value_type> swaps(n);
 
             // All "normal" bits.
@@ -67,6 +72,7 @@ namespace SortVis
                 }
             }
 
+            // For twos-complement numbers, we have to do a special pass for the highest bit.
             if (numeric_limits<value_type>::is_signed)
             {
                 auto front = swaps.begin();

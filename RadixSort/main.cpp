@@ -38,9 +38,13 @@ int main()
 {
     using namespace SortVis;
 
+    vector<char> empty;
+    vector<char> tiny(1);
     vector<int> positive{ 541, 212, 5125, 6342, 61, 243, 15, 99, 1234, 123, 1524 };
     vector<int> negative{ 541, -212, 5125, 6342, -61, -243, 15, -99, 1234, -123, 1524 };
 
+    test(empty);
+    test(tiny);
     test(cast<int, unsigned short>(positive));
     test(cast<int, short>(positive));
     test(cast<int, unsigned int>(positive));
