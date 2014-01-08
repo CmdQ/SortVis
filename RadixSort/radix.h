@@ -47,7 +47,7 @@ namespace SortVis
 
             vector<value_type> swaps(n);
 
-            // All "normal" bits.
+            // All "normal" bits starting with the least significant one (makes it a stable sort).
             for (int b = 0; b < bits; ++b)
             {
                 auto front = swaps.begin();
@@ -60,16 +60,8 @@ namespace SortVis
                     continue;
                 }
 
-                auto writeBack = first;
-                for (auto iter = swaps.begin(); iter != front; ++iter)
-                {
-                    *writeBack++ = *iter;
-                }
-
-                for (auto iter = --swaps.end(); writeBack != last; --iter)
-                {
-                    *writeBack++ = *iter;
-                }
+                auto continueHere = move(swaps.begin(), front, first);
+                move(swaps.rbegin(), reverse_iterator<Iter>(front), continueHere);
             }
 
             // For twos-complement numbers, we have to do a special pass for the highest bit.
@@ -80,18 +72,10 @@ namespace SortVis
 
                 partition(first, last, numeric_limits<value_type>::lowest(), front, back);
 
-                if (front-- != swaps.end())
+                if (front != swaps.end())
                 {
-                    auto writeBack = first;
-                    for (auto iter = --swaps.end(); iter != front; --iter)
-                    {
-                        *writeBack++ = *iter;
-                    }
-                    for (auto iter = swaps.begin(); writeBack != last; ++iter)
-                    {
-                        *writeBack++ = *iter;
-                    }
-
+                    auto continueHere = move(swaps.rbegin(), reverse_iterator<Iter>(front), first);
+                    move(swaps.begin(), front, continueHere);
                 }
             }
         }
