@@ -384,18 +384,15 @@ namespace SortVis
         /// </summary>
         /// <param name="numbers">The numbers to draw.</param>
         /// <param name="size">The size of the output bitmap.</param>
-        /// <param name="sortedFrom">The index where the sorted part begins.</param>
-        /// <param name="sortedTo">The index where the sorted part ends.</param>
         /// <param name="min">A precomputed minimum, use <c>null</c> to be computed.</param>
         /// <param name="max">A precomputed maximum, use <c>null</c> to be computed.</param>
         /// <returns>A bitmap that can be displayed.</returns>
-        public static Bitmap Draw(int[] numbers, Size size, int sortedFrom = 0, int sortedTo = 0, float? min = null, float? max = null)
+        public static Bitmap Draw(int[] numbers, Size size, float? min = null, float? max = null)
         {
             // I want to use these colors.
             var background = Color.White;
 
             var blockBrush = new SolidBrush(_grayBlock);
-            var finishedBrush = new SolidBrush(_finishedGreen);
 
             var bm = new Bitmap(size.Width, size.Height);
             using (var g = Graphics.FromImage(bm))
@@ -417,7 +414,7 @@ namespace SortVis
                 {
                     var num = numbers[i];
 
-                    g.FillRectangle(i >= sortedFrom && i < sortedTo ? finishedBrush : blockBrush,
+                    g.FillRectangle(blockBrush,
                     i * width, 0,
                     width, range > 0.0f ? (num - min.Value) / range * size.Height : size.Height / 2);
                 }
@@ -438,7 +435,7 @@ namespace SortVis
             var swapBrush = new SolidBrush(_swapColor);
             var sortedBrush = new SolidBrush(_finishedGreen);
 
-            var bm = Draw(Numbers, size, SortedFrom, SortedTo, _min, _max);
+            var bm = Draw(Numbers, size, _min, _max);
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
             using (var g = Graphics.FromImage(bm))
             {
@@ -458,7 +455,7 @@ namespace SortVis
                     {
                         brush = swapBrush;
                     }
-                    else if (i >= SortedFrom && i < SortedTo)
+                    else if (IsPartiallySorted(i))
                     {
                         brush = sortedBrush;
                     }
@@ -474,6 +471,16 @@ namespace SortVis
             bm.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
             return bm;
+        }
+
+        /// <summary>
+        /// Check whether an array index falls into a partially sorted range.
+        /// </summary>
+        /// <param name="i">An index into the array to be sorted.</param>
+        /// <returns><c>true</c> if in a sorted part, <c>false</c> otherwise.</returns>
+        protected virtual bool IsPartiallySorted(int i)
+        {
+            return i >= SortedFrom && i < SortedTo;
         }
 
         /// <summary>

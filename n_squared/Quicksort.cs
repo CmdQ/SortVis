@@ -9,7 +9,9 @@
 using SortLib;
 using SortVis;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 
 namespace n_squared
 {
@@ -68,6 +70,7 @@ namespace n_squared
 #elif MEDIAN_RAND
         private Random _rand;
 #endif
+        private readonly List<Tuple<int, int>> _sortedRanges;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QuickSort"/> class.
@@ -75,6 +78,7 @@ namespace n_squared
         public QuickSort()
         {
             ConsideredBig = 8;
+            _sortedRanges = new List<Tuple<int, int>>();
 #if MEDIAN_RAND
             _rand = new Random();
 #endif
@@ -89,6 +93,7 @@ namespace n_squared
             _pivots = new Tuple<int,int>[3];
             _pivotCompare = new PivotComarer(Comparer);
 #endif
+            _sortedRanges.Clear();
             SortIt(0, Numbers.Length);
         }
 
@@ -111,6 +116,7 @@ namespace n_squared
                 {
                     // Left half is bigger, so recurse in smaller half...
                     SortIt(pivot, hi);
+                    _sortedRanges.Add(Tuple.Create(pivot, hi));
                     // ... and sort smaller by resetting bounds.
                     hi = pivot;
                 }
@@ -118,6 +124,7 @@ namespace n_squared
                 {
                     // Right half is bigger, so recurse in smaller half.
                     SortIt(lo, pivot);
+                    _sortedRanges.Add(Tuple.Create(lo, pivot));
                     // ... and sort smaller by resetting bounds.
                     lo = pivot;
                 }
@@ -189,6 +196,23 @@ namespace n_squared
             }
 
             return lo;
+        }
+
+        /// <summary>
+        /// Check whether an array index falls into a partially sorted range.
+        /// </summary>
+        /// <param name="i">An index into the array to be sorted.</param>
+        /// <returns>
+        ///   <c>true</c> if in a sorted part, <c>false</c> otherwise.
+        /// </returns>
+        protected override bool IsPartiallySorted(int i)
+        {
+            if (base.IsPartiallySorted(i))
+            {
+                return true;
+            }
+
+            return _sortedRanges.Exists(tup => i >= tup.Item1 && i < tup.Item2);
         }
     }
 }
