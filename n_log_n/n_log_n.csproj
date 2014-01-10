@@ -36,11 +36,16 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalancedQuicksort.cs" />
     <Compile Include="Heapsort.cs" />
     <Compile Include="Mergesort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\n_squared\n_squared.csproj">
+      <Project>{dc9815ae-1e38-4562-a1f0-ab6f7b174392}</Project>
+      <Name>n_squared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SortLib\SortLib.csproj">
       <Project>{6560b777-2ca5-4a34-beee-e4c142834dac}</Project>
       <Name>SortLib</Name>

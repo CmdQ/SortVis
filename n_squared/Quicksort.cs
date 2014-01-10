@@ -224,6 +224,7 @@ namespace n_squared
                 return true;
             }
 
+            // TODO: This is highly inefficient!
             return _sortedRanges.Exists(tup => i >= tup.Item1 && i < tup.Item2);
         }
     }
