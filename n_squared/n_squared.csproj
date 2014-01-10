@@ -38,7 +38,6 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HeapInsertion.cs" />
     <Compile Include="Quicksort.cs" />
     <Compile Include="ShellSort.cs" />
     <Compile Include="Insertionsort.cs" />
@@ -48,10 +47,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\n_log_n\n_log_n.csproj">
-      <Project>{3959f195-03b7-4911-a072-5e96dc38a74f}</Project>
-      <Name>n_log_n</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SortLib\SortLib.csproj">
       <Project>{6560b777-2ca5-4a34-beee-e4c142834dac}</Project>
       <Name>SortLib</Name>

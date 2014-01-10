@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "n", "n\n.csproj", "{A96FA15
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RadixSort", "RadixSort\RadixSort.vcxproj", "{79F64029-4380-4A77-B218-06E93723BA28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeapBased", "HeapBased\HeapBased.csproj", "{B746442E-7A14-4EE0-9D84-1797DA1500DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,16 @@ Global
 		{79F64029-4380-4A77-B218-06E93723BA28}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{79F64029-4380-4A77-B218-06E93723BA28}.Release|Win32.ActiveCfg = Release|Win32
 		{79F64029-4380-4A77-B218-06E93723BA28}.Release|Win32.Build.0 = Release|Win32
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
