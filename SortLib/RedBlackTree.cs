@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -142,8 +143,9 @@ namespace SortLib
 
         private void ColorFlip(Node h)
         {
-            h._color = RED;
-            h._left._color = h._right._color = BLACK;
+            Debug.Assert(h._left._color == h._right._color && h._left._color == !h._color);
+            h._left._color = h._right._color = h._color;
+            h._color = !h._color;
         }
     }
 }
