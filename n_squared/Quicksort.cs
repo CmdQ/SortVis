@@ -139,26 +139,7 @@ namespace n_squared
         /// <returns>The position of the chosen pivot element.</returns>
         private int Partition(int lo, int hi)
         {
-#if MEDIAN_LAST
-            int pivot = --hi;
-#elif MEDIAN_MIDDLE || MEDIAN_OF_3
-            // Deterministic middle element, easily tricked.
-            int pivot = lo + (hi - lo) / 2;
-#if MEDIAN_OF_3
-            // Extract the first, the last and the value in the middle into a tiny array remembering the positions.
-            _pivots[0] = Tuple.Create(Numbers[0], 0);
-            _pivots[1] = Tuple.Create(Numbers[pivot], pivot);
-            _pivots[2] = Tuple.Create(Numbers[hi - 1], hi - 1);
-            // Sort them wrt. the values.
-            InsertionSort.Sort(_pivots, 0, 3, _pivotCompare.Compare);
-            // The median of 3 is then the position of the tuple in the middle.
-            pivot = _pivots[1].Item2;
-#endif//MEDIAN_OF_3
-#elif MEDIAN_RAND
-            // A randomly chosen pivot cannot be tricked and results almost always in O(n*log(n)) run time.
-            int pivot = _rand.Next(lo, hi);
-            // It should also be faster than sorting 3 values every time.
-#endif
+            int pivot = ChoosePivot(lo, ref hi);
 
 #if !MEDIAN_LAST
             // Swap the pivot to the right and concentrate on the values to the left of it.
@@ -196,6 +177,37 @@ namespace n_squared
             }
 
             return lo;
+        }
+
+        /// <summary>
+        /// Chooses a pivot element in the range [lo; hi[.
+        /// </summary>
+        /// <param name="lo">Inclusive lower bound.</param>
+        /// <param name="hi">Exclusive upper bound.</param>
+        /// <returns>An index where the chosen pivot element is to be found.</returns>
+        protected virtual int ChoosePivot(int lo, ref int hi)
+        {
+#if MEDIAN_LAST
+            return --hi;
+#elif MEDIAN_MIDDLE || MEDIAN_OF_3
+            // Deterministic middle element, easily tricked.
+            int pivot = lo + (hi - lo) / 2;
+#if MEDIAN_OF_3
+            // Extract the first, the last and the value in the middle into a tiny array remembering the positions.
+            _pivots[0] = Tuple.Create(Numbers[0], 0);
+            _pivots[1] = Tuple.Create(Numbers[pivot], pivot);
+            _pivots[2] = Tuple.Create(Numbers[hi - 1], hi - 1);
+            // Sort them wrt. the values.
+            InsertionSort.Sort(_pivots, 0, 3, _pivotCompare.Compare);
+            // The median of 3 is then the position of the tuple in the middle.
+            pivot = _pivots[1].Item2;
+#endif//MEDIAN_OF_3
+            return pivot;
+#elif MEDIAN_RAND
+            // A randomly chosen pivot cannot be tricked and results almost always in O(n*log(n)) run time.
+            return _rand.Next(lo, hi);
+            // It should also be faster than sorting 3 values every time.
+#endif
         }
 
         /// <summary>
