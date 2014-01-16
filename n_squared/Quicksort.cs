@@ -99,16 +99,9 @@ namespace n_squared
 
         private void SortIt(int lo, int hi)
         {
-            while (lo < hi)
+            while (hi - lo >= ConsideredBig)
             {
                 Abort.ThrowIfCancellationRequested();
-                if (hi - lo < ConsideredBig)
-                {
-                    // If the interval gets to small, we don't bother with quicksort and use insertion sort.
-                    InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
-                    return;
-                }
-
 
                 int pivot = Partition(lo, hi);
 
@@ -122,12 +115,23 @@ namespace n_squared
                 }
                 else
                 {
+                    if (lo == pivot)
+                    {
+                        // Without this we can end up in infinity.
+                        break;
+                    }
                     // Right half is bigger, so recurse in smaller half.
                     SortIt(lo, pivot);
                     _sortedRanges.Add(Tuple.Create(lo, pivot));
                     // ... and sort smaller by resetting bounds.
                     lo = pivot;
                 }
+            }
+            if (hi - lo > 1)
+            {
+                // If the interval gets to small, we don't bother with quicksort and use insertion sort.
+                InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
+                return;
             }
         }
 

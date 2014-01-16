@@ -39,7 +39,7 @@ namespace n_log_n
             Writes += count;
 
             int pivotValue = Recurse(lo, hi);
-            return Array.IndexOf(Numbers, pivotValue);
+            return Array.IndexOf(Numbers, pivotValue, lo);
         }
 
         private int Recurse(int lo, int hi)
