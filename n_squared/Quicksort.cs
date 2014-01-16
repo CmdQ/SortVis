@@ -29,23 +29,52 @@ namespace n_squared
         private class FinalAction : IDisposable
         {
             private readonly Action _finalAction;
+            private bool _disposed;
 
             /// <summary>
             /// Registers code to be executed when this instance will be disposed.
             /// </summary>
             /// <param name="finalAction">The swap action to do on dying.</param>
-            public FinalAction(Action finalAction)
+            private FinalAction(Action finalAction)
             {
+                _disposed = false;
                 _finalAction = finalAction;
+            }
+
+            /// <summary>
+            /// Creates an object that will perform a lambda when it goes
+            /// </summary>
+            /// <param name="action">A lambda to execute.</param>
+            /// <returns>An object with a bound lambda or <c>null</c> if the lambda was <c>null</c>.</returns>
+            public static FinalAction DoOnDispose(Action action)
+            {
+                if (action == null)
+                {
+                    return null;
+                }
+
+                return new FinalAction(action);
             }
 
             /// <summary>
             /// Performs application-defined tasks associated with freeing, releasing,
             /// or resetting unmanaged resources.
             /// </summary>
-            public void Dispose()
+            void IDisposable.Dispose()
             {
-                _finalAction();
+                FinishEarly();
+            }
+
+            /// <summary>
+            /// Does the cleanup work early.
+            /// </summary>
+            public void FinishEarly()
+            {
+                if (!_disposed)
+                {
+                    _finalAction();
+                    _disposed = true;
+                }
             }
         }
 
@@ -151,7 +180,7 @@ namespace n_squared
             pivot = hi;
 #endif
 
-            using (var rs = new FinalAction(() => Swap(lo, pivot)))
+            using (var rs = FinalAction.DoOnDispose(() => Swap(lo, pivot)))
             {
                 while (lo < hi)
                 {
