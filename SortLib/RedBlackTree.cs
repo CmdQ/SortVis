@@ -53,7 +53,7 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class with contents.
         /// </summary>
         /// <param name="keys">The keys to insert.</param>
         /// <param name="values">According values to insert.</param>
@@ -62,12 +62,12 @@ namespace SortLib
         {
             if (keys.Count() != values.Count())
             {
-                throw new IndexOutOfRangeException("The sequences are not equal in length.");
+                throw new ArgumentException("The sequences are not equal in length.");
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class with contents.
         /// </summary>
         /// <param name="pairs">The key-value-pairs to insert.</param>
         public RedBlackTree(IEnumerable<KeyValuePair<K, V>> pairs)
@@ -76,7 +76,7 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class with contents.
         /// </summary>
         /// <param name="pairs">The key-value-pairs to insert.</param>
         public RedBlackTree(IEnumerable<Tuple<K, V>> pairs)
