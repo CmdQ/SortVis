@@ -60,6 +60,8 @@ namespace Unittest
                     return t;
                 });
 
+                Assert.That(list.Count, Is.EqualTo(rbt.Count));
+
                 var flatSet = list.ToList();
                 var flatTree = rbt.Select(e => e.Key).ToList();
 

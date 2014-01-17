@@ -126,12 +126,14 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Counts the elements in this tree.
+        /// Gets the number of elements in this tree.
         /// </summary>
-        /// <returns>The number of elements found.</returns>
-        public int Count()
+        public int Count
         {
-            return Count(_root);
+            get
+            {
+                return CountNodes(_root);
+            }
         }
 
         /// <summary>
@@ -183,9 +185,9 @@ namespace SortLib
             return acc;
         }
 
-        private int Count(Node node)
+        private int CountNodes(Node node)
         {
-            return node == null ? 0 : 1 + Count(node.Left) + Count(node.Right);
+            return node == null ? 0 : 1 + CountNodes(node.Left) + CountNodes(node.Right);
         }
 
         private Node Insert(Node h, K key, V value)
