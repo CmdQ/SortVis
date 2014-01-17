@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SortLib
     /// A left-leaning variant of a red-black tree. Especially wrt. deletion it's
     /// supposed to be easier to implement.
     /// </summary>
-    public class RedBlackTree<K, V> where K : IComparable<K>
+    public class RedBlackTree<K, V> : IEnumerable<KeyValuePair<K, V>> where K : IComparable<K>
     {
         private class Node
         {
@@ -45,6 +46,48 @@ namespace SortLib
         private Node _root;
 
         /// <summary>
+        /// Initializes an empty instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// </summary>
+        public RedBlackTree()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// </summary>
+        /// <param name="keys">The keys to insert.</param>
+        /// <param name="values">According values to insert.</param>
+        public RedBlackTree(IEnumerable<K> keys, IEnumerable<V> values)
+            : this(keys.Zip(values, (k, v) => Tuple.Create(k, v)))
+        {
+            if (keys.Count() != values.Count())
+            {
+                throw new IndexOutOfRangeException("The sequences are not equal in length.");
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// </summary>
+        /// <param name="pairs">The key-value-pairs to insert.</param>
+        public RedBlackTree(IEnumerable<KeyValuePair<K, V>> pairs)
+            : this(pairs.Select(p => Tuple.Create(p.Key, p.Value)))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// </summary>
+        /// <param name="pairs">The key-value-pairs to insert.</param>
+        public RedBlackTree(IEnumerable<Tuple<K, V>> pairs)
+        {
+            foreach (var pair in pairs)
+            {
+                Add(pair.Item1, pair.Item2);
+            }
+        }
+
+        /// <summary>
         /// Determines whether the specified <paramref name="key"/> is contained in the tree.
         /// </summary>
         /// <param name="key">The key to search for.</param>
@@ -76,7 +119,7 @@ namespace SortLib
         /// </summary>
         /// <param name="key">The key to insert.</param>
         /// <param name="value">The value associated with it.</param>
-        public void Insert(K key, V value)
+        public void Add(K key, V value)
         {
             _root = Insert(_root, key, value);
             _root.Color = BLACK;
@@ -89,6 +132,55 @@ namespace SortLib
         public int Count()
         {
             return Count(_root);
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+        {
+            return GetEnumerator(_root, new LinkedList<KeyValuePair<K, V>>()).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        internal int MaxDepth()
+        {
+            return MaxDepth(_root);
+        }
+
+        private LinkedList<KeyValuePair<K, V>> GetEnumerator(Node node, LinkedList<KeyValuePair<K, V>> acc, int side = 0)
+        {
+            if (node == null)
+            {
+                return acc;
+            }
+
+            if (side < 0)
+            {
+                acc.AddFirst(new KeyValuePair<K, V>(node.Key, node.Value));
+            }
+            else
+            {
+                acc.AddLast(new KeyValuePair<K, V>(node.Key, node.Value));
+            }
+
+            if (node.Left != null)
+            {
+                GetEnumerator(node.Left, acc, -1);
+            }
+            if (node.Right != null)
+            {
+                GetEnumerator(node.Right, acc, 1);
+            }
+
+            return acc;
         }
 
         private int Count(Node node)
@@ -160,6 +252,16 @@ namespace SortLib
             Debug.Assert(h.Left.Color == h.Right.Color && h.Left.Color == !h.Color);
             h.Left.Color = h.Right.Color = h.Color;
             h.Color = !h.Color;
+        }
+
+        private int MaxDepth(Node node)
+        {
+            if (node == null)
+            {
+                return 0;
+            }
+
+            return 1 + Math.Max(MaxDepth(node.Left), MaxDepth(node.Right));
         }
     }
 }
