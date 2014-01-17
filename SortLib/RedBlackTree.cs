@@ -18,11 +18,11 @@ namespace SortLib
         {
             private readonly K _key;
 
-            public bool Color { get; set; }
-            public Node Left { get; set; }
-            public Node Right { get; set; }
-            public V Value { get; set; }
-
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Node"/> class.
+            /// </summary>
+            /// <param name="key">The fixed key which we associate a <paramref name="value"/> with.</param>
+            /// <param name="value">The value for that <paramref name="key"/>.</param>
             public Node(K key, V value)
             {
                 _key = key;
@@ -31,6 +31,34 @@ namespace SortLib
                 Left = Right = null;
             }
 
+            /// <summary>
+            /// Gets or sets the color of this node.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if red; <c>false</c> for black.
+            /// </value>
+            /// <seealso cref="RED"/>
+            /// <seealso cref="BLACK"/>
+            public bool Color { get; set; }
+
+            /// <summary>
+            /// Gets or sets the left child.
+            /// </summary>
+            public Node Left { get; set; }
+
+            /// <summary>
+            /// Gets or sets the right child.
+            /// </summary>
+            public Node Right { get; set; }
+
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
+            public V Value { get; set; }
+
+            /// <summary>
+            /// Gets the key.
+            /// </summary>
             public K Key
             {
                 get
