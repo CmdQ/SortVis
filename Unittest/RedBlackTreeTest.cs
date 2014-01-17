@@ -71,7 +71,8 @@ namespace Unittest
                     (a, b) => Tuple.Create(a, b)));
 
                 var depth = rbt.MaxDepth();
-                Assert.That(depth, Is.LessThanOrEqualTo(Math.Log(list.Count, 2.0) * 2.0),
+                var theory = Math.Log(list.Count, 2.0) * 2.0;
+                Assert.That(depth, Is.LessThanOrEqualTo(theory),
                     "The tree is not well balanced.");
             });
         }
@@ -99,7 +100,7 @@ namespace Unittest
         private void WithRandomNumbers(Action<SortedSet<int>> test)
         {
             List<int> lengths = Enumerable.Range(0, 10).ToList();
-            lengths.AddRange(new int[] { 64, 65, 66, 67 });
+            lengths.AddRange(new int[] { 63, 64, 65, 66, 67 });
 
             var rand = new Random();
 

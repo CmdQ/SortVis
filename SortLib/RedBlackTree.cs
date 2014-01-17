@@ -172,7 +172,7 @@ namespace SortLib
         /// </returns>
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
         {
-            return GetEnumerator(_root, new LinkedList<KeyValuePair<K, V>>()).GetEnumerator();
+            return GetEnumerator(_root).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -180,32 +180,48 @@ namespace SortLib
             return GetEnumerator();
         }
 
-        private LinkedList<KeyValuePair<K, V>> GetEnumerator(Node node, LinkedList<KeyValuePair<K, V>> acc, int side = 0)
+        private LinkedList<KeyValuePair<K, V>> GetEnumerator(Node node, LinkedListNode<KeyValuePair<K, V>> acc = null)
         {
-            if (node == null)
+            // First iteration.
+            if (acc == null)
             {
-                return acc;
-            }
-
-            if (side < 0)
-            {
-                acc.AddFirst(new KeyValuePair<K, V>(node.Key, node.Value));
+                var ll = new LinkedList<KeyValuePair<K, V>>();
+                if (node == null)
+                {
+                    return ll;
+                }
+                var onlyNode = ll.AddFirst(new KeyValuePair<K, V>(node.Key, node.Value));
+                if (node.Left != null)
+                {
+                    GetEnumerator(node.Left, onlyNode);
+                }
+                if (node.Right != null)
+                {
+                    GetEnumerator(node.Right, onlyNode);
+                }
+                return ll;
             }
             else
             {
-                acc.AddLast(new KeyValuePair<K, V>(node.Key, node.Value));
+                if (node == null)
+                {
+                    return acc.List;
+                }
+                if (node.Key.CompareTo(acc.Value.Key) < 0)
+                {
+                    var newNode = acc.List.AddBefore(acc, new KeyValuePair<K, V>(node.Key, node.Value));
+                    GetEnumerator(node.Left, newNode);
+                    GetEnumerator(node.Right, newNode);
+                }
+                else
+                {
+                    var newNode = acc.List.AddAfter(acc, new KeyValuePair<K, V>(node.Key, node.Value));
+                    GetEnumerator(node.Left, newNode);
+                    GetEnumerator(node.Right, newNode);
+                }
             }
 
-            if (node.Left != null)
-            {
-                GetEnumerator(node.Left, acc, -1);
-            }
-            if (node.Right != null)
-            {
-                GetEnumerator(node.Right, acc, 1);
-            }
-
-            return acc;
+            return acc.List;
         }
 
         private int CountNodes(Node node)
