@@ -10,6 +10,33 @@ namespace Unittest
     public class RedBlackTreeTest
     {
         [TestCase]
+        public void TestBalancedness()
+        {
+            var sequence = new RedBlackTree<int, bool>(Enumerable.Range(1, 7), Enumerable.Repeat(true, 7));
+
+            var perfect = new RedBlackTree<int, bool>();
+            perfect.Add(4, false);
+            perfect.Add(2, false);
+            perfect.Add(1, true);
+            perfect.Add(3, true);
+            perfect.Add(6, false);
+            perfect.Add(5, true);
+            perfect.Add(7, true);
+
+            Assert.That(perfect.MaxDepth(), Is.EqualTo(3));
+        }
+
+        [TestCase]
+        public void TestOrderedness()
+        {
+            WithRandomNumbers(list =>
+                {
+                    var rbt = new RedBlackTree<int, bool>(list, Enumerable.Repeat(true, list.Count));
+                    Assert.That(rbt.AreNodesOrdered(), Is.True);
+                });
+        }
+
+        [TestCase]
         public void TestCtors()
         {
             var empty = new RedBlackTree<char, string>();

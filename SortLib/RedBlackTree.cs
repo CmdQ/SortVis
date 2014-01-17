@@ -14,7 +14,7 @@ namespace SortLib
     /// </summary>
     public class RedBlackTree<K, V> : IEnumerable<KeyValuePair<K, V>> where K : IComparable<K>
     {
-        private class Node
+        internal class Node
         {
             private readonly K _key;
 
@@ -71,7 +71,7 @@ namespace SortLib
         private const bool RED = true;
         private const bool BLACK = false;
 
-        private Node _root;
+        internal Node _root;
 
         /// <summary>
         /// Initializes an empty instance of the <see cref="RedBlackTree{K, V}"/> class.
@@ -180,11 +180,6 @@ namespace SortLib
             return GetEnumerator();
         }
 
-        internal int MaxDepth()
-        {
-            return MaxDepth(_root);
-        }
-
         private LinkedList<KeyValuePair<K, V>> GetEnumerator(Node node, LinkedList<KeyValuePair<K, V>> acc, int side = 0)
         {
             if (node == null)
@@ -263,18 +258,25 @@ namespace SortLib
 
         private Node RotateRight(Node h)
         {
-            Node left = h.Left;
-            h.Left = left.Right;
-            left.Right = h;
-            return left;
+            Node x = h.Left;
+            h.Left = x.Right;
+            x.Right = h;
+            return FixColorAfterRotation(h, x);
+        }
+
+        private static Node FixColorAfterRotation(Node h, Node x)
+        {
+            x.Color = h.Color;
+            h.Color = RED;
+            return x;
         }
 
         private Node RotateLeft(Node h)
         {
-            Node right = h.Right;
-            h.Right = right.Left;
-            right.Left = h;
-            return right;
+            Node x = h.Right;
+            h.Right = x.Left;
+            x.Left = h;
+            return FixColorAfterRotation(h, x);
         }
 
         private void ColorFlip(Node h)
@@ -282,16 +284,6 @@ namespace SortLib
             Debug.Assert(h.Left.Color == h.Right.Color && h.Left.Color == !h.Color);
             h.Left.Color = h.Right.Color = h.Color;
             h.Color = !h.Color;
-        }
-
-        private int MaxDepth(Node node)
-        {
-            if (node == null)
-            {
-                return 0;
-            }
-
-            return 1 + Math.Max(MaxDepth(node.Left), MaxDepth(node.Right));
         }
     }
 }
