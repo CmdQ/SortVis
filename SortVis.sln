@@ -22,6 +22,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RadixSort", "RadixSort\Radi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeapBased", "HeapBased\HeapBased.csproj", "{B746442E-7A14-4EE0-9D84-1797DA1500DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unittest", "Unittest\Unittest.csproj", "{1A7DC0FC-3019-4460-BD18-A1144A77C061}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,16 @@ Global
 		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B746442E-7A14-4EE0-9D84-1797DA1500DE}.Release|Win32.ActiveCfg = Release|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1A7DC0FC-3019-4460-BD18-A1144A77C061}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

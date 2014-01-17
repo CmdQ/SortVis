@@ -82,6 +82,20 @@ namespace SortLib
             _root.Color = BLACK;
         }
 
+        /// <summary>
+        /// Counts the elements in this tree.
+        /// </summary>
+        /// <returns>The number of elements found.</returns>
+        public int Count()
+        {
+            return Count(_root);
+        }
+
+        private int Count(Node node)
+        {
+            return node == null ? 0 : 1 + Count(node.Left) + Count(node.Right);
+        }
+
         private Node Insert(Node h, K key, V value)
         {
             if (h == null)
