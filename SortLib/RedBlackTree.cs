@@ -16,16 +16,18 @@ namespace SortLib
         private class Node
         {
             private readonly K _key;
-            private V _value;
-            public Node _left;
-            public Node _right;
-            public bool _color;
+
+            public bool Color { get; set; }
+            public Node Left { get; set; }
+            public Node Right { get; set; }
+            public V Value { get; set; }
 
             public Node(K key, V value)
             {
                 _key = key;
-                _value = value;
-                _color = RED;
+                Value = value;
+                Color = RED;
+                Left = Right = null;
             }
 
             public K Key
@@ -35,18 +37,6 @@ namespace SortLib
                     return _key;
                 }
             }
-
-            public V Value
-            {
-                get
-                {
-                    return _value;
-                }
-                set
-                {
-                    _value = value;
-                }
-            }
         }
 
         private const bool RED = true;
@@ -54,6 +44,11 @@ namespace SortLib
 
         private Node _root;
 
+        /// <summary>
+        /// Determines whether the specified <paramref name="key"/> is contained in the tree.
+        /// </summary>
+        /// <param name="key">The key to search for.</param>
+        /// <returns><c>true</c> if it is, <c>false</c> otherwise.</returns>
         public bool Contains(K key)
         {
             Node n = _root;
@@ -66,20 +61,25 @@ namespace SortLib
                 }
                 if (cmp < 0)
                 {
-                    n = n._left;
+                    n = n.Left;
                 }
                 else
                 {
-                    n = n._right;
+                    n = n.Right;
                 }
             }
             return false;
         }
 
+        /// <summary>
+        /// Inserts the specified <paramref name="key"/> into the tree.
+        /// </summary>
+        /// <param name="key">The key to insert.</param>
+        /// <param name="value">The value associated with it.</param>
         public void Insert(K key, V value)
         {
             _root = Insert(_root, key, value);
-            _root._color = BLACK;
+            _root.Color = BLACK;
         }
 
         private Node Insert(Node h, K key, V value)
@@ -89,7 +89,7 @@ namespace SortLib
                 return new Node(key, value);
             }
 
-            if (IsRed(h._left) && IsRed(h._right))
+            if (IsRed(h.Left) && IsRed(h.Right))
             {
                 ColorFlip(h);
             }
@@ -101,18 +101,18 @@ namespace SortLib
             }
             else if (cmp < 0)
             {
-                h._left = Insert(h._left, key, value);
+                h.Left = Insert(h.Left, key, value);
             }
             else
             {
-                h._right = Insert(h._right, key, value);
+                h.Right = Insert(h.Right, key, value);
             }
 
-            if (IsRed(h._right) && !IsRed(h._left))
+            if (IsRed(h.Right) && !IsRed(h.Left))
             {
                 h = RotateLeft(h);
             }
-            if (IsRed(h._left) && IsRed(h._left._left))
+            if (IsRed(h.Left) && IsRed(h.Left.Left))
             {
                 h = RotateRight(h);
             }
@@ -122,30 +122,30 @@ namespace SortLib
 
         private static bool IsRed(Node h)
         {
-            return h != null && h._color == RED;
+            return h != null && h.Color == RED;
         }
 
         private Node RotateRight(Node h)
         {
-            Node left = h._left;
-            h._left = left._right;
-            left._right = h;
+            Node left = h.Left;
+            h.Left = left.Right;
+            left.Right = h;
             return left;
         }
 
         private Node RotateLeft(Node h)
         {
-            Node right = h._right;
-            h._right = right._left;
-            right._left = h;
+            Node right = h.Right;
+            h.Right = right.Left;
+            right.Left = h;
             return right;
         }
 
         private void ColorFlip(Node h)
         {
-            Debug.Assert(h._left._color == h._right._color && h._left._color == !h._color);
-            h._left._color = h._right._color = h._color;
-            h._color = !h._color;
+            Debug.Assert(h.Left.Color == h.Right.Color && h.Left.Color == !h.Color);
+            h.Left.Color = h.Right.Color = h.Color;
+            h.Color = !h.Color;
         }
     }
 }
