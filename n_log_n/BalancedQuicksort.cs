@@ -34,20 +34,22 @@ namespace n_log_n
         /// </returns>
         protected override int ChoosePivot(int lo, ref int hi)
         {
-            Array.Copy(Numbers, lo, _median, lo, hi - lo);
-            Writes += hi - lo;
+            int count = hi - lo;
+            Array.Copy(Numbers, lo, _median, lo, count);
+            Writes += count;
 
             int pivotValue = Recurse(lo, hi);
-            return Array.IndexOf(Numbers, pivotValue);
+            return Array.IndexOf(Numbers, pivotValue, lo);
         }
 
         private int Recurse(int lo, int hi)
         {
+            const int fixedLength = 5;
             int gather = lo;
-            for (int i = lo; i < hi; i += 5)
+            for (int i = lo; i < hi; i += fixedLength)
             {
-                int upper5 = Math.Min(hi - 1, i + 5);
-                InsertionSort.Sort<int>(_median, i, upper5, Comparer.Compare,
+                int upper = Math.Min(hi - 1, i + fixedLength);
+                InsertionSort.Sort<int>(_median, i, upper, CompareNum,
                     (from, to) =>
                     {
                         _median[to] = _median[from];
@@ -57,10 +59,10 @@ namespace n_log_n
                         _median[pos] = value;
                         ++Writes;
                     }, Abort);
-                _median[gather++] = _median[i + (upper5 - i) / 2];
+                _median[gather++] = _median[i + (upper - i) / 2];
                 ++Writes;
             }
-            if (hi - lo <= 5)
+            if (hi - lo <= fixedLength)
             {
                 return _median[lo];
             }

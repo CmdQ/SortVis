@@ -29,23 +29,52 @@ namespace n_squared
         private class FinalAction : IDisposable
         {
             private readonly Action _finalAction;
+            private bool _disposed;
 
             /// <summary>
             /// Registers code to be executed when this instance will be disposed.
             /// </summary>
             /// <param name="finalAction">The swap action to do on dying.</param>
-            public FinalAction(Action finalAction)
+            private FinalAction(Action finalAction)
             {
+                _disposed = false;
                 _finalAction = finalAction;
+            }
+
+            /// <summary>
+            /// Creates an object that will perform a lambda when it goes
+            /// </summary>
+            /// <param name="action">A lambda to execute.</param>
+            /// <returns>An object with a bound lambda or <c>null</c> if the lambda was <c>null</c>.</returns>
+            public static FinalAction DoOnDispose(Action action)
+            {
+                if (action == null)
+                {
+                    return null;
+                }
+
+                return new FinalAction(action);
             }
 
             /// <summary>
             /// Performs application-defined tasks associated with freeing, releasing,
             /// or resetting unmanaged resources.
             /// </summary>
-            public void Dispose()
+            void IDisposable.Dispose()
             {
-                _finalAction();
+                FinishEarly();
+            }
+
+            /// <summary>
+            /// Does the cleanup work early.
+            /// </summary>
+            public void FinishEarly()
+            {
+                if (!_disposed)
+                {
+                    _finalAction();
+                    _disposed = true;
+                }
             }
         }
 
@@ -99,16 +128,9 @@ namespace n_squared
 
         private void SortIt(int lo, int hi)
         {
-            while (lo < hi)
+            while (hi - lo >= ConsideredBig)
             {
                 Abort.ThrowIfCancellationRequested();
-                if (hi - lo < ConsideredBig)
-                {
-                    // If the interval gets to small, we don't bother with quicksort and use insertion sort.
-                    InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
-                    return;
-                }
-
 
                 int pivot = Partition(lo, hi);
 
@@ -122,12 +144,23 @@ namespace n_squared
                 }
                 else
                 {
+                    if (lo == pivot)
+                    {
+                        // Without this we can end up in infinity.
+                        break;
+                    }
                     // Right half is bigger, so recurse in smaller half.
                     SortIt(lo, pivot);
                     _sortedRanges.Add(Tuple.Create(lo, pivot));
                     // ... and sort smaller by resetting bounds.
                     lo = pivot;
                 }
+            }
+            if (hi - lo > 1)
+            {
+                // If the interval gets to small, we don't bother with quicksort and use insertion sort.
+                InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
+                return;
             }
         }
 
@@ -147,7 +180,7 @@ namespace n_squared
             pivot = hi;
 #endif
 
-            using (var rs = new FinalAction(() => Swap(lo, pivot)))
+            using (var rs = FinalAction.DoOnDispose(() => Swap(lo, pivot)))
             {
                 while (lo < hi)
                 {
