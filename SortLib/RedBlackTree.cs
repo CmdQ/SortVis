@@ -65,22 +65,22 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Determines whether the specified <paramref name="key"/> is contained in the tree.
+        /// Determines whether the specified <paramref name="item"/> is contained in the tree.
         /// </summary>
-        /// <param name="key">The key to search for.</param>
+        /// <param name="item">The item to search for.</param>
         /// <returns><c>true</c> if it is, <c>false</c> otherwise.</returns>
-        public bool Contains(T key)
+        public bool Contains(T item)
         {
-            return FindNode(key) != null;
+            return FindNode(item) != null;
         }
 
         /// <summary>
-        /// Inserts the specified <paramref name="key"/> into the tree.
+        /// Inserts the specified <paramref name="item"/> into the tree.
         /// </summary>
-        /// <param name="key">The key to insert.</param>
-        public void Add(T key)
+        /// <param name="item">The item to insert.</param>
+        public void Add(T item)
         {
-            _root = Insert(_root, key);
+            _root = Insert(_root, item);
             _root.Color = Node.BLACK;
         }
 
@@ -112,14 +112,14 @@ namespace SortLib
         /// Tries to find a node in the tree.
         /// </summary>
         /// <param name="node">The starting node.</param>
-        /// <param name="key">The key to find.</param>
+        /// <param name="item">The item to find.</param>
         /// <returns>The found node or <c>null</c> if not present.</returns>
-        protected Node FindNode(T key, Node node = null)
+        protected Node FindNode(T item, Node node = null)
         {
             node = node ?? _root;
             while (node != null)
             {
-                int cmp = _comp.Compare(key, node.Item);
+                int cmp = _comp.Compare(item, node.Item);
                 if (cmp == 0)
                 {
                     return node;
@@ -185,11 +185,11 @@ namespace SortLib
             return node == null ? 0 : 1 + CountNodes(node.Left) + CountNodes(node.Right);
         }
 
-        private Node Insert(Node h, T key)
+        private Node Insert(Node h, T item)
         {
             if (h == null)
             {
-                return new Node(key);
+                return new Node(item);
             }
 
             if (IsRed(h.Left) && IsRed(h.Right))
@@ -197,18 +197,18 @@ namespace SortLib
                 ColorFlip(h);
             }
 
-            int cmp = _comp.Compare(key, h.Item);
+            int cmp = _comp.Compare(item, h.Item);
             if (cmp < 0)
             {
-                h.Left = Insert(h.Left, key);
+                h.Left = Insert(h.Left, item);
             }
             else if (cmp > 0)
             {
-                h.Right = Insert(h.Right, key);
+                h.Right = Insert(h.Right, item);
             }
             else
             {
-                h.Item = key;
+                h.Item = item;
             }
 
             if (IsRed(h.Right) && !IsRed(h.Left))
