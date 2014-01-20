@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Unittest
 {
-    internal class RedBlackSetTester<T> : RedBlackSet<T>
+    internal class RedBlackSetTester<T> : RedBlackSet<T> where T : IComparable<T>
     {
         public RedBlackSetTester()
         {

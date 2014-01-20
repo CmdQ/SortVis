@@ -10,7 +10,7 @@ namespace SortLib
     /// A set in form of a balanced binary tree.
     /// </summary>
     /// <typeparam name="T">The type of the values which have to be <see cref="IComparable{K}"/></typeparam>
-    public class RedBlackSet<T> : RedBlackTree<T>// where T : IComparable<T>
+    public class RedBlackSet<T> : RedBlackTree<T> where T : IComparable<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RedBlackSet{T}"/> class.
