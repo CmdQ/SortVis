@@ -12,7 +12,7 @@ namespace Unittest
         [TestCase]
         public void TestDoubleInsertionMap()
         {
-            var map = new RedBlackMap<char, short>()
+            var map = new RedBlackMap<char, short>
             {
                 { 'a', 1 },
                 { 'b', 2 },
@@ -36,10 +36,10 @@ namespace Unittest
         {
             var set = new RedBlackSet<char>
             {
-            'a',
-            'b',
-            'c',
-            'd',
+                'a',
+                'b',
+                'c',
+                'd',
             };
             Assert.That(set.Empty, Is.False);
             Assert.That(set.Count, Is.EqualTo(4));
@@ -105,7 +105,7 @@ namespace Unittest
         }
 
         [TestCase]
-        public void TestDepth()
+        public void TestDepthWithRandomNumbers()
         {
             WithRandomNumbers(list =>
             {
