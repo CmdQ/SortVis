@@ -111,7 +111,7 @@ namespace SortLib
             node = node ?? _root;
             while (node != null)
             {
-                int cmp = _comp.Compare(key, node.Key);
+                int cmp = _comp.Compare(key, node.Item);
                 if (cmp == 0)
                 {
                     return node;
@@ -138,7 +138,7 @@ namespace SortLib
                 {
                     return ll;
                 }
-                var onlyNode = ll.AddFirst(node.Key);
+                var onlyNode = ll.AddFirst(node.Item);
                 if (node.Left != null)
                 {
                     GetEnumerator(node.Left, onlyNode);
@@ -155,15 +155,15 @@ namespace SortLib
                 {
                     return acc.List;
                 }
-                if (_comp.Compare(node.Key, acc.Value) < 0)
+                if (_comp.Compare(node.Item, acc.Value) < 0)
                 {
-                    var newNode = acc.List.AddBefore(acc, node.Key);
+                    var newNode = acc.List.AddBefore(acc, node.Item);
                     GetEnumerator(node.Left, newNode);
                     GetEnumerator(node.Right, newNode);
                 }
                 else
                 {
-                    var newNode = acc.List.AddAfter(acc, node.Key);
+                    var newNode = acc.List.AddAfter(acc, node.Item);
                     GetEnumerator(node.Left, newNode);
                     GetEnumerator(node.Right, newNode);
                 }
@@ -189,7 +189,7 @@ namespace SortLib
                 ColorFlip(h);
             }
 
-            int cmp = _comp.Compare(key, h.Key);
+            int cmp = _comp.Compare(key, h.Item);
             if (cmp < 0)
             {
                 h.Left = Insert(h.Left, key);
@@ -200,7 +200,7 @@ namespace SortLib
             }
             else
             {
-                h.Key = key;
+                h.Item = key;
             }
 
             if (IsRed(h.Right) && !IsRed(h.Left))

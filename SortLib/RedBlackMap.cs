@@ -116,7 +116,7 @@ namespace SortLib
                 {
                     throw new KeyNotFoundException("The map does not contain an entry for that key.");
                 }
-                return kvp.Key.Value;
+                return kvp.Item.Value;
             }
             set
             {

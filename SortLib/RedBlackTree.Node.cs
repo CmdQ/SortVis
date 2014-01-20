@@ -21,10 +21,10 @@ namespace SortLib
             /// <summary>
             /// Initializes a new instance of the <see cref="Node"/> class.
             /// </summary>
-            /// <param name="key">The fixed key to store.</param>
-            public Node(T key)
+            /// <param name="item">The item to store.</param>
+            public Node(T item)
             {
-                Key = key;
+                Item = item;
                 Color = RED;
                 Left = Right = null;
             }
@@ -50,9 +50,9 @@ namespace SortLib
             public Node Right { get; set; }
 
             /// <summary>
-            /// Gets the key.
+            /// Gets or sets the item stored in this node.
             /// </summary>
-            public T Key { get; set; }
+            public T Item { get; set; }
         }
     }
 }

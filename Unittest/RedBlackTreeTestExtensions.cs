@@ -35,11 +35,11 @@ namespace Unittest
                 return true;
             }
 
-            if (node.Left != null && Comparer.Compare(node.Left.Key, node.Key) > 0)
+            if (node.Left != null && Comparer.Compare(node.Left.Item, node.Item) > 0)
             {
                 return false;
             }
-            if (node.Right != null && Comparer.Compare(node.Right.Key, node.Key) < 0)
+            if (node.Right != null && Comparer.Compare(node.Right.Item, node.Item) < 0)
             {
                 return false;
             }
