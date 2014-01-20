@@ -81,10 +81,7 @@ namespace Unittest
 
             var rbt = new RedBlackTree<int, bool>(Enumerable.Range(1, 7).Zip(Enumerable.Repeat(true, 7), Tuple.Create));
 
-            Assert.That(rbt.MaxDepth(), Is.EqualTo(3));
-
             double max = 0.0;
-
             for (int i = 8; i <= up2; ++i)
             {
                 rbt.Add(i, false);
