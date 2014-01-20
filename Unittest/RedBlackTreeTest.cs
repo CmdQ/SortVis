@@ -53,6 +53,23 @@ namespace Unittest
         }
 
         [TestCase]
+        public void TestSetClearing()
+        {
+            var set = new RedBlackSet<char>
+            {
+                'a',
+                'b',
+                'c',
+                'd',
+            };
+            Assert.That(set.Count, Is.GreaterThan(0));
+            set.Clear();
+            Assert.That(set.Empty, Is.True);
+            set.Add('z');
+            Assert.That(set.Count, Is.EqualTo(1));
+        }
+
+        [TestCase]
         public void TestBalancedness()
         {
             var perfect = new RedBlackSetTester<int>();

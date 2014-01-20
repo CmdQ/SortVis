@@ -52,6 +52,17 @@ namespace SortLib
                 return _comp;
             }
         } 
+        
+        /// <summary>
+        /// Gets the number of elements in this tree.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return CountNodes(_root);
+            }
+        }
 
         /// <summary>
         /// Determines whether the specified <paramref name="key"/> is contained in the tree.
@@ -74,14 +85,11 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Gets the number of elements in this tree.
+        /// Clears all data from the tree.
         /// </summary>
-        public int Count
+        public void Clear()
         {
-            get
-            {
-                return CountNodes(_root);
-            }
+            _root = null;
         }
 
         /// <summary>
