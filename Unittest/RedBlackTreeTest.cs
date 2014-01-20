@@ -12,8 +12,6 @@ namespace Unittest
         [TestCase]
         public void TestBalancedness()
         {
-            var sequence = new RedBlackTree<int, bool>(Enumerable.Range(1, 7), Enumerable.Repeat(true, 7));
-
             var perfect = new RedBlackTree<int, bool>();
             perfect.Add(4, false);
             perfect.Add(2, false);
@@ -73,7 +71,31 @@ namespace Unittest
                 var theory = Math.Log(list.Count, 2.0) * 2.0;
                 Assert.That(depth, Is.LessThanOrEqualTo(theory),
                     "The tree is not well balanced.");
-            });
+            }, new int[] { 255, 256, 257, 9999, 99999 });
+        }
+
+        [TestCase]
+        public void TestDepthOfLinearInsertion()
+        {
+            const int up2 = 9999;
+
+            var rbt = new RedBlackTree<int, bool>(Enumerable.Range(1, 7).Zip(Enumerable.Repeat(true, 7), Tuple.Create));
+
+            Assert.That(rbt.MaxDepth(), Is.EqualTo(3));
+
+            double max = 0.0;
+
+            for (int i = 8; i <= up2; ++i)
+            {
+                rbt.Add(i, false);
+                double actual = rbt.MaxDepth();
+                double perfect = Math.Log(i, 2.0);
+                double ratio = actual / perfect;
+                max = Math.Max(max, ratio);
+            }
+
+            Assert.That(rbt.Count, Is.EqualTo(up2));
+            Assert.That(max, Is.LessThanOrEqualTo(2.0));
         }
 
         [TestCase]
