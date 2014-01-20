@@ -12,7 +12,7 @@ namespace SortLib
     /// A left-leaning variant of a red-black tree. Especially wrt. deletion it's
     /// supposed to be easier to implement.
     /// </summary>
-    internal partial class RedBlackTree<T> : IEnumerable<T>
+    public abstract partial class RedBlackTree<T> : IEnumerable<T>
     {
         /// <summary>
         /// A comparer to use for our keys.
@@ -30,6 +30,20 @@ namespace SortLib
         public RedBlackTree(IComparer<T> comparer = null)
         {
             _comp = comparer ?? Comparer<T>.Default;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackTree{T}"/> class with elements to be added.
+        /// </summary>
+        /// <param name="elements">The elements to add.</param>
+        /// <param name="comparer">An optional comparer to use for the elements.</param>
+        public RedBlackTree(IEnumerable<T> elements, IComparer<T> comparer = null)
+            : this(comparer)
+        {
+            foreach (var elm in elements)
+            {
+                Add(elm);
+            }
         }
 
         /// <summary>

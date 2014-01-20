@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace Unittest
 {
-    internal class RedBlackTreeTestExtensions<T> : RedBlackTree<T>
+    internal class RedBlackSetTester<T> : RedBlackSet<T>
     {
+        public RedBlackSetTester()
+        {
+        }
+
+        public RedBlackSetTester(IEnumerable<T> list)
+            : base(list)
+        {
+        }
+
         public int MaxDepth()
         {
             return MaxDepth(_root);
@@ -41,6 +50,19 @@ namespace Unittest
         private static int MaxDepth(RedBlackTree<T>.Node node)
         {
             return node == null ? 0 : 1 + Math.Max(MaxDepth(node.Left), MaxDepth(node.Right));
+        }
+    }
+
+    internal class RedBlackMapTester<K, V> : RedBlackMap<K, V>
+    {
+        public RedBlackMapTester(IEnumerable<K> keys, IEnumerable<V> values)
+            : base(keys, values)
+        {
+        }
+
+        public RedBlackMapTester(IEnumerable<KeyValuePair<K, V>> pairs)
+            : base(pairs)
+        {
         }
     }
 }
