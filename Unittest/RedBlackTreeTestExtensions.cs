@@ -64,5 +64,10 @@ namespace Unittest
             : base(pairs)
         {
         }
+
+        public RedBlackMapTester(IEnumerable<Tuple<K, V>> tuples)
+            : base(tuples)
+        {
+        }
     }
 }

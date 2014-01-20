@@ -46,7 +46,9 @@ namespace Unittest
                     var range = Enumerable.Range(42, list.Count);
                     var two = new RedBlackMapTester<int, int>(list, range);
                     var prs = new RedBlackMapTester<int, int>(list.Zip<int, int, KeyValuePair<int, int>>(range, (a, b) => new KeyValuePair<int, int>(a, b)));
+                    var tup = new RedBlackMapTester<int, int>(list.Zip<int, int, Tuple<int, int>>(range, Tuple.Create));
                     Assert.That(two.ToArray(), Is.EqualTo(prs.ToList()));
+                    Assert.That(two.ToArray(), Is.EqualTo(tup.ToList()));
                 });
 
             Assert.That(() =>

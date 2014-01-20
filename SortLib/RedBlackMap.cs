@@ -87,6 +87,20 @@ namespace SortLib
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackMap{K, V}"/> class with elements to be added.
+        /// </summary>
+        /// <param name="tuples">The keys and values to store with.</param>
+        /// <param name="comp">An optional comparer to use.</param>
+        public RedBlackMap(IEnumerable<Tuple<K, V>> tuples, IComparer<KeyValuePair<K, V>> comp = null)
+            : this(comp)
+        {
+            foreach (var tuple in tuples)
+            {
+                Add(tuple.Item1, tuple.Item2);
+            }
+        }
+
+        /// <summary>
         /// Adds the specified key with a given value.
         /// </summary>
         /// <param name="key">The key for <paramref name="value"/>.</param>
