@@ -12,120 +12,48 @@ namespace SortLib
     /// A left-leaning variant of a red-black tree. Especially wrt. deletion it's
     /// supposed to be easier to implement.
     /// </summary>
-    public class RedBlackTree<K, V> : IEnumerable<KeyValuePair<K, V>> where K : IComparable<K>
+    internal partial class RedBlackTree<T> : IEnumerable<T>
     {
-        internal class Node
-        {
-            private readonly K _key;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Node"/> class.
-            /// </summary>
-            /// <param name="key">The fixed key which we associate a <paramref name="value"/> with.</param>
-            /// <param name="value">The value for that <paramref name="key"/>.</param>
-            public Node(K key, V value)
-            {
-                _key = key;
-                Value = value;
-                Color = RED;
-                Left = Right = null;
-            }
-
-            /// <summary>
-            /// Gets or sets the color of this node.
-            /// </summary>
-            /// <value>
-            ///   <c>true</c> if red; <c>false</c> for black.
-            /// </value>
-            /// <seealso cref="RED"/>
-            /// <seealso cref="BLACK"/>
-            public bool Color { get; set; }
-
-            /// <summary>
-            /// Gets or sets the left child.
-            /// </summary>
-            public Node Left { get; set; }
-
-            /// <summary>
-            /// Gets or sets the right child.
-            /// </summary>
-            public Node Right { get; set; }
-
-            /// <summary>
-            /// Gets or sets the value.
-            /// </summary>
-            public V Value { get; set; }
-
-            /// <summary>
-            /// Gets the key.
-            /// </summary>
-            public K Key
-            {
-                get
-                {
-                    return _key;
-                }
-            }
-        }
-
-        private const bool RED = true;
-        private const bool BLACK = false;
-
-        internal Node _root;
+        /// <summary>
+        /// A comparer to use for our keys.
+        /// </summary>
+        private readonly IComparer<T> _comp;
 
         /// <summary>
-        /// Initializes an empty instance of the <see cref="RedBlackTree{K, V}"/> class.
+        /// The root node of the tree.
         /// </summary>
-        public RedBlackTree()
+        protected Node _root = null;
+
+        /// <summary>
+        /// Initializes an empty instance of the <see cref="RedBlackTree{T}"/> class.
+        /// </summary>
+        public RedBlackTree(IComparer<T> comparer = null)
         {
+            _comp = comparer ?? Comparer<T>.Default;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class with contents.
+        /// Gets the <see cref="IComparer{T}"/> for elements in the tree.
         /// </summary>
-        /// <param name="keys">The keys to insert.</param>
-        /// <param name="values">According values to insert.</param>
-        public RedBlackTree(IEnumerable<K> keys, IEnumerable<V> values)
-            : this(keys.Zip(values, Tuple.Create))
+        public IComparer<T> Comparer
         {
-            if (keys.Count() != values.Count())
+            get
             {
-                throw new ArgumentException("The sequences are not equal in length.");
+                return _comp;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class with contents.
-        /// </summary>
-        /// <param name="pairs">The key-value-pairs to insert.</param>
-        public RedBlackTree(IEnumerable<KeyValuePair<K, V>> pairs)
-            : this(pairs.Select(p => Tuple.Create(p.Key, p.Value)))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackTree{K, V}"/> class with contents.
-        /// </summary>
-        /// <param name="pairs">The key-value-pairs to insert.</param>
-        public RedBlackTree(IEnumerable<Tuple<K, V>> pairs)
-        {
-            foreach (var pair in pairs)
-            {
-                Add(pair.Item1, pair.Item2);
-            }
-        }
+        } 
 
         /// <summary>
         /// Determines whether the specified <paramref name="key"/> is contained in the tree.
         /// </summary>
         /// <param name="key">The key to search for.</param>
         /// <returns><c>true</c> if it is, <c>false</c> otherwise.</returns>
-        public bool Contains(K key)
+        public bool Contains(T key)
         {
             Node n = _root;
             while (n != null)
             {
-                int cmp = key.CompareTo(n.Key);
+                int cmp = _comp.Compare(key, n.Key);
                 if (cmp == 0)
                 {
                     return true;
@@ -146,11 +74,10 @@ namespace SortLib
         /// Inserts the specified <paramref name="key"/> into the tree.
         /// </summary>
         /// <param name="key">The key to insert.</param>
-        /// <param name="value">The value associated with it.</param>
-        public void Add(K key, V value)
+        public void Add(T key)
         {
-            _root = Insert(_root, key, value);
-            _root.Color = BLACK;
+            _root = Insert(_root, key);
+            _root.Color = Node.BLACK;
         }
 
         /// <summary>
@@ -170,7 +97,7 @@ namespace SortLib
         /// <returns>
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
         /// </returns>
-        public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             return GetEnumerator(_root).GetEnumerator();
         }
@@ -180,17 +107,17 @@ namespace SortLib
             return GetEnumerator();
         }
 
-        private LinkedList<KeyValuePair<K, V>> GetEnumerator(Node node, LinkedListNode<KeyValuePair<K, V>> acc = null)
+        private LinkedList<T> GetEnumerator(Node node, LinkedListNode<T> acc = null)
         {
             // First iteration.
             if (acc == null)
             {
-                var ll = new LinkedList<KeyValuePair<K, V>>();
+                var ll = new LinkedList<T>();
                 if (node == null)
                 {
                     return ll;
                 }
-                var onlyNode = ll.AddFirst(new KeyValuePair<K, V>(node.Key, node.Value));
+                var onlyNode = ll.AddFirst(node.Key);
                 if (node.Left != null)
                 {
                     GetEnumerator(node.Left, onlyNode);
@@ -207,15 +134,15 @@ namespace SortLib
                 {
                     return acc.List;
                 }
-                if (node.Key.CompareTo(acc.Value.Key) < 0)
+                if (_comp.Compare(node.Key, acc.Value) < 0)
                 {
-                    var newNode = acc.List.AddBefore(acc, new KeyValuePair<K, V>(node.Key, node.Value));
+                    var newNode = acc.List.AddBefore(acc, node.Key);
                     GetEnumerator(node.Left, newNode);
                     GetEnumerator(node.Right, newNode);
                 }
                 else
                 {
-                    var newNode = acc.List.AddAfter(acc, new KeyValuePair<K, V>(node.Key, node.Value));
+                    var newNode = acc.List.AddAfter(acc, node.Key);
                     GetEnumerator(node.Left, newNode);
                     GetEnumerator(node.Right, newNode);
                 }
@@ -229,11 +156,11 @@ namespace SortLib
             return node == null ? 0 : 1 + CountNodes(node.Left) + CountNodes(node.Right);
         }
 
-        private Node Insert(Node h, K key, V value)
+        private Node Insert(Node h, T key)
         {
             if (h == null)
             {
-                return new Node(key, value);
+                return new Node(key);
             }
 
             if (IsRed(h.Left) && IsRed(h.Right))
@@ -241,19 +168,19 @@ namespace SortLib
                 ColorFlip(h);
             }
 
-            int cmp = key.CompareTo(h.Key);
-            if (cmp == 0)
+            int cmp = _comp.Compare(key, h.Key);
+            if (cmp < 0)
             {
-                h.Value = value;
+                h.Left = Insert(h.Left, key);
             }
-            else if (cmp < 0)
+            else if (cmp > 0)
             {
-                h.Left = Insert(h.Left, key, value);
+                h.Right = Insert(h.Right, key);
             }
-            else
-            {
-                h.Right = Insert(h.Right, key, value);
-            }
+            //else
+            //{
+            //    h.Value = value;
+            //}
 
             if (IsRed(h.Right) && !IsRed(h.Left))
             {
@@ -269,7 +196,7 @@ namespace SortLib
 
         private static bool IsRed(Node h)
         {
-            return h != null && h.Color == RED;
+            return h != null && h.Color == Node.RED;
         }
 
         private Node RotateRight(Node h)
@@ -283,7 +210,7 @@ namespace SortLib
         private static Node FixColorAfterRotation(Node h, Node x)
         {
             x.Color = h.Color;
-            h.Color = RED;
+            h.Color = Node.RED;
             return x;
         }
 

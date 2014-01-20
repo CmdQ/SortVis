@@ -7,30 +7,30 @@ using System.Threading.Tasks;
 
 namespace Unittest
 {
-    public static class RedBlackTreeTestExtensions
+    internal class RedBlackTreeTestExtensions<T> : RedBlackTree<T>
     {
-        public static int MaxDepth<K, V>(this RedBlackTree<K, V> tree) where K : IComparable<K>
+        public int MaxDepth()
         {
-            return MaxDepth(tree._root);
+            return MaxDepth(_root);
         }
 
-        public static bool AreNodesOrdered<K, V>(this RedBlackTree<K, V> tree) where K : IComparable<K>
+        public bool AreNodesOrdered()
         {
-            return AreNodesOrdered(tree._root);
+            return AreNodesOrdered(_root);
         }
 
-        private static bool AreNodesOrdered<K, V>(RedBlackTree<K, V>.Node node) where K : IComparable<K>
+        private bool AreNodesOrdered(RedBlackTree<T>.Node node)
         {
             if (node == null)
             {
                 return true;
             }
 
-            if (node.Left != null && node.Left.Key.CompareTo(node.Key) > 0)
+            if (node.Left != null && Comparer.Compare(node.Left.Key, node.Key) > 0)
             {
                 return false;
             }
-            if (node.Right != null && node.Right.Key.CompareTo(node.Key) < 0)
+            if (node.Right != null && Comparer.Compare(node.Right.Key, node.Key) < 0)
             {
                 return false;
             }
@@ -38,7 +38,7 @@ namespace Unittest
             return true;
         }
 
-        private static int MaxDepth<K, V>(RedBlackTree<K, V>.Node node) where K : IComparable<K>
+        private static int MaxDepth(RedBlackTree<T>.Node node)
         {
             return node == null ? 0 : 1 + Math.Max(MaxDepth(node.Left), MaxDepth(node.Right));
         }
