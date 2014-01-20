@@ -67,8 +67,7 @@ namespace Unittest
                     return;
                 }
 
-                var rbt = new RedBlackTree<int, bool>(list.Zip(Enumerable.Repeat(false, list.Count),
-                    (a, b) => Tuple.Create(a, b)));
+                var rbt = new RedBlackTree<int, bool>(list.Zip(Enumerable.Repeat(false, list.Count), Tuple.Create));
 
                 var depth = rbt.MaxDepth();
                 var theory = Math.Log(list.Count, 2.0) * 2.0;
@@ -97,10 +96,14 @@ namespace Unittest
             });
         }
 
-        private void WithRandomNumbers(Action<SortedSet<int>> test)
+        private void WithRandomNumbers(Action<SortedSet<int>> test, IEnumerable<int> additional = null)
         {
             List<int> lengths = Enumerable.Range(0, 10).ToList();
             lengths.AddRange(new int[] { 63, 64, 65, 66, 67 });
+            if (additional != null)
+            {
+                lengths.AddRange(additional);
+            }
 
             var rand = new Random();
 

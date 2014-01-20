@@ -86,7 +86,7 @@ namespace SortLib
         /// <param name="keys">The keys to insert.</param>
         /// <param name="values">According values to insert.</param>
         public RedBlackTree(IEnumerable<K> keys, IEnumerable<V> values)
-            : this(keys.Zip(values, (k, v) => Tuple.Create(k, v)))
+            : this(keys.Zip(values, Tuple.Create))
         {
             if (keys.Count() != values.Count())
             {
