@@ -12,7 +12,7 @@ namespace SortLib
     /// </summary>
     /// <typeparam name="K">The type of the keys which have to be <see cref="IComparable{K}"/></typeparam>
     /// <typeparam name="V">Values to associate with keys.</typeparam>
-    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>>
+    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>> where K : IComparable<K>
     {
         private class KeyValueComparer : IComparer<KeyValuePair<K, V>>
         {

@@ -53,7 +53,7 @@ namespace Unittest
         }
     }
 
-    internal class RedBlackMapTester<K, V> : RedBlackMap<K, V>
+    internal class RedBlackMapTester<K, V> : RedBlackMap<K, V> where K : IComparable<K>
     {
         public RedBlackMapTester(IEnumerable<K> keys, IEnumerable<V> values)
             : base(keys, values)
