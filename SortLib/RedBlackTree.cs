@@ -60,24 +60,7 @@ namespace SortLib
         /// <returns><c>true</c> if it is, <c>false</c> otherwise.</returns>
         public bool Contains(T key)
         {
-            Node n = _root;
-            while (n != null)
-            {
-                int cmp = _comp.Compare(key, n.Key);
-                if (cmp == 0)
-                {
-                    return true;
-                }
-                if (cmp < 0)
-                {
-                    n = n.Left;
-                }
-                else
-                {
-                    n = n.Right;
-                }
-            }
-            return false;
+            return FindNode(key) != null;
         }
 
         /// <summary>
@@ -115,6 +98,34 @@ namespace SortLib
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Tries to find a node in the tree.
+        /// </summary>
+        /// <param name="node">The starting node.</param>
+        /// <param name="key">The key to find.</param>
+        /// <returns>The found node or <c>null</c> if not present.</returns>
+        protected Node FindNode(T key, Node node = null)
+        {
+            node = node ?? _root;
+            while (node != null)
+            {
+                int cmp = _comp.Compare(key, node.Key);
+                if (cmp == 0)
+                {
+                    return node;
+                }
+                if (cmp < 0)
+                {
+                    node = node.Left;
+                }
+                else
+                {
+                    node = node.Right;
+                }
+            }
+            return null;
         }
 
         private LinkedList<T> GetEnumerator(Node node, LinkedListNode<T> acc = null)
@@ -187,10 +198,10 @@ namespace SortLib
             {
                 h.Right = Insert(h.Right, key);
             }
-            //else
-            //{
-            //    h.Value = value;
-            //}
+            else
+            {
+                h.Key = key;
+            }
 
             if (IsRed(h.Right) && !IsRed(h.Left))
             {

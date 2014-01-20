@@ -10,6 +10,27 @@ namespace Unittest
     public class RedBlackTreeTest
     {
         [TestCase]
+        public void TestDoubleInsertionMap()
+        {
+            var map = new RedBlackMap<char, short>()
+            {
+                { 'a', 1 },
+                { 'b', 2 },
+                { 'c', 3 },
+                { 'd', 5 },
+            };
+
+            Assert.That(map['a'], Is.EqualTo(1));
+            Assert.That(map['b'], Is.EqualTo(2));
+            Assert.That(map['c'], Is.EqualTo(3));
+            Assert.That(map['d'], Is.EqualTo(5));
+
+            var before = map.Count;
+            map['d'] = 4;
+            Assert.That(map.Count, Is.EqualTo(before));
+            Assert.That(map['d'], Is.EqualTo(4));
+        }
+
         [TestCase]
         public void TestDoubleInsertionSet()
         {

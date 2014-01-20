@@ -10,7 +10,9 @@ namespace SortLib
     /// </summary>
     /// <typeparam name="K">The type of the keys which have to be <see cref="IComparable{K}"/></typeparam>
     /// <typeparam name="V">Values to associate with keys.</typeparam>
-    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>> where K : IComparable<K>
+    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>>
+        where K : IComparable<K>
+        where V : new()
     {
         private class KeyValueComparer : IComparer<KeyValuePair<K, V>>
         {
@@ -96,6 +98,35 @@ namespace SortLib
             {
                 Add(tuple.Item1, tuple.Item2);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the value for a specified key.
+        /// </summary>
+        /// <param name="key">The key to use for lookup.</param>
+        /// <value>The value to save for <paramref name="key"/>.</value>
+        /// <returns>The value associated with <paramref name="key"/>.</returns>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">The map does not contain an entry for that key.</exception>
+        public V this[K key]
+        {
+            get
+            {
+                var kvp = FindNode(key);
+                if (kvp == null)
+                {
+                    throw new KeyNotFoundException("The map does not contain an entry for that key.");
+                }
+                return kvp.Key.Value;
+            }
+            set
+            {
+                Add(key, value);
+            }
+        }
+
+        private Node FindNode(K key, Node node = null)
+        {
+            return FindNode(new KeyValuePair<K, V>(key, new V()), node);
         }
 
         /// <summary>

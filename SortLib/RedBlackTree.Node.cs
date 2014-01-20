@@ -18,15 +18,13 @@ namespace SortLib
             /// </summary>
             public const bool BLACK = false;
 
-            private readonly T _key;
-
             /// <summary>
             /// Initializes a new instance of the <see cref="Node"/> class.
             /// </summary>
             /// <param name="key">The fixed key to store.</param>
             public Node(T key)
             {
-                _key = key;
+                Key = key;
                 Color = RED;
                 Left = Right = null;
             }
@@ -54,13 +52,7 @@ namespace SortLib
             /// <summary>
             /// Gets the key.
             /// </summary>
-            public T Key
-            {
-                get
-                {
-                    return _key;
-                }
-            }
+            public T Key { get; set; }
         }
     }
 }
