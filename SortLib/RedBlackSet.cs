@@ -27,5 +27,16 @@ namespace SortLib
             : base(elements, comparer)
         {
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the set is empty.
+        /// </summary>
+        public bool Empty
+        {
+            get
+            {
+                return _root == null;
+            }
+        }
     }
 }

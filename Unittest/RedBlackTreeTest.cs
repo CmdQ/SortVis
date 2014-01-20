@@ -10,6 +10,28 @@ namespace Unittest
     public class RedBlackTreeTest
     {
         [TestCase]
+        [TestCase]
+        public void TestDoubleInsertionSet()
+        {
+            var set = new RedBlackSet<char>
+            {
+            'a',
+            'b',
+            'c',
+            'd',
+            };
+            Assert.That(set.Empty, Is.False);
+            Assert.That(set.Count, Is.EqualTo(4));
+            Assert.That(set.Contains('e'), Is.False);
+            set.Add('e');
+            Assert.That(set.Contains('e'));
+            Assert.That(set.Count, Is.EqualTo(5));
+            set.Add('e');
+            Assert.That(set.Contains('e'));
+            Assert.That(set.Count, Is.EqualTo(5));
+        }
+
+        [TestCase]
         public void TestBalancedness()
         {
             var perfect = new RedBlackSetTester<int>();
@@ -38,8 +60,12 @@ namespace Unittest
         public void TestCtors()
         {
             var empty = new RedBlackSetTester<char>();
+            Assert.That(empty.Empty, Is.True);
             Assert.That(empty.Count(), Is.EqualTo(0));
             Assert.That(empty.ToList(), Is.Empty);
+            empty.Add('1');
+            Assert.That(empty.Empty, Is.False);
+            Assert.That(empty.Count(), Is.EqualTo(1));
 
             WithRandomNumbers(list =>
                 {
