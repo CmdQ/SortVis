@@ -19,8 +19,9 @@ namespace Unittest
             Assert.That(t.Cache, Is.EqualTo(init));
             Assert.That(t.Remove(4), Is.True);
             var remove = init.Where(i => i != 4);
+            Assert.That(t.Add(2), Is.False);
             Assert.That(t.Cache, Is.EquivalentTo(remove));
-            t.Add(7);
+            Assert.That(t.Add(7), Is.True);
             var add = remove.Concat(Enumerable.Repeat(7, 1));
             Assert.That(t.Cache, Is.EquivalentTo(add));
             t.Clear();

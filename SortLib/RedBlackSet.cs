@@ -38,5 +38,18 @@ namespace SortLib
                 return _root == null;
             }
         }
+
+        /// <summary>
+        /// Inserts the specified <paramref name="item"/> into the tree.
+        /// </summary>
+        /// <param name="item">The item to insert.</param>
+        public new bool Add(T item)
+        {
+            FlatList = null;
+            bool inserted;
+            _root = Insert(_root, item, out inserted);
+            _root.Color = Node.BLACK;
+            return inserted;
+        }
     }
 }

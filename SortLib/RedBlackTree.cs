@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -15,6 +16,9 @@ namespace SortLib
         /// </summary>
         private readonly IComparer<T> _comparer;
 
+        /// <summary>
+        /// This is a cached flattened variant of the tree. Set to <c>null</c> whenever you modify the tree!
+        /// </summary>
         private LinkedList<T> _cache;
 
         /// <summary>
@@ -84,11 +88,22 @@ namespace SortLib
         /// <summary>
         /// Gets the elements in the tree as a flat list.
         /// </summary>
+        /// <remarks>
+        /// To clear/reset the cache, e.g. before/after a modifying operation, assign <c>null</c>.
+        /// </remarks>
         protected LinkedList<T> FlatList
         {
             get
             {
                 return _cache = _cache ?? GetEnumerator(_root);
+            }
+            set
+            {
+                if (value != null)
+                {
+                    throw new ArgumentException("To reset the cache, assign null.");
+                }
+                _cache = null;
             }
         }
 
@@ -108,8 +123,9 @@ namespace SortLib
         /// <param name="item">The item to insert.</param>
         public void Add(T item)
         {
-            _cache = null;
-            _root = Insert(_root, item);
+            FlatList = null;
+            bool dummy;
+            _root = Insert(_root, item, out dummy);
             _root.Color = Node.BLACK;
         }
 
@@ -118,7 +134,7 @@ namespace SortLib
         /// </summary>
         public void Clear()
         {
-            _cache = null;
+            FlatList = null;
             _root = null;
         }
 
@@ -135,7 +151,7 @@ namespace SortLib
             var newRoot = Remove(_root, item, ref found);
             if (found)
             {
-                _cache = null;
+                FlatList = null;
                 (_root = newRoot).Color = Node.BLACK;
             }
             return found;
@@ -194,6 +210,54 @@ namespace SortLib
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Inserts an <paramref name="item"/> below a <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The part of the tree to insert in.</param>
+        /// <param name="item">The item to insert.</param>
+        /// <param name="inserted">if set to <c>true</c> a new node in the tree was created;
+        /// it's <c>false</c> for an unchanged tree.</param>
+        /// <returns>The node containing <paramref name="item"/>.</returns>
+        protected Node Insert(Node node, T item, out bool inserted)
+        {
+            if (node == null)
+            {
+                inserted = true;
+                return new Node(item);
+            }
+
+            if (HasRedChildren(node))
+            {
+                ColorFlip(node);
+            }
+
+            int cmp = _comparer.Compare(item, node.Item);
+            if (cmp < 0)
+            {
+                node.Left = Insert(node.Left, item, out inserted);
+            }
+            else if (cmp > 0)
+            {
+                node.Right = Insert(node.Right, item, out inserted);
+            }
+            else
+            {
+                inserted = false;
+                node.Item = item;
+            }
+
+            if (IsRed(node.Right) && !IsRed(node.Left))
+            {
+                node = RotateLeft(node);
+            }
+            if (TwiceLeftColor(node) == Node.RED)
+            {
+                node = RotateRight(node);
+            }
+
+            return node;
         }
 
         /// <summary>
@@ -391,44 +455,6 @@ namespace SortLib
         private int CountNodes(Node node)
         {
             return node == null ? 0 : 1 + CountNodes(node.Left) + CountNodes(node.Right);
-        }
-
-        private Node Insert(Node node, T item)
-        {
-            if (node == null)
-            {
-                return new Node(item);
-            }
-
-            if (HasRedChildren(node))
-            {
-                ColorFlip(node);
-            }
-
-            int cmp = _comparer.Compare(item, node.Item);
-            if (cmp < 0)
-            {
-                node.Left = Insert(node.Left, item);
-            }
-            else if (cmp > 0)
-            {
-                node.Right = Insert(node.Right, item);
-            }
-            else
-            {
-                node.Item = item;
-            }
-
-            if (IsRed(node.Right) && !IsRed(node.Left))
-            {
-                node = RotateLeft(node);
-            }
-            if (TwiceLeftColor(node) == Node.RED)
-            {
-                node = RotateRight(node);
-            }
-
-            return node;
         }
 
         private static bool IsRed(Node node)
