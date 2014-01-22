@@ -152,7 +152,7 @@ namespace SortLib
         /// <returns><c>true</c> if the value was found; otherwise, <c>false</c>.</returns>
         public bool ContainsValue(V value)
         {
-            throw new NotImplementedException();
+            return ConstructList(_root).Any(kv => kv.Value.Equals(value));
         }
 
         /// <summary>

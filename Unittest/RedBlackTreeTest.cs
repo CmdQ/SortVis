@@ -96,15 +96,21 @@ namespace Unittest
             var map = new RedBlackMap<char, ushort>
             {
                 { 'a', 1 },
-                { 'b', 1 },
-                { 'c', 1 },
-                { 'd', 1 },
-                { 'e', 1 },
-                { 'f', 1 },
-                { 'g', 1 },
-                { 'h', 1 },
+                { 'b', 2 },
+                { 'c', 3 },
+                { 'd', 4 },
+                { 'e', 5 },
+                { 'f', 6 },
+                { 'g', 7 },
+                { 'h', 8 },
             };
-            Assert.That(map.Count, Is.EqualTo(8));
+
+            for (ushort i = 1; i <= 8; ++i)
+            {
+                Assert.That(map.ContainsValue(i), Is.True);
+            }
+
+            Assert.That(map.Count, Is.EqualTo(map['h']));
             Assert.That(map.ContainsKey('f'), Is.True);
             Assert.That(map.ContainsKey('h'), Is.True);
             Assert.That(map.Remove('f'), Is.True);
@@ -113,6 +119,9 @@ namespace Unittest
             Assert.That(map.Count, Is.EqualTo(6));
             Assert.That(map.ContainsKey('f'), Is.False);
             Assert.That(map.ContainsKey('h'), Is.False);
+
+            Assert.That(map.ContainsValue(6), Is.False);
+            Assert.That(map.ContainsValue(8), Is.False);
         }
 
         [TestCase]
