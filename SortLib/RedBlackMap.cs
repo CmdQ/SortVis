@@ -10,7 +10,7 @@ namespace SortLib
     /// </summary>
     /// <typeparam name="K">The type of the keys which have to be <see cref="IComparable{K}"/></typeparam>
     /// <typeparam name="V">Values to associate with keys.</typeparam>
-    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>>
+    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>>, IDictionary<K, V>
         where K : IComparable<K>
         where V : new()
     {
@@ -29,7 +29,7 @@ namespace SortLib
             /// <param name="x">The first object to compare.</param>
             /// <param name="y">The second object to compare.</param>
             /// <returns>
-            /// A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.Value Meaning Less than zero<paramref name="x" /> is less than <paramref name="y" />.Zero<paramref name="x" /> equals <paramref name="y" />.Greater than zero<paramref name="x" /> is greater than <paramref name="y" />.
+            /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
             /// </returns>
             public int Compare(KeyValuePair<K, V> x, KeyValuePair<K, V> y)
             {
@@ -106,7 +106,8 @@ namespace SortLib
         /// <param name="key">The key to use for lookup.</param>
         /// <value>The value to save for <paramref name="key"/>.</value>
         /// <returns>The value associated with <paramref name="key"/>.</returns>
-        /// <exception cref="System.Collections.Generic.KeyNotFoundException">The map does not contain an entry for that key.</exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">The map does not contain an entry
+        /// for that key.</exception>
         public V this[K key]
         {
             get
@@ -144,14 +145,104 @@ namespace SortLib
             return base.Contains(new KeyValuePair<K, V>(key, new V()));
         }
 
-        private Node FindNode(K key, Node node = null)
+        /// <summary>
+        /// Determines whether the map contains a mapping with the specified mapping target.
+        /// </summary>
+        /// <param name="value">The value to find.</param>
+        /// <returns><c>true</c> if the value was found; otherwise, <c>false</c>.</returns>
+        public bool ContainsValue(V value)
         {
-            return FindNode(new KeyValuePair<K, V>(key, new V()), node);
+            throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to remove.</param>
+        /// <returns>
+        /// <c>true</c> if the element is successfully removed; otherwise, <c>false</c>. This method also returns <c>false</c>
+        /// if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </returns>
         public bool Remove(K key)
         {
             return base.Remove(new KeyValuePair<K, V>(key, new V()));
+        }
+
+
+        /// <summary>
+        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys
+        /// of the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the object
+        /// that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </returns>
+        public ICollection<K> Keys
+        {
+            get
+            { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// Gets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key whose value to get.</param>
+        /// <param name="value">When this method returns, the value associated with the specified key,
+        /// if the key is found; otherwise, the default value for the type of the <paramref name="value"/> parameter.
+        /// This parameter is passed uninitialized.</param>
+        /// <returns>
+        /// <c>true</c> if the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/> contains
+        /// an element with the specified key; otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetValue(K key, out V value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values
+        /// in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the object
+        /// that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </returns>
+        public ICollection<V> Values
+        {
+            get
+            { throw new NotImplementedException(); }
+        }
+
+
+        /// <summary>
+        /// Copies the elements of the map to an array, starting at a particular array index.
+        /// </summary>
+        /// <param name="array">The one-dimensional array that is the destination of the elements copied
+        /// from the map. The array must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        private Node FindNode(K key, Node node = null)
+        {
+            return FindNode(new KeyValuePair<K, V>(key, new V()), node);
         }
     }
 }
