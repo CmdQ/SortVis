@@ -158,7 +158,7 @@ namespace SortLib
         {
             if (_comparer.Compare(item, node.Item) < 0)
             {
-                if (!IsRed(node.Left) && !IsRed(node.Left.Left))
+                if (TwiceLeftColor(node) == Node.BLACK)
                 {
                     node = MoveRedLeft(node);
                 }
@@ -198,6 +198,27 @@ namespace SortLib
             return FixUp(node);
         }
 
+        /// <summary>
+        /// Checks if both the left child and its left child have the same color.
+        /// </summary>
+        /// <param name="node">The node that is both parent and grand parent.</param>
+        /// <returns><c>null</c> if the colors differ, otherwise a boolean color
+        /// (<see cref="Node.RED"/> and <see cref="Node.BLACK"/>).</returns>
+        private bool? TwiceLeftColor(Node node)
+        {
+            bool first = IsRed(node.Left);
+            if (node.Left == null)
+            {
+                Debug.Assert(!first);
+                return null;
+            }
+            if (first != IsRed(node.Left.Left))
+            {
+                return null;
+            }
+            return first;
+        }
+
         private Node FixUp(Node node)
         {
             if (IsRed(node.Right))
@@ -205,7 +226,7 @@ namespace SortLib
                 node = RotateLeft(node);
             }
 
-            if (node.Left != null && IsRed(node.Left) && IsRed(node.Left.Left))
+            if (node.Left != null && TwiceLeftColor(node) == Node.RED)
             {
                 node = RotateRight(node);
             }
@@ -240,7 +261,7 @@ namespace SortLib
                 return null;
             }
 
-            if (!IsRed(node.Left) && !IsRed(node.Left.Left))
+            if (TwiceLeftColor(node) == Node.BLACK)
             {
                 node = MoveRedLeft(node);
             }
@@ -354,7 +375,7 @@ namespace SortLib
             {
                 node = RotateLeft(node);
             }
-            if (IsRed(node.Left) && IsRed(node.Left.Left))
+            if (TwiceLeftColor(node) == Node.RED)
             {
                 node = RotateRight(node);
             }
