@@ -152,7 +152,7 @@ namespace SortLib
         /// <returns><c>true</c> if the value was found; otherwise, <c>false</c>.</returns>
         public bool ContainsValue(V value)
         {
-            return ConstructList(_root).Any(kv => kv.Value.Equals(value));
+            return FlatList.Any(kv => kv.Value.Equals(value));
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace SortLib
         {
             get
             {
-                return ConstructList(_root).Select(kv => kv.Key).ToArray();
+                return FlatList.Select(kv => kv.Key).ToArray();
             }
         }
 
@@ -221,38 +221,7 @@ namespace SortLib
         {
             get
             {
-                return ConstructList(_root).Select(kv => kv.Value).ToArray();
-            }
-        }
-
-
-        /// <summary>
-        /// Copies the elements of the map to an array, starting at a particular array index.
-        /// </summary>
-        /// <param name="array">The one-dimensional array that is the destination of the elements copied
-        /// from the map. The array must have zero-based indexing.</param>
-        /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-        public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
-        {
-            var list = ConstructList(_root);
-            foreach (var elm in list)
-            {
-                list.CopyTo(array, arrayIndex);
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only;
-        /// otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
+                return FlatList.Select(kv => kv.Value).ToArray();
             }
         }
 

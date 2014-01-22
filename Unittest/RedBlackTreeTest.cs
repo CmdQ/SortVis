@@ -10,6 +10,24 @@ namespace Unittest
     public class RedBlackTreeTest
     {
         [TestCase]
+        public void TestCacheWorks()
+        {
+            var init = new int[] { 2, 3, 4, 5 };
+
+            var t = new RedBlackSetTester<int>(init);
+
+            Assert.That(t.Cache, Is.EqualTo(init));
+            Assert.That(t.Remove(4), Is.True);
+            var remove = init.Where(i => i != 4);
+            Assert.That(t.Cache, Is.EquivalentTo(remove));
+            t.Add(7);
+            var add = remove.Concat(Enumerable.Repeat(7, 1));
+            Assert.That(t.Cache, Is.EquivalentTo(add));
+            t.Clear();
+            Assert.That(t.Cache, Is.Empty);
+        }
+
+        [TestCase]
         public void TestTryGetValue()
         {
             var map = new RedBlackMap<char, short>

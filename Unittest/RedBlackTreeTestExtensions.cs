@@ -18,6 +18,14 @@ namespace Unittest
         {
         }
 
+        public LinkedList<T> Cache
+        {
+            get
+            {
+                return FlatList;
+            }
+        }
+
         public int MaxDepth()
         {
             return MaxDepth(_root);

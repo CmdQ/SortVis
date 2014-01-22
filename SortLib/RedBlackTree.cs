@@ -8,12 +8,14 @@ namespace SortLib
     /// A left-leaning variant of a red-black tree. Especially wrt. deletion it's
     /// supposed to be easier to implement.
     /// </summary>
-    public abstract partial class RedBlackTree<T> : IEnumerable<T>
+    public abstract partial class RedBlackTree<T> : ICollection<T>
     {
         /// <summary>
         /// A comparer to use for our keys.
         /// </summary>
         private readonly IComparer<T> _comparer;
+
+        private LinkedList<T> _cache;
 
         /// <summary>
         /// The root node of the tree.
@@ -65,6 +67,32 @@ namespace SortLib
         }
 
         /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the elements in the tree as a flat list.
+        /// </summary>
+        protected LinkedList<T> FlatList
+        {
+            get
+            {
+                return _cache = _cache ?? GetEnumerator(_root);
+            }
+        }
+
+        /// <summary>
         /// Determines whether the specified <paramref name="item"/> is contained in the tree.
         /// </summary>
         /// <param name="item">The item to search for.</param>
@@ -80,6 +108,7 @@ namespace SortLib
         /// <param name="item">The item to insert.</param>
         public void Add(T item)
         {
+            _cache = null;
             _root = Insert(_root, item);
             _root.Color = Node.BLACK;
         }
@@ -89,6 +118,7 @@ namespace SortLib
         /// </summary>
         public void Clear()
         {
+            _cache = null;
             _root = null;
         }
 
@@ -105,6 +135,7 @@ namespace SortLib
             var newRoot = Remove(_root, item, ref found);
             if (found)
             {
+                _cache = null;
                 (_root = newRoot).Color = Node.BLACK;
             }
             return found;
@@ -118,12 +149,23 @@ namespace SortLib
         /// </returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return ConstructList(_root).GetEnumerator();
+            return FlatList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Copies the elements of the tree to an array, starting at a particular array index.
+        /// </summary>
+        /// <param name="array">The one-dimensional array that is the destination of the elements copied
+        /// from the tree. The array must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            FlatList.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -160,7 +202,7 @@ namespace SortLib
         /// <param name="node">The node to start with.</param>
         /// <param name="acc">An accumulator argument. Don't supply anything other than <c>null</c>!</param>
         /// <returns>A list containing all elements under and including <paramref name="node"/>.</returns>
-        protected LinkedList<T> ConstructList(Node node, LinkedListNode<T> acc = null)
+        private LinkedList<T> GetEnumerator(Node node, LinkedListNode<T> acc = null)
         {
             // First iteration.
             if (acc == null)
@@ -173,11 +215,11 @@ namespace SortLib
                 var onlyNode = ll.AddFirst(node.Item);
                 if (node.Left != null)
                 {
-                    ConstructList(node.Left, onlyNode);
+                    GetEnumerator(node.Left, onlyNode);
                 }
                 if (node.Right != null)
                 {
-                    ConstructList(node.Right, onlyNode);
+                    GetEnumerator(node.Right, onlyNode);
                 }
                 return ll;
             }
@@ -190,14 +232,14 @@ namespace SortLib
                 if (_comparer.Compare(node.Item, acc.Value) < 0)
                 {
                     var newNode = acc.List.AddBefore(acc, node.Item);
-                    ConstructList(node.Left, newNode);
-                    ConstructList(node.Right, newNode);
+                    GetEnumerator(node.Left, newNode);
+                    GetEnumerator(node.Right, newNode);
                 }
                 else
                 {
                     var newNode = acc.List.AddAfter(acc, node.Item);
-                    ConstructList(node.Left, newNode);
-                    ConstructList(node.Right, newNode);
+                    GetEnumerator(node.Left, newNode);
+                    GetEnumerator(node.Right, newNode);
                 }
             }
 
