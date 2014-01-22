@@ -118,7 +118,7 @@ namespace SortLib
         /// </returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return GetEnumerator(_root).GetEnumerator();
+            return ConstructList(_root).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -152,6 +152,56 @@ namespace SortLib
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="LinkedList{T}"/> with all elements of a particular sub-tree.
+        /// </summary>
+        /// <param name="node">The node to start with.</param>
+        /// <param name="acc">An accumulator argument. Don't supply anything other than <c>null</c>!</param>
+        /// <returns>A list containing all elements under and including <paramref name="node"/>.</returns>
+        protected LinkedList<T> ConstructList(Node node, LinkedListNode<T> acc = null)
+        {
+            // First iteration.
+            if (acc == null)
+            {
+                var ll = new LinkedList<T>();
+                if (node == null)
+                {
+                    return ll;
+                }
+                var onlyNode = ll.AddFirst(node.Item);
+                if (node.Left != null)
+                {
+                    ConstructList(node.Left, onlyNode);
+                }
+                if (node.Right != null)
+                {
+                    ConstructList(node.Right, onlyNode);
+                }
+                return ll;
+            }
+            else
+            {
+                if (node == null)
+                {
+                    return acc.List;
+                }
+                if (_comparer.Compare(node.Item, acc.Value) < 0)
+                {
+                    var newNode = acc.List.AddBefore(acc, node.Item);
+                    ConstructList(node.Left, newNode);
+                    ConstructList(node.Right, newNode);
+                }
+                else
+                {
+                    var newNode = acc.List.AddAfter(acc, node.Item);
+                    ConstructList(node.Left, newNode);
+                    ConstructList(node.Right, newNode);
+                }
+            }
+
+            return acc.List;
         }
 
         private Node Remove(Node node, T item, ref bool found)
@@ -294,50 +344,6 @@ namespace SortLib
             }
 
             return node;
-        }
-
-        private LinkedList<T> GetEnumerator(Node node, LinkedListNode<T> acc = null)
-        {
-            // First iteration.
-            if (acc == null)
-            {
-                var ll = new LinkedList<T>();
-                if (node == null)
-                {
-                    return ll;
-                }
-                var onlyNode = ll.AddFirst(node.Item);
-                if (node.Left != null)
-                {
-                    GetEnumerator(node.Left, onlyNode);
-                }
-                if (node.Right != null)
-                {
-                    GetEnumerator(node.Right, onlyNode);
-                }
-                return ll;
-            }
-            else
-            {
-                if (node == null)
-                {
-                    return acc.List;
-                }
-                if (_comparer.Compare(node.Item, acc.Value) < 0)
-                {
-                    var newNode = acc.List.AddBefore(acc, node.Item);
-                    GetEnumerator(node.Left, newNode);
-                    GetEnumerator(node.Right, newNode);
-                }
-                else
-                {
-                    var newNode = acc.List.AddAfter(acc, node.Item);
-                    GetEnumerator(node.Left, newNode);
-                    GetEnumerator(node.Right, newNode);
-                }
-            }
-
-            return acc.List;
         }
 
         private int CountNodes(Node node)

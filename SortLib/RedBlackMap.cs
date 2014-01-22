@@ -222,7 +222,11 @@ namespace SortLib
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
         public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            var list = ConstructList(_root);
+            foreach (var elm in list)
+            {
+                list.CopyTo(array, arrayIndex);
+            }
         }
 
         /// <summary>
