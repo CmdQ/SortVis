@@ -122,6 +122,9 @@ namespace Unittest
 
             Assert.That(map.ContainsValue(6), Is.False);
             Assert.That(map.ContainsValue(8), Is.False);
+
+            Assert.That(map.Keys, Is.EqualTo(new char[] { 'a', 'b', 'c', 'd', 'e', 'g' }));
+            Assert.That(map.Values, Is.EqualTo(new ushort[] { 1, 2, 3, 4, 5, 7 }));
         }
 
         [TestCase]

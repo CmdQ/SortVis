@@ -82,7 +82,7 @@ namespace SortLib
         {
             if (keys.Count() != values.Count())
             {
-                throw new ArgumentException();
+                throw new ArgumentException("The two sequences don't have the same length.");
             }
         }
 
@@ -160,8 +160,9 @@ namespace SortLib
         /// </summary>
         /// <param name="key">The key of the element to remove.</param>
         /// <returns>
-        /// <c>true</c> if the element is successfully removed; otherwise, <c>false</c>. This method also returns <c>false</c>
-        /// if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// <c>true</c> if the element is successfully removed; otherwise, <c>false</c>. This method also returns
+        /// <c>false</c> if <paramref name="key"/> was not found in the
+        /// original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
         public bool Remove(K key)
         {
@@ -180,7 +181,9 @@ namespace SortLib
         public ICollection<K> Keys
         {
             get
-            { throw new NotImplementedException(); }
+            {
+                return ConstructList(_root).Select(kv => kv.Key).ToArray();
+            }
         }
 
         /// <summary>
@@ -210,7 +213,9 @@ namespace SortLib
         public ICollection<V> Values
         {
             get
-            { throw new NotImplementedException(); }
+            {
+                return ConstructList(_root).Select(kv => kv.Value).ToArray();
+            }
         }
 
 
