@@ -59,7 +59,7 @@ namespace SortLib
         /// <param name="other">The collection of items to remove from the set.</param>
         /// <remarks>
         /// This method is an O(n) operation, where <c>n</c> is the number of elements
-        /// in the other parameter.
+        /// in the <paramref name="other"/> parameter.
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void ExceptWith(IEnumerable<T> other)
@@ -75,7 +75,7 @@ namespace SortLib
         /// Modifies the current set so that it contains only elements that are also in a specified collection.
         /// </summary>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <remarks>This method ignores any duplicate elements in other.</remarks>
+        /// <remarks>This method ignores any duplicate elements in <paramref name="other"/>.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void IntersectWith(IEnumerable<T> other)
         {
@@ -94,15 +94,16 @@ namespace SortLib
         /// otherwise, <c>false</c>.</returns>
         /// <remarks>
         /// <para>
-        /// If the current set is a proper subset of other, other must have at least one
+        /// If the current set is a proper subset of <paramref name="other"/>, <paramref name="other"/> must have at least one
         /// element that the current set does not have.
         /// <para>
         /// An empty set is a proper subset of any other collection. Therefore, this method
-        /// returns true if the current set is empty, unless the other parameter is also an empty set.
+        /// returns <c>true</c> if the current set is empty, unless the
+        /// <paramref name="other"/> parameter is also an empty set.
         /// </para>
         /// <para>
-        /// This method always returns false if the current set has more or the same number
-        /// of elements than other.</para>
+        /// This method always returns <c>false</c> if the current set has more or the same number
+        /// of elements than <paramref name="other"/>.</para>
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
@@ -123,17 +124,17 @@ namespace SortLib
         /// otherwise, <c>false</c>.</returns>
         /// <remarks>
         /// <para>
-        /// If the current set is a proper superset of other, the current set must have at least
-        /// one element that other does not have.
+        /// If the current set is a proper superset of <paramref name="other"/>, the current set must have at least
+        /// one element that <paramref name="other"/> does not have.
         /// </para>
         /// <para>
         /// An empty set is a proper superset of any other collection. Therefore, this method
-        /// returns true if the collection represented by the other parameter is empty, unless the
-        /// current set is also empty.
+        /// returns <c>true</c> if the collection represented by the <paramref name="other"/> parameter is empty,
+        /// unless the current set is also empty.
         /// </para>
         /// <para>
-        /// This method always returns false if the number of elements in the current set is less
-        /// than or equal to the number of elements in other.
+        /// This method always returns <c>false</c> if the number of elements in the current set is less
+        /// than or equal to the number of elements in <paramref name="other"/>.
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
@@ -154,11 +155,12 @@ namespace SortLib
         /// otherwise, <c>false</c>.</returns>
         /// <remarks>
         /// <para>
-        /// If other contains the same elements as the current set, the current set is still considered
-        /// a subset of other.
+        /// If <paramref name="other"/> contains the same elements as the current set,
+        /// the current set is still considered a subset of <paramref name="other"/>.
         /// </para>
         /// <para>
-        /// This method always returns false if the current set has elements that are not in <paramref name="other"/>.
+        /// This method always returns <c>false</c> if the current set has elements that are not
+        /// in <paramref name="other"/>.
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
@@ -179,11 +181,12 @@ namespace SortLib
         /// otherwise, <c>false</c>.</returns>
         /// <remarks>
         /// <para>
-        /// If other contains the same elements as the current set, the current set is still considered
-        /// a superset of other.
+        /// If <paramref name="other"/> contains the same elements as the current set,
+        /// the current set is still considered a superset of <paramref name="other"/>.
         /// </para>
         /// <para>
-        /// This method always returns false if the current set has fewer elements than <paramref name="other"/>.
+        /// This method always returns <c>false</c> if the current set has fewer elements than
+        /// <paramref name="other"/>.
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
@@ -200,9 +203,9 @@ namespace SortLib
         /// Determines whether the current set overlaps with the specified collection.
         /// </summary>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><c>true</c> if the current set and other share at least one common element;
+        /// <returns><c>true</c> if the current set and <paramref name="other"/> share at least one common element;
         /// otherwise, <c>false</c>.</returns>
-        /// <remarks>Any duplicate elements in other are ignored.</remarks>
+        /// <remarks>Any duplicate elements in <paramref name="other"/> are ignored.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool Overlaps(IEnumerable<T> other)
         {
@@ -217,10 +220,10 @@ namespace SortLib
         /// Determines whether the current set and the specified collection contain the same elements.
         /// </summary>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns>true if the current set is equal to other;
-        /// otherwise, false.</returns>
+        /// <returns>true if the current set is equal to <paramref name="other"/>;
+        /// otherwise, <c>false</c>.</returns>
         /// <remarks>
-        /// This method ignores the order of elements and any duplicate elements in other.
+        /// This method ignores the order of elements and any duplicate elements in <paramref name="other"/>.
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool SetEquals(IEnumerable<T> other)
@@ -237,7 +240,7 @@ namespace SortLib
         /// present either in the current set or in the specified collection, but not both.
         /// </summary>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <remarks>Any duplicate elements in other are ignored.</remarks>
+        /// <remarks>Any duplicate elements in <paramref name="other"/> are ignored.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
@@ -253,7 +256,7 @@ namespace SortLib
         /// are present in either the current set or the specified collection.
         /// </summary>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <remarks>Any duplicate elements in other are ignored.</remarks>
+        /// <remarks>Any duplicate elements in <paramref name="other"/> are ignored.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void UnionWith(IEnumerable<T> other)
         {
