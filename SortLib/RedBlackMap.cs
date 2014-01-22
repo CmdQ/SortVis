@@ -199,7 +199,14 @@ namespace SortLib
         /// </returns>
         public bool TryGetValue(K key, out V value)
         {
-            throw new NotImplementedException();
+            var node = FindNode(key);
+            if (node != null)
+            {
+                value = node.Item.Value;
+                return true;
+            }
+            value = new V();
+            return false;
         }
 
         /// <summary>

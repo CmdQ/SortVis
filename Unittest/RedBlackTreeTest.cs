@@ -10,6 +10,30 @@ namespace Unittest
     public class RedBlackTreeTest
     {
         [TestCase]
+        public void TestTryGetValue()
+        {
+            var map = new RedBlackMap<char, short>
+            {
+                { 'a', 1 },
+                { 'b', 2 },
+                { 'c', 3 },
+                { 'd', 5 },
+            };
+
+            short value;
+            Assert.That(map.TryGetValue('a', out value), Is.True);
+            Assert.That(value, Is.EqualTo(1));
+            Assert.That(map.TryGetValue('b', out value), Is.True);
+            Assert.That(value, Is.EqualTo(2));
+            Assert.That(map.TryGetValue('c', out value), Is.True);
+            Assert.That(value, Is.EqualTo(3));
+            Assert.That(map.TryGetValue('d', out value), Is.True);
+            Assert.That(value, Is.EqualTo(5));
+            Assert.That(map.TryGetValue('x', out value), Is.False);
+            Assert.That(value, Is.EqualTo(new short()));
+        }
+
+        [TestCase]
         public void TestDoubleInsertionMap()
         {
             var map = new RedBlackMap<char, short>
