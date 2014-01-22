@@ -124,11 +124,6 @@ namespace SortLib
             }
         }
 
-        private Node FindNode(K key, Node node = null)
-        {
-            return FindNode(new KeyValuePair<K, V>(key, new V()), node);
-        }
-
         /// <summary>
         /// Adds the specified key with a given value.
         /// </summary>
@@ -137,6 +132,26 @@ namespace SortLib
         public void Add(K key, V value)
         {
             Add(new KeyValuePair<K, V>(key, value));
+        }
+
+        /// <summary>
+        /// Determines whether the map contains an element with the specified key.
+        /// </summary>
+        /// <param name="key">The key to locate.</param>
+        /// <returns><c>true</c> if the key was found; otherwise, <c>false</c>.</returns>
+        public bool ContainsKey(K key)
+        {
+            return base.Contains(new KeyValuePair<K, V>(key, new V()));
+        }
+
+        private Node FindNode(K key, Node node = null)
+        {
+            return FindNode(new KeyValuePair<K, V>(key, new V()), node);
+        }
+
+        public bool Remove(K key)
+        {
+            return base.Remove(new KeyValuePair<K, V>(key, new V()));
         }
     }
 }

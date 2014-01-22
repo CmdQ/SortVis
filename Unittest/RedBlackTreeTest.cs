@@ -70,6 +70,52 @@ namespace Unittest
         }
 
         [TestCase]
+        public void TestSetRemove()
+        {
+            var set = new RedBlackSet<char>
+            {
+                'a',
+                'b',
+                'c',
+                'd',
+                'e',
+                'f',
+                'g',
+                'h',
+            };
+            Assert.That(set.Count, Is.EqualTo(8));
+            Assert.That(set.Contains('f'), Is.True);
+            set.Remove('f');
+            Assert.That(set.Count, Is.EqualTo(7));
+            Assert.That(set.Contains('f'), Is.False);
+        }
+
+        [TestCase]
+        public void TestMapRemove()
+        {
+            var map = new RedBlackMap<char, ushort>
+            {
+                { 'a', 1 },
+                { 'b', 1 },
+                { 'c', 1 },
+                { 'd', 1 },
+                { 'e', 1 },
+                { 'f', 1 },
+                { 'g', 1 },
+                { 'h', 1 },
+            };
+            Assert.That(map.Count, Is.EqualTo(8));
+            Assert.That(map.ContainsKey('f'), Is.True);
+            Assert.That(map.ContainsKey('h'), Is.True);
+            Assert.That(map.Remove('f'), Is.True);
+            Assert.That(map.Remove('h'), Is.True);
+            Assert.That(map.Remove('h'), Is.False);
+            Assert.That(map.Count, Is.EqualTo(6));
+            Assert.That(map.ContainsKey('f'), Is.False);
+            Assert.That(map.ContainsKey('h'), Is.False);
+        }
+
+        [TestCase]
         public void TestBalancedness()
         {
             var perfect = new RedBlackSetTester<int>();

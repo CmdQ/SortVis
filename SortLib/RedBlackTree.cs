@@ -13,7 +13,7 @@ namespace SortLib
         /// <summary>
         /// A comparer to use for our keys.
         /// </summary>
-        private readonly IComparer<T> _comp;
+        private readonly IComparer<T> _comparer;
 
         /// <summary>
         /// The root node of the tree.
@@ -25,7 +25,7 @@ namespace SortLib
         /// </summary>
         public RedBlackTree(IComparer<T> comparer = null)
         {
-            _comp = comparer ?? Comparer<T>.Default;
+            _comparer = comparer ?? Comparer<T>.Default;
         }
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace SortLib
         {
             get
             {
-                return _comp;
+                return _comparer;
             }
-        } 
-        
+        }
+
         /// <summary>
         /// Gets the number of elements in this tree.
         /// </summary>
@@ -93,6 +93,24 @@ namespace SortLib
         }
 
         /// <summary>
+        /// Removes an item from the tree.
+        /// </summary>
+        /// <param name="item">The element to remove.</param>
+        /// <returns>
+        /// <c>true</c> if the element is found and successfully removed; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Remove(T item)
+        {
+            bool found = false;
+            var newRoot = Remove(_root, item, ref found);
+            if (found)
+            {
+                (_root = newRoot).Color = Node.BLACK;
+            }
+            return found;
+        }
+
+        /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>
@@ -119,7 +137,7 @@ namespace SortLib
             node = node ?? _root;
             while (node != null)
             {
-                int cmp = _comp.Compare(item, node.Item);
+                int cmp = _comparer.Compare(item, node.Item);
                 if (cmp == 0)
                 {
                     return node;
@@ -134,6 +152,122 @@ namespace SortLib
                 }
             }
             return null;
+        }
+
+        private Node Remove(Node node, T item, ref bool found)
+        {
+            if (_comparer.Compare(item, node.Item) < 0)
+            {
+                if (!IsRed(node.Left) && !IsRed(node.Left.Left))
+                {
+                    node = MoveRedLeft(node);
+                }
+                node.Left = Remove(node.Left, item, ref found);
+            }
+            else
+            {
+                if (IsRed(node.Left))
+                {
+                    node = RotateRight(node);
+                }
+                if (_comparer.Compare(item, node.Item) == 0 && node.Right == null)
+                {
+                    found = true;
+                    return node.Right;
+                }
+                if (node.Right == null)
+                {
+                    return node;
+                }
+                else if (!IsRed(node.Right) && !IsRed(node.Right.Left))
+                {
+                    node = MoveRedRight(node);
+                }
+                if (_comparer.Compare(item, node.Item) == 0)
+                {
+                    found = true;
+                    node.Item = Min(node.Right).Item;
+                    node.Right = RemoveMin(node.Right);
+                }
+                else
+                {
+                    node.Right = Remove(node.Right, item, ref found);
+                }
+            }
+
+            return FixUp(node);
+        }
+
+        private Node FixUp(Node node)
+        {
+            if (IsRed(node.Right))
+            {
+                node = RotateLeft(node);
+            }
+
+            if (node.Left != null && IsRed(node.Left) && IsRed(node.Left.Left))
+            {
+                node = RotateRight(node);
+            }
+
+            if (IsRed(node.Left) && IsRed(node.Right))
+            {
+                ColorFlip(node);
+            }
+
+            return node;
+        }
+
+        private Node Min(Node node)
+        {
+            while (node.Left != null)
+            {
+                node = node.Left;
+            }
+
+            return node;
+        }
+
+        private Node RemoveMin(Node node)
+        {
+            if (node.Left == null)
+            {
+                return null;
+            }
+
+            if (!IsRed(node.Left) && !IsRed(node.Left.Left))
+            {
+                node = MoveRedLeft(node);
+            }
+
+            node.Left = RemoveMin(node.Left);
+
+            return FixUp(node);
+        }
+
+        private Node MoveRedLeft(Node node)
+        {
+            ColorFlip(node);
+            if (IsRed(node.Right.Left))
+            {
+                node.Right = RotateRight(node.Right);
+                node = RotateLeft(node);
+                ColorFlip(node);
+            }
+
+            return node;
+        }
+
+        private Node MoveRedRight(Node node)
+        {
+            ColorFlip(node);
+            if (IsRed(node.Left.Left))
+            {
+                node = RotateRight(node);
+                ColorFlip(node);
+            }
+
+            return node;
         }
 
         private LinkedList<T> GetEnumerator(Node node, LinkedListNode<T> acc = null)
@@ -163,7 +297,7 @@ namespace SortLib
                 {
                     return acc.List;
                 }
-                if (_comp.Compare(node.Item, acc.Value) < 0)
+                if (_comparer.Compare(node.Item, acc.Value) < 0)
                 {
                     var newNode = acc.List.AddBefore(acc, node.Item);
                     GetEnumerator(node.Left, newNode);
@@ -185,77 +319,77 @@ namespace SortLib
             return node == null ? 0 : 1 + CountNodes(node.Left) + CountNodes(node.Right);
         }
 
-        private Node Insert(Node h, T item)
+        private Node Insert(Node node, T item)
         {
-            if (h == null)
+            if (node == null)
             {
                 return new Node(item);
             }
 
-            if (IsRed(h.Left) && IsRed(h.Right))
+            if (IsRed(node.Left) && IsRed(node.Right))
             {
-                ColorFlip(h);
+                ColorFlip(node);
             }
 
-            int cmp = _comp.Compare(item, h.Item);
+            int cmp = _comparer.Compare(item, node.Item);
             if (cmp < 0)
             {
-                h.Left = Insert(h.Left, item);
+                node.Left = Insert(node.Left, item);
             }
             else if (cmp > 0)
             {
-                h.Right = Insert(h.Right, item);
+                node.Right = Insert(node.Right, item);
             }
             else
             {
-                h.Item = item;
+                node.Item = item;
             }
 
-            if (IsRed(h.Right) && !IsRed(h.Left))
+            if (IsRed(node.Right) && !IsRed(node.Left))
             {
-                h = RotateLeft(h);
+                node = RotateLeft(node);
             }
-            if (IsRed(h.Left) && IsRed(h.Left.Left))
+            if (IsRed(node.Left) && IsRed(node.Left.Left))
             {
-                h = RotateRight(h);
+                node = RotateRight(node);
             }
 
-            return h;
+            return node;
         }
 
-        private static bool IsRed(Node h)
+        private static bool IsRed(Node node)
         {
-            return h != null && h.Color == Node.RED;
+            return node != null && node.Color == Node.RED;
         }
 
-        private Node RotateRight(Node h)
+        private Node RotateRight(Node node)
         {
-            Node x = h.Left;
-            h.Left = x.Right;
-            x.Right = h;
-            return FixColorAfterRotation(h, x);
+            Node x = node.Left;
+            node.Left = x.Right;
+            x.Right = node;
+            return FixColorAfterRotation(node, x);
         }
 
-        private static Node FixColorAfterRotation(Node h, Node x)
+        private static Node FixColorAfterRotation(Node node, Node parent)
         {
-            x.Color = h.Color;
-            h.Color = Node.RED;
-            return x;
+            parent.Color = node.Color;
+            node.Color = Node.RED;
+            return parent;
         }
 
-        private Node RotateLeft(Node h)
+        private Node RotateLeft(Node node)
         {
-            Node x = h.Right;
-            h.Right = x.Left;
-            x.Left = h;
-            return FixColorAfterRotation(h, x);
+            Node x = node.Right;
+            node.Right = x.Left;
+            x.Left = node;
+            return FixColorAfterRotation(node, x);
         }
 
-        private void ColorFlip(Node h)
+        private void ColorFlip(Node node)
         {
-            Debug.Assert(h.Left.Color == h.Right.Color && h.Left.Color == !h.Color);
-            h.Left.Color = h.Right.Color = h.Color;
-            h.Color = !h.Color;
+            Debug.Assert(node.Left.Color == node.Right.Color && node.Left.Color == !node.Color);
+            node.Left.Color = node.Right.Color = node.Color;
+            node.Color = !node.Color;
         }
     }
 }
