@@ -210,12 +210,17 @@ namespace SortLib
                 node = RotateRight(node);
             }
 
-            if (IsRed(node.Left) && IsRed(node.Right))
+            if (HasRedChildren(node))
             {
                 ColorFlip(node);
             }
 
             return node;
+        }
+
+        private bool HasRedChildren(Node node)
+        {
+            return IsRed(node.Left) && IsRed(node.Right);
         }
 
         private Node Min(Node node)
@@ -326,7 +331,7 @@ namespace SortLib
                 return new Node(item);
             }
 
-            if (IsRed(node.Left) && IsRed(node.Right))
+            if (HasRedChildren(node))
             {
                 ColorFlip(node);
             }
