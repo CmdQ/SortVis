@@ -123,10 +123,10 @@ namespace SortLib
         /// <param name="item">The item to insert.</param>
         public void Add(T item)
         {
-            FlatList = null;
             bool dummy;
             _root = Insert(_root, item, out dummy);
             _root.Color = Node.BLACK;
+            FlatList = null;
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace SortLib
         /// </summary>
         public void Clear()
         {
-            FlatList = null;
             _root = null;
+            FlatList = null;
         }
 
         /// <summary>
@@ -151,8 +151,8 @@ namespace SortLib
             var newRoot = Remove(_root, item, ref found);
             if (found)
             {
-                FlatList = null;
                 (_root = newRoot).Color = Node.BLACK;
+                FlatList = null;
             }
             return found;
         }
