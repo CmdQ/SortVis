@@ -43,13 +43,11 @@ namespace SortLib
         /// Inserts the specified <paramref name="item"/> into the tree.
         /// </summary>
         /// <param name="item">The item to insert.</param>
+        /// <returns><c>true</c> if the item was inserted, i.e. the tree was changed; <c>false</c>
+        /// if it was already present.</returns>
         public new bool Add(T item)
         {
-            FlatList = null;
-            bool inserted;
-            _root = Insert(_root, item, out inserted);
-            _root.Color = Node.BLACK;
-            return inserted;
+            return AddItem(item);
         }
 
 

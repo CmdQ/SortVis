@@ -123,10 +123,7 @@ namespace SortLib
         /// <param name="item">The item to insert.</param>
         public void Add(T item)
         {
-            bool dummy;
-            _root = Insert(_root, item, out dummy);
-            _root.Color = Node.BLACK;
-            FlatList = null;
+            AddItem(item);
         }
 
         /// <summary>
@@ -210,6 +207,20 @@ namespace SortLib
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Inserts the specified <paramref name="item"/> into the tree.
+        /// </summary>
+        /// <param name="item">The item to insert.</param>
+        /// <returns><c>true</c> if the item was inserted, i.e. the tree was changed; <c>false</c>
+        /// if it was already present.</returns>
+        protected bool AddItem(T item)
+        {
+            bool inserted;
+            (_root = Insert(_root, item, out inserted)).Color = Node.BLACK;
+            FlatList = null;
+            return inserted;
         }
 
         /// <summary>
