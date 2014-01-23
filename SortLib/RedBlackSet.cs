@@ -66,7 +66,10 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
-            throw new NotImplementedException();
+            foreach (T elm in other)
+            {
+                Remove(elm);
+            }
         }
 
         /// <summary>
