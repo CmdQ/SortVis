@@ -64,21 +64,22 @@ namespace SortLib
             {
                 var left = DescribeChild(Left, "left");
                 var right = DescribeChild(Right, "right");
-                return string.Format("{{{3} {4} Node '{0}' with {1} and {2}}}", Item.ToString(),
-                    left,
-                    right,
+                return string.Format("{{{0} {1} Node '{2}' with {3} and {4}}}",
                     Left == null && Right == null ? "empty" : (Left != null ? "LL" : "wrong"),
-                    DescribeColor(this));
+                    DescribeColor(this),
+                    Item.ToString(),
+                    left,
+                    right);
             }
 
             private static string DescribeChild(Node node, string dir)
             {
                 return node == null
                     ? string.Concat("NO ", dir)
-                    : string.Format("{{{1} {2} '{0}'}}",
-                        node.Item.ToString(),
+                    : string.Format("{{{0} {1} '{2}'}}",
                         DescribeColor(node),
-                        dir);
+                        dir,
+                        node.Item.ToString());
             }
 
             private static string DescribeColor(Node node)
