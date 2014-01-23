@@ -62,10 +62,28 @@ namespace SortLib
             /// </returns>
             public override string ToString()
             {
-                return string.Format("{{{3} Node '{0}' with {1} and {2}}}", Item.ToString(),
-                    Left == null ? "NO left" : string.Format("{{left '{0}'}}", Left.Item.ToString()),
-                    Right == null ? "NO right" : string.Format("{{right '{0}'}}", Right.Item.ToString()),
-                    Left == null && Right == null ? "empty" : (Left != null ? "LL" : "wrong"));
+                var left = DescribeChild(Left, "left");
+                var right = DescribeChild(Right, "right");
+                return string.Format("{{{3} {4} Node '{0}' with {1} and {2}}}", Item.ToString(),
+                    left,
+                    right,
+                    Left == null && Right == null ? "empty" : (Left != null ? "LL" : "wrong"),
+                    DescribeColor(this));
+            }
+
+            private static string DescribeChild(Node node, string dir)
+            {
+                return node == null
+                    ? string.Concat("NO ", dir)
+                    : string.Format("{{{1} {2} '{0}'}}",
+                        node.Item.ToString(),
+                        DescribeColor(node),
+                        dir);
+            }
+
+            private static string DescribeColor(Node node)
+            {
+                return node == null || node.Color == BLACK ? "black" : "red";
             }
         }
     }
