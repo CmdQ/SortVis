@@ -20,7 +20,7 @@ namespace Unittest
         {
             _even = (
                 from n in _numbers
-                select (n - 1) * 2).ToArray();
+                select (n - 1) * 2).Skip(1).ToArray();
 
             _odd = (
                 from n in _numbers

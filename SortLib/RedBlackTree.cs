@@ -1,4 +1,9 @@
-﻿using System;
+﻿#if !TREE23 && !TREE234
+#warning Define either TREE23 or TREE234 of these, altough the 2-3-4 case is broken.
+#define TREE23
+#endif
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -144,14 +149,26 @@ namespace SortLib
         /// </returns>
         public bool Remove(T item)
         {
-            bool found = false;
-            var newRoot = Remove(_root, item, ref found);
-            if (found)
+            if (!Contains(item))
             {
-                (_root = newRoot).Color = Node.BLACK;
-                FlatList = null;
+                return false;
             }
-            return found;
+
+            if (!IsRed(_root.Left) && !IsRed(_root.Right))
+            {
+                _root.Color = Node.RED;
+            }
+
+            _root = Remove(_root, item);
+
+            if (_root != null)
+            {
+                _root.Color = Node.BLACK;
+            }
+
+            FlatList = null;
+
+            return true;
         }
 
         /// <summary>
@@ -224,54 +241,6 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Inserts an <paramref name="item"/> below a <paramref name="node"/>.
-        /// </summary>
-        /// <param name="node">The part of the tree to insert in.</param>
-        /// <param name="item">The item to insert.</param>
-        /// <param name="inserted">if set to <c>true</c> a new node in the tree was created;
-        /// it's <c>false</c> for an unchanged tree.</param>
-        /// <returns>The node containing <paramref name="item"/>.</returns>
-        protected Node Insert(Node node, T item, out bool inserted)
-        {
-            if (node == null)
-            {
-                inserted = true;
-                return new Node(item);
-            }
-
-            if (HasRedChildren(node))
-            {
-                ColorFlip(node);
-            }
-
-            int cmp = _comparer.Compare(item, node.Item);
-            if (cmp < 0)
-            {
-                node.Left = Insert(node.Left, item, out inserted);
-            }
-            else if (cmp > 0)
-            {
-                node.Right = Insert(node.Right, item, out inserted);
-            }
-            else
-            {
-                inserted = false;
-                node.Item = item;
-            }
-
-            if (IsRed(node.Right) && !IsRed(node.Left))
-            {
-                node = RotateLeft(node);
-            }
-            if (TwiceLeftColor(node) == Node.RED)
-            {
-                node = RotateRight(node);
-            }
-
-            return node;
-        }
-
-        /// <summary>
         /// Constructs a <see cref="LinkedList{T}"/> with all elements of a particular sub-tree.
         /// </summary>
         /// <param name="node">The node to start with.</param>
@@ -321,15 +290,17 @@ namespace SortLib
             return acc.List;
         }
 
-        private Node Remove(Node node, T item, ref bool found)
+        private Node Remove(Node node, T item)
         {
+            Debug.Assert(Contains(item), "When item is not in the tree, running this will break it.");
+
             if (_comparer.Compare(item, node.Item) < 0)
             {
                 if (TwiceLeftColor(node) == Node.BLACK)
                 {
                     node = MoveRedLeft(node);
                 }
-                node.Left = Remove(node.Left, item, ref found);
+                node.Left = Remove(node.Left, item);
             }
             else
             {
@@ -339,12 +310,7 @@ namespace SortLib
                 }
                 if (_comparer.Compare(item, node.Item) == 0 && node.Right == null)
                 {
-                    found = true;
-                    return node.Right;
-                }
-                if (node.Right == null)
-                {
-                    return node;
+                    return null;
                 }
                 else if (!IsRed(node.Right) && !IsRed(node.Right.Left))
                 {
@@ -352,13 +318,12 @@ namespace SortLib
                 }
                 if (_comparer.Compare(item, node.Item) == 0)
                 {
-                    found = true;
                     node.Item = Min(node.Right).Item;
                     node.Right = RemoveMin(node.Right);
                 }
                 else
                 {
-                    node.Right = Remove(node.Right, item, ref found);
+                    node.Right = Remove(node.Right, item);
                 }
             }
 
@@ -393,7 +358,7 @@ namespace SortLib
                 node = RotateLeft(node);
             }
 
-            if (node.Left != null && TwiceLeftColor(node) == Node.RED)
+            if (TwiceLeftColor(node) == Node.RED)
             {
                 node = RotateRight(node);
             }
@@ -440,12 +405,12 @@ namespace SortLib
 
         private Node MoveRedLeft(Node node)
         {
+            Debug.Assert(IsRed(node) && !IsRed(node.Left) && !IsRed(node.Left.Left));
             ColorFlip(node);
             if (IsRed(node.Right.Left))
             {
                 node.Right = RotateRight(node.Right);
                 node = RotateLeft(node);
-                ColorFlip(node);
             }
 
             return node;
@@ -453,11 +418,11 @@ namespace SortLib
 
         private Node MoveRedRight(Node node)
         {
+            Debug.Assert(IsRed(node) && !IsRed(node.Right) && !IsRed(node.Right.Left));
             ColorFlip(node);
             if (IsRed(node.Left.Left))
             {
                 node = RotateRight(node);
-                ColorFlip(node);
             }
 
             return node;
@@ -468,6 +433,63 @@ namespace SortLib
             return node == null ? 0 : 1 + CountNodes(node.Left) + CountNodes(node.Right);
         }
 
+        /// <summary>
+        /// Inserts an <paramref name="item"/> below a <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The part of the tree to insert in.</param>
+        /// <param name="item">The item to insert.</param>
+        /// <param name="inserted">if set to <c>true</c> a new node in the tree was created;
+        /// it's <c>false</c> for an unchanged tree.</param>
+        /// <returns>The node containing <paramref name="item"/>.</returns>
+        protected Node Insert(Node node, T item, out bool inserted)
+        {
+            if (node == null)
+            {
+                inserted = true;
+                return new Node(item);
+            }
+
+#if TREE234
+            if (HasRedChildren(node))
+            {
+                ColorFlip(node);
+            }
+#endif
+
+            int cmp = _comparer.Compare(item, node.Item);
+            if (cmp < 0)
+            {
+                node.Left = Insert(node.Left, item, out inserted);
+            }
+            else if (cmp > 0)
+            {
+                node.Right = Insert(node.Right, item, out inserted);
+            }
+            else
+            {
+                inserted = false;
+                node.Item = item;
+            }
+
+            if (IsRed(node.Right) && !IsRed(node.Left))
+            {
+                node = RotateLeft(node);
+            }
+            if (TwiceLeftColor(node) == Node.RED)
+            {
+                node = RotateRight(node);
+            }
+
+#if TREE23
+            if (HasRedChildren(node))
+            {
+                ColorFlip(node);
+            }
+#endif
+
+            return node;
+        }
+
         private static bool IsRed(Node node)
         {
             return node != null && node.Color == Node.RED;
@@ -475,6 +497,7 @@ namespace SortLib
 
         private Node RotateRight(Node node)
         {
+            Debug.Assert(node != null && IsRed(node.Left));
             Node x = node.Left;
             node.Left = x.Right;
             x.Right = node;
@@ -483,6 +506,7 @@ namespace SortLib
 
         private static Node FixColorAfterRotation(Node node, Node parent)
         {
+            Debug.Assert(parent.Left == node || parent.Right == node, "These nodes are not directly related.");
             parent.Color = node.Color;
             node.Color = Node.RED;
             return parent;
@@ -490,6 +514,7 @@ namespace SortLib
 
         private Node RotateLeft(Node node)
         {
+            Debug.Assert(node != null && IsRed(node.Right));
             Node x = node.Right;
             node.Right = x.Left;
             x.Left = node;
