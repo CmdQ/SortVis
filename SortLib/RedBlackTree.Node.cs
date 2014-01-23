@@ -53,6 +53,20 @@ namespace SortLib
             /// Gets or sets the item stored in this node.
             /// </summary>
             public T Item { get; set; }
+
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String" /> that represents this instance.
+            /// </returns>
+            public override string ToString()
+            {
+                return string.Format("{{{3} Node '{0}' with {1} and {2}}}", Item.ToString(),
+                    Left == null ? "NO left" : string.Format("{{left '{0}'}}", Left.Item.ToString()),
+                    Right == null ? "NO right" : string.Format("{{right '{0}'}}", Right.Item.ToString()),
+                    Left == null && Right == null ? "empty" : (Left != null ? "LL" : "wrong"));
+            }
         }
     }
 }
