@@ -117,6 +117,16 @@ namespace Unittest
             Assert.That(a.IsProperSupersetOf(_primes));
         }
 
+        [TestCase]
+        public void TestOverlap()
+        {
+            var a = new RedBlackSetTester<int>(_odd);
+            Assert.That(() => a.Overlaps(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(a.Overlaps(_even), Is.False);
+            a.AddRange(_primes);
+            Assert.That(a.Overlaps(_even));
+        }
+
         private bool UpTo100(int n)
         {
             return n <= 100;

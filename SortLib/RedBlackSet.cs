@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -244,11 +245,8 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool Overlaps(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-            throw new NotImplementedException();
+            // TODO: Use Distinct()?
+            return other.Any(e => Contains(e));
         }
 
         /// <summary>
