@@ -471,7 +471,7 @@ namespace SortLib
                 node.Item = item;
             }
 
-            if (IsRed(node.Right) && !IsRed(node.Left))
+            if (IsRightLeaning(node))
             {
                 node = RotateLeft(node);
             }
@@ -488,6 +488,11 @@ namespace SortLib
 #endif
 
             return node;
+        }
+
+        private static bool IsRightLeaning(Node node)
+        {
+            return !IsRed(node.Left) && IsRed(node.Right);
         }
 
         private static bool IsRed(Node node)
