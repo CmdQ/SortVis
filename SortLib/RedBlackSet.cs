@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SortLib
 {
@@ -136,20 +137,7 @@ namespace SortLib
 
             var otherSet = new RedBlackSet<T>(other);
 
-            if (Count >= otherSet.Count)
-            {
-                return false;
-            }
-
-            foreach (var item in this)
-            {
-                if (!otherSet.Contains(item))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return IsSomeSubsetOf(otherSet, 1);
         }
 
         /// <summary>
@@ -206,7 +194,8 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
-            throw new NotImplementedException();
+
+            return IsSomeSubsetOf(new RedBlackSet<T>(other), 0);
         }
 
         /// <summary>
@@ -301,6 +290,33 @@ namespace SortLib
                 throw new ArgumentNullException("other");
             }
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// This checks if this set is a subset of <paramref name="other"/>. It works
+        /// for both regular and proper subsets, depending on the value of <paramref name="minDifference"/>.
+        /// </summary>
+        /// <param name="other">The set to compare to the current set.</param>
+        /// <param name="minDifference">A minimum difference that has to be observed in the number of elements
+        /// in the set.</param>
+        /// <returns><c>true</c> if the set is a (proper) subset of <paramref name="other"/>.</returns>
+        private bool IsSomeSubsetOf(RedBlackSet<T> other, int minDifference)
+        {
+            Debug.Assert(minDifference == 0 || minDifference == 1, "Other values don't make sense.");
+            if (Count + minDifference > other.Count)
+            {
+                return false;
+            }
+
+            foreach (var item in this)
+            {
+                if (!other.Contains(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

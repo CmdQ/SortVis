@@ -76,6 +76,21 @@ namespace Unittest
             Assert.That(a.IsProperSubsetOf(_numbers), Is.False);
         }
 
+        [TestCase]
+        public void TestIsSubsetOf()
+        {
+            var a = new RedBlackSetTester<int>();
+            Assert.That(() => a.IsSubsetOf(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(a.IsSubsetOf(Enumerable.Range(1, 1)));
+            Assert.That(a.IsSubsetOf(Enumerable.Empty<int>()));
+            a.AddRange(_primes);
+            Assert.That(a.IsSubsetOf(_numbers));
+            a.AddRange(_even.Where(UpTo100));
+            Assert.That(a.IsSubsetOf(_numbers));
+            a.AddRange(_odd.Where(UpTo100));
+            Assert.That(a.IsSubsetOf(_numbers));
+        }
+
         private bool UpTo100(int n)
         {
             return n <= 100;
