@@ -66,6 +66,7 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
+
             foreach (T elm in other)
             {
                 Remove(elm);
@@ -107,8 +108,8 @@ namespace SortLib
         /// otherwise, <c>false</c>.</returns>
         /// <remarks>
         /// <para>
-        /// If the current set is a proper subset of <paramref name="other"/>, <paramref name="other"/> must have at least one
-        /// element that the current set does not have.
+        /// If the current set is a proper subset of <paramref name="other"/>, <paramref name="other"/> must have
+        /// at least one element that the current set does not have.
         /// <para>
         /// An empty set is a proper subset of any other collection. Therefore, this method
         /// returns <c>true</c> if the current set is empty, unless the
@@ -126,7 +127,29 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
-            throw new NotImplementedException();
+            
+            if (Empty)
+            {
+                var e = other.GetEnumerator();
+                return e.MoveNext();
+            }
+
+            var otherSet = new RedBlackSet<T>(other);
+
+            if (Count >= otherSet.Count)
+            {
+                return false;
+            }
+
+            foreach (var item in this)
+            {
+                if (!otherSet.Contains(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>

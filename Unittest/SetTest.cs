@@ -29,7 +29,7 @@ namespace Unittest
             _squares = (
                 from n in _numbers
                 let s = n * n
-                where s <= 100
+                where UpTo100(s)
                 select s).ToArray();
 
             _primes = (
@@ -59,6 +59,26 @@ namespace Unittest
             Assert.That(a.Contains(2));
             a.IntersectWith(_odd);
             Assert.That(a, Is.Empty);
+        }
+
+        [TestCase]
+        public void TestIsProperSubsetOf()
+        {
+            var a = new RedBlackSetTester<int>();
+            Assert.That(() => a.IsProperSubsetOf(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(a.IsProperSubsetOf(Enumerable.Range(1, 1)));
+            Assert.That(a.IsProperSubsetOf(Enumerable.Empty<int>()), Is.False);
+            a.AddRange(_primes);
+            Assert.That(a.IsProperSubsetOf(_numbers));
+            a.AddRange(_even.Where(UpTo100));
+            Assert.That(a.IsProperSubsetOf(_numbers));
+            a.AddRange(_odd.Where(UpTo100));
+            Assert.That(a.IsProperSubsetOf(_numbers), Is.False);
+        }
+
+        private bool UpTo100(int n)
+        {
+            return n <= 100;
         }
 
         private bool IsPrime(int n)

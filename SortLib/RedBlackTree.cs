@@ -49,10 +49,7 @@ namespace SortLib
         public RedBlackTree(IEnumerable<T> elements, IComparer<T> comparer = null)
             : this(comparer)
         {
-            foreach (var elm in elements)
-            {
-                Add(elm);
-            }
+            AddRange(elements);
         }
 
         /// <summary>
@@ -131,6 +128,19 @@ namespace SortLib
         public void Add(T item)
         {
             AddItem(item);
+        }
+
+        /// <summary>
+        /// Adds all elements in <paramref name="items"/>.
+        /// </summary>
+        /// <param name="items">The items to add.</param>
+        /// <remarks>Duplicate items are ignored.</remarks>
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Add(item);
+            }
         }
 
         /// <summary>
