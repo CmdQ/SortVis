@@ -502,7 +502,7 @@ namespace SortLib
 
         private Node RotateRight(Node node)
         {
-            Debug.Assert(node != null && IsRed(node.Left));
+            Debug.Assert(IsRed(node.Left));
             Node x = node.Left;
             node.Left = x.Right;
             x.Right = node;
@@ -519,7 +519,7 @@ namespace SortLib
 
         private Node RotateLeft(Node node)
         {
-            Debug.Assert(node != null && IsRed(node.Right));
+            Debug.Assert(IsRed(node.Right));
             Node x = node.Right;
             node.Right = x.Left;
             x.Left = node;
