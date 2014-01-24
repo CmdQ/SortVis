@@ -84,7 +84,19 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
-            throw new NotImplementedException();
+
+            var otherSet = new RedBlackSet<T>(other);
+
+            var copy = new T[Count];
+            CopyTo(copy, 0);
+
+            foreach (var item in copy)
+            {
+                if (!otherSet.Contains(item))
+                {
+                    Remove(item);
+                }
+            }
         }
 
         /// <summary>

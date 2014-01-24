@@ -42,8 +42,23 @@ namespace Unittest
         public void TestExceptWith()
         {
             var a = new RedBlackSetTester<int>(_numbers);
+            Assert.That(() => a.ExceptWith(null), Throws.InstanceOf<ArgumentNullException>());
             a.ExceptWith(_odd);
             Assert.That(a, Is.EqualTo(_even.Where(x => x <= _numbers.Max())));
+            a.ExceptWith(_primes);
+            Assert.That(a, Is.EqualTo(_even.Where(x => x > 2 && x <= _numbers.Max())));
+        }
+
+        [TestCase]
+        public void TestIntersectWith()
+        {
+            var a = new RedBlackSetTester<int>(_even);
+            Assert.That(() => a.IntersectWith(null), Throws.InstanceOf<ArgumentNullException>());
+            a.IntersectWith(_primes);
+            Assert.That(a, Has.Count.EqualTo(1));
+            Assert.That(a.Contains(2));
+            a.IntersectWith(_odd);
+            Assert.That(a, Is.Empty);
         }
 
         private bool IsPrime(int n)
