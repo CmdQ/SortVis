@@ -49,6 +49,10 @@ namespace SortLib
         public RedBlackTree(IEnumerable<T> elements, IComparer<T> comparer = null)
             : this(comparer)
         {
+            if (elements == null)
+            {
+                throw new ArgumentNullException("elements");
+            }
             AddRange(elements);
         }
 

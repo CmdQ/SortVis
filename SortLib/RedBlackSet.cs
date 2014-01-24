@@ -83,11 +83,6 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void IntersectWith(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-
             var otherSet = new RedBlackSet<T>(other);
 
             var copy = new T[Count];
@@ -198,11 +193,6 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool IsSubsetOf(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-
             return IsSomeSubsetOf(new RedBlackSet<T>(other), 0);
         }
 
@@ -225,11 +215,6 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool IsSupersetOf(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-
             var otherSet = new RedBlackSet<T>(other);
 
             return otherSet.IsSomeSubsetOf(this, 0);
