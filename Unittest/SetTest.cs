@@ -139,6 +139,20 @@ namespace Unittest
             Assert.That(a.SetEquals(_numbers));
         }
 
+        [TestCase]
+        public void TestSymmetricExceptWith()
+        {
+            var a = new RedBlackSetTester<int>(_odd.Where(UpTo100));
+            Assert.That(() => a.SymmetricExceptWith(null), Throws.InstanceOf<ArgumentNullException>());
+            a.SymmetricExceptWith(_even.Where(UpTo100));
+            Assert.That(a.SetEquals(_numbers));
+            a.Clear();
+            a.AddRange(_primes);
+            a.SymmetricExceptWith(_odd.Where(UpTo100).Concat(Enumerable.Repeat(2, 2)));
+            Assert.That(a.Contains(_primes.First()), Is.False);
+            Assert.That(_primes.Skip(1).All(p => !a.Contains(p)));
+        }
+
         private bool UpTo100(int n)
         {
             return n <= 100;

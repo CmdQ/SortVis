@@ -256,11 +256,19 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
-            if (other == null)
+            var otherSet = new RedBlackSet<T>(other);
+
+            foreach (var item in otherSet)
             {
-                throw new ArgumentNullException("other");
+                if (Contains(item))
+                {
+                    Remove(item);
+                }
+                else
+                {
+                    Add(item);
+                }
             }
-            throw new NotImplementedException();
         }
 
         /// <summary>
