@@ -1,6 +1,8 @@
 ﻿#if !TREE23 && !TREE234
-#warning Define either TREE23 or TREE234 of these, altough the 2-3-4 case is broken.
+#warning Define either TREE23 or TREE234.
 #define TREE23
+#elif TREE23 && TREE234
+#error You cannot define them both.
 #endif
 
 using System;
@@ -355,6 +357,12 @@ namespace SortLib
         {
             if (IsRed(node.Right))
             {
+#if TREE234
+                if (IsRed(node.Right.Left))
+                {
+                    node.Right = RotateRight(node.Right);
+                }
+#endif
                 node = RotateLeft(node);
             }
 
@@ -363,10 +371,12 @@ namespace SortLib
                 node = RotateRight(node);
             }
 
+#if TREE23
             if (HasRedChildren(node))
             {
                 ColorFlip(node);
             }
+#endif
 
             return node;
         }
@@ -411,6 +421,13 @@ namespace SortLib
             {
                 node.Right = RotateRight(node.Right);
                 node = RotateLeft(node);
+
+#if TREE234
+                if (IsRed(node.Right.Right))
+                {
+                    node.Right = RotateLeft(node.Right);
+                }
+#endif
             }
 
             return node;
