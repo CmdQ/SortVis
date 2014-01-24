@@ -201,6 +201,18 @@ namespace SortLib
         }
 
         /// <summary>
+        /// Removes a range of elements from the tree.
+        /// </summary>
+        /// <param name="items">The items to remove.</param>
+        public void RemoveRange(IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                Remove(item);
+            }
+        }
+
+        /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>

@@ -69,10 +69,7 @@ namespace SortLib
                 throw new ArgumentNullException("other");
             }
 
-            foreach (T elm in other)
-            {
-                Remove(elm);
-            }
+            RemoveRange(other);
         }
 
         /// <summary>
