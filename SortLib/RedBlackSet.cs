@@ -227,8 +227,7 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool Overlaps(IEnumerable<T> other)
         {
-            // TODO: Use Distinct()?
-            return other.Any(e => Contains(e));
+            return other.Distinct(EqualityComparer).Any(e => Contains(e));
         }
 
         /// <summary>
