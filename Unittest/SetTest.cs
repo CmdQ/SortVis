@@ -91,6 +91,32 @@ namespace Unittest
             Assert.That(a.IsSubsetOf(_numbers));
         }
 
+        [TestCase]
+        public void TestIsSupersetOf()
+        {
+            var a = new RedBlackSetTester<int>();
+            Assert.That(() => a.IsSupersetOf(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(a.IsSupersetOf(Enumerable.Empty<int>()));
+            Assert.That(a.IsSupersetOf(Enumerable.Range(1, 1)), Is.False);
+            a.AddRange(_odd);
+            Assert.That(a.IsSupersetOf(_primes), Is.False);
+            a.Add(2);
+            Assert.That(a.IsSupersetOf(_primes));
+        }
+
+        [TestCase]
+        public void TestIsProperSupersetOf()
+        {
+            var a = new RedBlackSetTester<int>();
+            Assert.That(() => a.IsProperSupersetOf(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(a.IsProperSupersetOf(Enumerable.Empty<int>()), Is.False);
+            Assert.That(a.IsProperSupersetOf(Enumerable.Range(1, 1)), Is.False);
+            a.Add(2);
+            Assert.That(a.IsProperSupersetOf(Enumerable.Empty<int>()));
+            a.AddRange(_odd);
+            Assert.That(a.IsProperSupersetOf(_primes));
+        }
+
         private bool UpTo100(int n)
         {
             return n <= 100;

@@ -129,15 +129,14 @@ namespace SortLib
                 throw new ArgumentNullException("other");
             }
             
+            // Early exit.
             if (Empty)
             {
                 var e = other.GetEnumerator();
                 return e.MoveNext();
             }
 
-            var otherSet = new RedBlackSet<T>(other);
-
-            return IsSomeSubsetOf(otherSet, 1);
+            return IsSomeSubsetOf(new RedBlackSet<T>(other), 1);
         }
 
         /// <summary>
@@ -168,7 +167,15 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
-            throw new NotImplementedException();
+
+            // Early exit.
+            var e = other.GetEnumerator();
+            if (!e.MoveNext())
+            {
+                return !Empty;
+            }
+
+            return (new RedBlackSet<T>(other)).IsSomeSubsetOf(this, 1);
         }
 
         /// <summary>
@@ -221,7 +228,10 @@ namespace SortLib
             {
                 throw new ArgumentNullException("other");
             }
-            throw new NotImplementedException();
+
+            var otherSet = new RedBlackSet<T>(other);
+
+            return otherSet.IsSomeSubsetOf(this, 0);
         }
 
         /// <summary>
