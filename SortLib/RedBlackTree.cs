@@ -24,14 +24,16 @@ namespace SortLib
         private readonly IComparer<T> _comparer;
 
         /// <summary>
+        /// The root node of the tree.
+        /// </summary>
+        protected Node _root = null;
+
+        /// <summary>
         /// This is a cached flattened variant of the tree. Set to <c>null</c> whenever you modify the tree!
         /// </summary>
         private LinkedList<T> _cache;
 
-        /// <summary>
-        /// The root node of the tree.
-        /// </summary>
-        protected Node _root = null;
+        private IEqualityComparer<T> _equality;
 
         /// <summary>
         /// Initializes an empty instance of the <see cref="RedBlackTree{T}"/> class.
@@ -90,6 +92,17 @@ namespace SortLib
             get
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets an equality comparer that is derived from <see cref="Comparer"/>.
+        /// </summary>
+        protected IEqualityComparer<T> EqualityComparer
+        {
+            get
+            {
+                return _equality = _equality ?? new ComparerBasedEqualityComparer(Comparer);
             }
         }
 

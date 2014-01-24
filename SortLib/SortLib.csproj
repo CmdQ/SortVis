@@ -43,6 +43,7 @@
     <Compile Include="GeneratorBase.cs" />
     <Compile Include="RedBlackMap.cs" />
     <Compile Include="RedBlackSet.cs" />
+    <Compile Include="RedBlackTree.EqualityComparer.cs" />
     <Compile Include="RedBlackTree.Node.cs" />
     <Compile Include="RedBlackTree.cs" />
     <Compile Include="SorterBase.ComparerExt.cs" />

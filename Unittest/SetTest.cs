@@ -127,6 +127,18 @@ namespace Unittest
             Assert.That(a.Overlaps(_even));
         }
 
+        [TestCase]
+        public void TestSetEquals()
+        {
+            var a = new RedBlackSetTester<int>(_odd.Where(UpTo100));
+            Assert.That(() => a.SetEquals(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(a.SetEquals(_numbers), Is.False);
+            a.AddRange(_primes);
+            Assert.That(a.SetEquals(_numbers), Is.False);
+            a.AddRange(_even.Where(UpTo100));
+            Assert.That(a.SetEquals(_numbers));
+        }
+
         private bool UpTo100(int n)
         {
             return n <= 100;

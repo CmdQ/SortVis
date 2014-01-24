@@ -246,11 +246,9 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public bool SetEquals(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-            throw new NotImplementedException();
+            var otherSet = new RedBlackSet<T>(other);
+
+            return FlatList.SequenceEqual(otherSet.FlatList, EqualityComparer);
         }
 
         /// <summary>
