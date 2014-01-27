@@ -33,8 +33,6 @@ namespace SortLib
         /// </summary>
         private LinkedList<T> _cache;
 
-        private IEqualityComparer<T> _equality;
-
         /// <summary>
         /// Initializes an empty instance of the <see cref="RedBlackTree{T}"/> class.
         /// </summary>
@@ -92,17 +90,6 @@ namespace SortLib
             get
             {
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets an equality comparer that is derived from <see cref="Comparer"/>.
-        /// </summary>
-        protected IEqualityComparer<T> EqualityComparer
-        {
-            get
-            {
-                return _equality = _equality ?? new ComparerBasedEqualityComparer(Comparer);
             }
         }
 

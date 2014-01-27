@@ -9,8 +9,10 @@ namespace SortLib
     /// A set in form of a balanced binary tree.
     /// </summary>
     /// <typeparam name="T">The type of the values which have to be <see cref="IComparable{K}"/></typeparam>
-    public class RedBlackSet<T> : RedBlackTree<T>, ISet<T> where T : IComparable<T>
+    public partial class RedBlackSet<T> : RedBlackTree<T>, ISet<T> where T : IComparable<T>
     {
+        private IEqualityComparer<T> _equality;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RedBlackSet{T}"/> class.
         /// </summary>
@@ -40,6 +42,18 @@ namespace SortLib
                 return _root == null;
             }
         }
+
+        /// <summary>
+        /// Gets an equality comparer that is derived from <see cref="RedBlackTree{T}.Comparer"/>.
+        /// </summary>
+        private IEqualityComparer<T> EqualityComparer
+        {
+            get
+            {
+                return _equality = _equality ?? new ComparerBasedEqualityComparer(Comparer);
+            }
+        }
+
 
         /// <summary>
         /// Inserts the specified <paramref name="item"/> into the tree.

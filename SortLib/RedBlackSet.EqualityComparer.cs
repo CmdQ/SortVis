@@ -2,7 +2,7 @@
 
 namespace SortLib
 {
-    partial class RedBlackTree<T>
+    public partial class RedBlackSet<T>
     {
         private class ComparerBasedEqualityComparer : IEqualityComparer<T>
         {
