@@ -78,11 +78,6 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void ExceptWith(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-
             RemoveRange(other);
         }
 
@@ -294,11 +289,7 @@ namespace SortLib
         /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
         public void UnionWith(IEnumerable<T> other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-            throw new NotImplementedException();
+            AddRange(other);
         }
 
         /// <summary>

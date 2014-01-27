@@ -153,6 +153,19 @@ namespace Unittest
             Assert.That(_primes.Skip(1).All(p => !a.Contains(p)));
         }
 
+        [TestCase]
+        public void TestUnionWith()
+        {
+            var a = new RedBlackSetTester<int>(_odd.Where(UpTo100));
+            Assert.That(() => a.SymmetricExceptWith(null), Throws.InstanceOf<ArgumentNullException>());
+            int count = a.Count;
+            a.UnionWith(_primes);
+            Assert.That(a.Count, Is.EqualTo(count + 1));
+            Assert.That(a.Contains(2));
+            a.UnionWith(_even.Where(UpTo100));
+            Assert.That(a.SetEquals(_numbers));
+        }
+
         private bool UpTo100(int n)
         {
             return n <= 100;

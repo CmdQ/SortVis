@@ -49,10 +49,6 @@ namespace SortLib
         public RedBlackTree(IEnumerable<T> elements, IComparer<T> comparer = null)
             : this(comparer)
         {
-            if (elements == null)
-            {
-                throw new ArgumentNullException("elements");
-            }
             AddRange(elements);
         }
 
@@ -141,6 +137,11 @@ namespace SortLib
         /// <remarks>Duplicate items are ignored.</remarks>
         public void AddRange(IEnumerable<T> items)
         {
+            if (items == null)
+            {
+                throw new ArgumentNullException("items");
+            }
+
             foreach (var item in items)
             {
                 Add(item);
@@ -193,6 +194,11 @@ namespace SortLib
         /// <param name="items">The items to remove.</param>
         public void RemoveRange(IEnumerable<T> items)
         {
+            if (items == null)
+            {
+                throw new ArgumentNullException("items");
+            }
+
             foreach (T item in items)
             {
                 Remove(item);
