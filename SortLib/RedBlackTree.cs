@@ -36,6 +36,7 @@ namespace SortLib
         /// <summary>
         /// Initializes an empty instance of the <see cref="RedBlackTree{T}"/> class.
         /// </summary>
+        /// <param name="comparer">An optional comparer to use for the the order of the elements.</param>
         public RedBlackTree(IComparer<T> comparer = null)
         {
             _comparer = comparer ?? Comparer<T>.Default;

@@ -10,6 +10,28 @@ namespace Unittest
     public class RedBlackTreeTest
     {
         [TestCase]
+        public void TestComparerForSet()
+        {
+            var a = new RedBlackSet<int>((x, y) => y - x)
+            {
+                23,
+                253,
+                7,
+                1,
+                52,
+                79,
+                834,
+                1,
+            };
+
+            var flat = a.Reverse().ToArray();
+            for (int i = 1; i < flat.Length; ++i)
+            {
+                Assert.That(flat[i - 1], Is.LessThanOrEqualTo(flat[i]));
+            }
+        }
+
+        [TestCase]
         public void TestCacheWorks()
         {
             var init = new int[] { 2, 3, 4, 5 };

@@ -23,6 +23,15 @@ namespace SortLib
         }
 
         /// <summary>
+        /// Initializes an empty instance of the <see cref="RedBlackTree{T}"/> class.
+        /// </summary>
+        /// <param name="lambdaComparer">A lambda that does the comparing of elements.</param>
+        public RedBlackSet(Comparison<T> lambdaComparer)
+            : base(System.Collections.Generic.Comparer<T>.Create(lambdaComparer))
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RedBlackSet{T}"/> class with elements to be added.
         /// </summary>
         /// <param name="elements">The elements to add.</param>
