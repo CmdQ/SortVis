@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SortLib
 {
-    public class RedBlackSameMap<T> : RedBlackMap<T, T>
+    internal class RedBlackSameMap<T> : RedBlackMap<T, T>
         where T : IComparable<T>, new()
     {
         public KeyValuePair<T, T>? PredecessorOrNode(T x)

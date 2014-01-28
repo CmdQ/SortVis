@@ -2,11 +2,20 @@
 
 namespace SortLib
 {
+    /// <summary>
+    /// Implements a class to keep track of intervals that can merge when overlapped.
+    /// </summary>
+    /// <typeparam name="T">The numeric type to describe bound with.</typeparam>
     public class Intervals<T>
         where T : IComparable<T>, new()
     {
         private readonly RedBlackSameMap<T> _map = new RedBlackSameMap<T>();
 
+        /// <summary>
+        /// Adds an interval.
+        /// </summary>
+        /// <param name="lo">Inclusive lower bound.</param>
+        /// <param name="hi">Exclusive upper bound.</param>
         public void Add(T lo, T hi)
         {
             var predNull = _map.PredecessorOrNode(lo);
@@ -64,6 +73,11 @@ namespace SortLib
             }
         }
 
+        /// <summary>
+        /// Tests whether a value falls within one of the saved intervals.
+        /// </summary>
+        /// <param name="x">The number to check.</param>
+        /// <returns><c>true</c> when in one of the intervals, <c>false</c>otherwise.</returns>
         public bool Contains(T x)
         {
             var pre = _map.PredecessorOrNode(x);

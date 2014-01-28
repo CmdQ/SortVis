@@ -272,6 +272,13 @@ namespace SortLib
             return null;
         }
 
+        /// <summary>
+        /// Finds the successor node of a given node in the tree.
+        /// </summary>
+        /// <param name="node">The node whose successor we shall find.</param>
+        /// <param name="root">An optional point in the tree to start from; if <c>null</c>
+        /// then we start from the root.</param>
+        /// <returns>The found successor node or <c>null</c> if a successor doesn't exist.</returns>
         protected Node Successor(Node node, Node root = null)
         {
             if (node == null)
