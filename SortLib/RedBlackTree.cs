@@ -65,6 +65,17 @@ namespace SortLib
         }
 
         /// <summary>
+        /// Gets a value indicating whether the tree is empty.
+        /// </summary>
+        public bool Empty
+        {
+            get
+            {
+                return _root == null;
+            }
+        }
+
+        /// <summary>
         /// Gets the number of elements in this tree.
         /// </summary>
         public int Count

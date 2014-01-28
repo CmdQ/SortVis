@@ -42,17 +42,6 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Gets a value indicating whether the set is empty.
-        /// </summary>
-        public bool Empty
-        {
-            get
-            {
-                return _root == null;
-            }
-        }
-
-        /// <summary>
         /// Gets an equality comparer that is derived from <see cref="RedBlackTree{T}.Comparer"/>.
         /// </summary>
         private IEqualityComparer<T> EqualityComparer
