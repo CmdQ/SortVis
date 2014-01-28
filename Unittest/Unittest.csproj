@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntervalTest.cs" />
     <Compile Include="RedBlackTreeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedBlackTreeTestExtensions.cs" />

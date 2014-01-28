@@ -272,6 +272,41 @@ namespace SortLib
             return null;
         }
 
+        protected Node Successor(Node node, Node root = null)
+        {
+            if (node == null)
+            {
+                return null;
+            }
+
+            if (node.Left != null)
+            {
+                return Max(node.Left);
+            }
+
+            root = root ?? _root;
+
+            Node succ = null;
+            while (root != null)
+            {
+                int cmp = _comparer.Compare(node.Item, root.Item);
+                if (cmp < 0)
+                {
+                    succ = root;
+                    root = root.Left;
+                }
+                else if (cmp > 0)
+                {
+                    root = root.Right;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return succ;
+        }
+
         /// <summary>
         /// Inserts the specified <paramref name="item"/> into the tree.
         /// </summary>
@@ -435,6 +470,16 @@ namespace SortLib
             while (node.Left != null)
             {
                 node = node.Left;
+            }
+
+            return node;
+        }
+
+        private Node Max(Node node)
+        {
+            while (node.Right != null)
+            {
+                node = node.Right;
             }
 
             return node;

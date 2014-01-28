@@ -35,6 +35,7 @@
     <Compile Include="BubbleSort.cs" />
     <Compile Include="CircularArray.cs" />
     <Compile Include="IGenerator.cs" />
+    <Compile Include="Intervals.cs" />
     <Compile Include="ISorter.cs" />
     <Compile Include="IGeneratorMetadata.cs" />
     <Compile Include="ISorterMetadata.cs" />
@@ -42,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GeneratorBase.cs" />
     <Compile Include="RedBlackMap.cs" />
+    <Compile Include="RedBlackSameMap.cs" />
     <Compile Include="RedBlackSet.cs" />
     <Compile Include="RedBlackSet.EqualityComparer.cs" />
     <Compile Include="RedBlackTree.Node.cs" />
