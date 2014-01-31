@@ -59,9 +59,17 @@ namespace SortLib
                     else
                     {
                         var succ = succNull.Value;
-                        if (hi.CompareTo(succ.Key) > 0)
+                        if (hi.CompareTo(succ.Key) >= 0)
                         {
-                            _map.Remove(succ.Key);
+                            // Shares part with successor.
+                            _map.Remove(succ);
+
+                            if (pred.Value.CompareTo(lo) >= 0)
+                            {
+                                // Also shares part with predecessor.
+                                _map.Remove(pred);
+                                lo = pred.Key;
+                            }
                             if (hi.CompareTo(succ.Value) >= 0)
                             {
                                 _map.Add(lo, hi);
@@ -103,6 +111,11 @@ namespace SortLib
             }
 
             return found.Key.CompareTo(x) <= 0 && x.CompareTo(found.Value) < 0;
+        }
+
+        internal int Count()
+        {
+            return _map.Count;
         }
     }
 }

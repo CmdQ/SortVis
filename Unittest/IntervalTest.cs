@@ -36,6 +36,25 @@ namespace Unittest
         }
 
         [TestCase]
+        public void PerfectFill()
+        {
+            var a = new Intervals<float>();
+            a.Add(0, 5);
+            Assert.That(a.Contains(-float.Epsilon), Is.False);
+            Assert.That(a.Contains(0));
+            Assert.That(a.Contains(4.999f));
+            Assert.That(a.Contains(5), Is.False);
+            a.Add(6, 10);
+            Assert.That(a.Contains(6));
+            Assert.That(a.Contains(9.999f));
+            Assert.That(a.Contains(10), Is.False);
+            Assert.That(a.Count(), Is.EqualTo(2));
+            Assert.That(a.Count(), Is.EqualTo(2));
+            a.Add(5, 6);
+            Assert.That(a.Count(), Is.EqualTo(1));
+        }
+
+        [TestCase]
         public void PredecessorOfRightChild()
         {
             var a = MakeTree();
@@ -68,7 +87,9 @@ namespace Unittest
         {
             var a = MakeTree();
             a.Add(0, 4.9);
+            Assert.That(a.Count(), Is.EqualTo(5));
             a.Add(0, 6);
+            Assert.That(a.Count(), Is.EqualTo(5));
             a.Add(41, 43);
             a.Add(48.5, 50);
             Assert.That(a.Contains(-double.Epsilon), Is.False);
@@ -84,6 +105,7 @@ namespace Unittest
             Assert.That(a.Contains(49.99999));
             Assert.That(a.Contains(50), Is.False);
             a.Add(-200, 200);
+            Assert.That(a.Count(), Is.EqualTo(1));
             Assert.That(a.Contains(-200.00001), Is.False);
             Assert.That(a.Contains(-200));
             Assert.That(a.Contains(199.99999));
@@ -109,6 +131,7 @@ namespace Unittest
             a.Add(25, 29);
             a.Add(10, 12);
             a.Add(42, 49);
+            Assert.That(a.Count(), Is.EqualTo(5));
             return a;
         }
     }
