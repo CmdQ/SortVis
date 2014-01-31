@@ -71,6 +71,23 @@ namespace Unittest
             a.Add(0, 6);
             a.Add(41, 43);
             a.Add(48.5, 50);
+            Assert.That(a.Contains(-double.Epsilon), Is.False);
+            Assert.That(a.Contains(0));
+            Assert.That(a.Contains(5.99999));
+            Assert.That(a.Contains(40.99999), Is.False);
+            Assert.That(a.Contains(41));
+            Assert.That(a.Contains(42));
+            Assert.That(a.Contains(43));
+            Assert.That(a.Contains(44));
+            Assert.That(a.Contains(48));
+            Assert.That(a.Contains(49));
+            Assert.That(a.Contains(49.99999));
+            Assert.That(a.Contains(50), Is.False);
+            a.Add(-200, 200);
+            Assert.That(a.Contains(-200.00001), Is.False);
+            Assert.That(a.Contains(-200));
+            Assert.That(a.Contains(199.99999));
+            Assert.That(a.Contains(200), Is.False);
         }
 
         /// <summary>

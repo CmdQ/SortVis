@@ -18,6 +18,13 @@ namespace SortLib
         /// <param name="hi">Exclusive upper bound.</param>
         public void Add(T lo, T hi)
         {
+            if (hi.CompareTo(lo) <= 0)
+            {
+                return;
+            }
+
+            _map.RemoveOverlapped(lo, hi);
+
             var predNull = _map.PredecessorOrNode(lo);
 
             if (predNull == null)
@@ -40,7 +47,7 @@ namespace SortLib
                     var succNull = _map.Successor(pred.Value);
                     if (succNull == null)
                     {
-                        if (pred.Value.CompareTo(lo) > 0)
+                        if (pred.Value.CompareTo(lo) >= 0)
                         {
                             _map[pred.Key] = hi;
                         }
@@ -66,6 +73,7 @@ namespace SortLib
                         }
                         else
                         {
+                            // Lies completely between two intervals.
                             _map.Add(lo, hi);
                         }
                     }
