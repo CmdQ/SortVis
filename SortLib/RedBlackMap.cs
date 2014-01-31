@@ -5,19 +5,27 @@ using System.Linq;
 namespace SortLib
 {
     /// <summary>
-    /// A balanced binary tree that maps keys (of type <typeparamref name="K"/>) to values
-    /// (of type <typeparamref name="V"/>).
+    /// A balanced binary tree that maps keys (of type <typeparamref name="TKey"/>) to values
+    /// (of type <typeparamref name="TValue"/>).
     /// </summary>
-    /// <typeparam name="K">The type of the keys which have to be <see cref="IComparable{K}"/></typeparam>
-    /// <typeparam name="V">Values to associate with keys.</typeparam>
-    public class RedBlackMap<K, V> : RedBlackTree<KeyValuePair<K, V>>, IDictionary<K, V>
-        where K : IComparable<K>
-        where V : new()
+    /// <typeparam name="TKey">The type of the keys which have to be <see cref="IComparable{K}"/></typeparam>
+    /// <typeparam name="TValue">Values to associate with keys.</typeparam>
+    public class RedBlackMap<TKey, TValue> : RedBlackTree<KeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>
+        where TKey : IComparable<TKey>
+        where TValue : new()
     {
-        private class KeyValueComparer : IComparer<KeyValuePair<K, V>>
+        private class KeyValuePair
+        {
+            public static KeyValuePair<K, V> Create<K, V>(K key, V value)
+            {
+                return new KeyValuePair<K, V>(key, value);
+            }
+        }
+
+        private class KeyValueComparer : IComparer<KeyValuePair<TKey, TValue>>
         {
             private static readonly KeyValueComparer _singleton = new KeyValueComparer();
-            private static readonly IComparer<K> _comp = Comparer<K>.Default;
+            private static readonly IComparer<TKey> _comp = Comparer<TKey>.Default;
 
             private KeyValueComparer()
             {
@@ -31,7 +39,7 @@ namespace SortLib
             /// <returns>
             /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
             /// </returns>
-            public int Compare(KeyValuePair<K, V> x, KeyValuePair<K, V> y)
+            public int Compare(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
             {
                 return _comp.Compare(x.Key, y.Key);
             }
@@ -49,20 +57,20 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackMap{K, V}"/> class.
+        /// Initializes a new instance of the <see cref="RedBlackMap{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="comp">An optional comparer to use.</param>
-        public RedBlackMap(IComparer<KeyValuePair<K, V>> comp = null)
+        public RedBlackMap(IComparer<KeyValuePair<TKey, TValue>> comp = null)
             : base(comp ?? KeyValueComparer.Default)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackMap{K, V}"/> class with elements to be added.
+        /// Initializes a new instance of the <see cref="RedBlackMap{TKey, TValue}"/> class with elements to be added.
         /// </summary>
         /// <param name="pairs">Pairs of key and value to add.</param>
         /// <param name="comp">An optional comparer to use.</param>
-        public RedBlackMap(IEnumerable<KeyValuePair<K, V>> pairs, IComparer<KeyValuePair<K, V>> comp = null)
+        public RedBlackMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs, IComparer<KeyValuePair<TKey, TValue>> comp = null)
             : this(comp)
         {
             foreach (var pair in pairs)
@@ -72,13 +80,13 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackMap{K, V}"/> class with elements to be added.
+        /// Initializes a new instance of the <see cref="RedBlackMap{TKey, TValue}"/> class with elements to be added.
         /// </summary>
         /// <param name="keys">The keys to use.</param>
         /// <param name="values">The values to associate with.</param>
         /// <param name="comp">An optional comparer to use.</param>
-        public RedBlackMap(IEnumerable<K> keys, IEnumerable<V> values, IComparer<KeyValuePair<K, V>> comp = null)
-            : this(keys.Zip(values, (k, v) => new KeyValuePair<K, V>(k, v)), comp)
+        public RedBlackMap(IEnumerable<TKey> keys, IEnumerable<TValue> values, IComparer<KeyValuePair<TKey, TValue>> comp = null)
+            : this(keys.Zip(values, KeyValuePair.Create), comp)
         {
             if (keys.Count() != values.Count())
             {
@@ -87,11 +95,11 @@ namespace SortLib
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedBlackMap{K, V}"/> class with elements to be added.
+        /// Initializes a new instance of the <see cref="RedBlackMap{TKey, TValue}"/> class with elements to be added.
         /// </summary>
         /// <param name="tuples">The keys and values to store with.</param>
         /// <param name="comp">An optional comparer to use.</param>
-        public RedBlackMap(IEnumerable<Tuple<K, V>> tuples, IComparer<KeyValuePair<K, V>> comp = null)
+        public RedBlackMap(IEnumerable<Tuple<TKey, TValue>> tuples, IComparer<KeyValuePair<TKey, TValue>> comp = null)
             : this(comp)
         {
             foreach (var tuple in tuples)
@@ -108,7 +116,7 @@ namespace SortLib
         /// <returns>The value associated with <paramref name="key"/>.</returns>
         /// <exception cref="System.Collections.Generic.KeyNotFoundException">The map does not contain an entry
         /// for that key.</exception>
-        public V this[K key]
+        public TValue this[TKey key]
         {
             get
             {
@@ -130,9 +138,9 @@ namespace SortLib
         /// </summary>
         /// <param name="key">The key for <paramref name="value"/>.</param>
         /// <param name="value">The value to store with <paramref name="key"/>.</param>
-        public void Add(K key, V value)
+        public void Add(TKey key, TValue value)
         {
-            Add(new KeyValuePair<K, V>(key, value));
+            Add(new KeyValuePair<TKey, TValue>(key, value));
         }
 
         /// <summary>
@@ -140,9 +148,9 @@ namespace SortLib
         /// </summary>
         /// <param name="key">The key to locate.</param>
         /// <returns><c>true</c> if the key was found; otherwise, <c>false</c>.</returns>
-        public bool ContainsKey(K key)
+        public bool ContainsKey(TKey key)
         {
-            return base.Contains(new KeyValuePair<K, V>(key, new V()));
+            return base.Contains(new KeyValuePair<TKey, TValue>(key, new TValue()));
         }
 
         /// <summary>
@@ -150,7 +158,7 @@ namespace SortLib
         /// </summary>
         /// <param name="value">The value to find.</param>
         /// <returns><c>true</c> if the value was found; otherwise, <c>false</c>.</returns>
-        public bool ContainsValue(V value)
+        public bool ContainsValue(TValue value)
         {
             return FlatList.Any(kv => kv.Value.Equals(value));
         }
@@ -164,9 +172,9 @@ namespace SortLib
         /// <c>false</c> if <paramref name="key"/> was not found in the
         /// original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
-        public bool Remove(K key)
+        public bool Remove(TKey key)
         {
-            return base.Remove(new KeyValuePair<K, V>(key, new V()));
+            return base.Remove(new KeyValuePair<TKey, TValue>(key, new TValue()));
         }
 
 
@@ -178,7 +186,7 @@ namespace SortLib
         /// An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the object
         /// that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
-        public ICollection<K> Keys
+        public ICollection<TKey> Keys
         {
             get
             {
@@ -197,7 +205,7 @@ namespace SortLib
         /// <c>true</c> if the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/> contains
         /// an element with the specified key; otherwise, <c>false</c>.
         /// </returns>
-        public bool TryGetValue(K key, out V value)
+        public bool TryGetValue(TKey key, out TValue value)
         {
             var node = FindNode(key);
             if (node != null)
@@ -205,7 +213,7 @@ namespace SortLib
                 value = node.Item.Value;
                 return true;
             }
-            value = new V();
+            value = new TValue();
             return false;
         }
 
@@ -217,7 +225,7 @@ namespace SortLib
         /// An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the object
         /// that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
-        public ICollection<V> Values
+        public ICollection<TValue> Values
         {
             get
             {
@@ -225,9 +233,9 @@ namespace SortLib
             }
         }
 
-        private Node FindNode(K key, Node node = null)
+        private Node FindNode(TKey key, Node node = null)
         {
-            return FindNode(new KeyValuePair<K, V>(key, new V()), node);
+            return FindNode(new KeyValuePair<TKey, TValue>(key, new TValue()), node);
         }
     }
 }
