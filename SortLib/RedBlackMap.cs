@@ -14,13 +14,31 @@ namespace SortLib
         where TKey : IComparable<TKey>
         where TValue : new()
     {
-        public class KeyValuePair
+        /// <summary>
+        /// Provides convenience creation method for <see cref="KeyValuePair{TKey, TValue}"/>s.
+        /// </summary>
+        public static class KeyValuePair
         {
+            /// <summary>
+            /// Create a <see cref="KeyValuePair{K, V}"/> with a <paramref name="key"/> and a <paramref name="value"/>.
+            /// </summary>
+            /// <typeparam name="K">Type of the key.</typeparam>
+            /// <typeparam name="V">Type of the value.</typeparam>
+            /// <param name="key">The key to use.</param>
+            /// <param name="value">The value to associate with it.</param>
+            /// <returns>A new <see cref="KeyValuePair{K, V}"/>.</returns>
             public static KeyValuePair<K, V> Create<K, V>(K key, V value)
             {
                 return new KeyValuePair<K, V>(key, value);
             }
 
+            /// <summary>
+            /// Create a <see cref="KeyValuePair{K, V}"/> with a <paramref name="key"/> and a
+            /// default value.
+            /// </summary>
+            /// <typeparam name="K">Type of the key.</typeparam>
+            /// <param name="key">The key to use.</param>
+            /// <returns>A new <see cref="KeyValuePair{K, V}"/>.</returns>
             public static KeyValuePair<K, TValue> Create<K>(K key)
             {
                 return new KeyValuePair<K, TValue>(key, new TValue());
@@ -78,10 +96,7 @@ namespace SortLib
         public RedBlackMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs, IComparer<KeyValuePair<TKey, TValue>> comp = null)
             : this(comp)
         {
-            foreach (var pair in pairs)
-            {
-                Add(pair);
-            }
+            AddRange(pairs);
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace Unittest
             Assert.That(a.Contains(6));
             Assert.That(a.Contains(9.999f));
             Assert.That(a.Contains(10), Is.False);
-            Assert.That(a.Count(), Is.EqualTo(2));
+
             Assert.That(a.Count(), Is.EqualTo(2));
             a.Add(5, 6);
             Assert.That(a.Count(), Is.EqualTo(1));
