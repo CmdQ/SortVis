@@ -14,11 +14,16 @@ namespace SortLib
         where TKey : IComparable<TKey>
         where TValue : new()
     {
-        private class KeyValuePair
+        public class KeyValuePair
         {
             public static KeyValuePair<K, V> Create<K, V>(K key, V value)
             {
                 return new KeyValuePair<K, V>(key, value);
+            }
+
+            public static KeyValuePair<K, TValue> Create<K>(K key)
+            {
+                return new KeyValuePair<K, TValue>(key, new TValue());
             }
         }
 
@@ -140,7 +145,7 @@ namespace SortLib
         /// <param name="value">The value to store with <paramref name="key"/>.</param>
         public void Add(TKey key, TValue value)
         {
-            Add(new KeyValuePair<TKey, TValue>(key, value));
+            Add(KeyValuePair.Create(key, value));
         }
 
         /// <summary>
@@ -150,7 +155,7 @@ namespace SortLib
         /// <returns><c>true</c> if the key was found; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(TKey key)
         {
-            return base.Contains(new KeyValuePair<TKey, TValue>(key, new TValue()));
+            return base.Contains(KeyValuePair.Create(key));
         }
 
         /// <summary>
@@ -174,7 +179,7 @@ namespace SortLib
         /// </returns>
         public bool Remove(TKey key)
         {
-            return base.Remove(new KeyValuePair<TKey, TValue>(key, new TValue()));
+            return base.Remove(KeyValuePair.Create(key));
         }
 
 
@@ -235,7 +240,7 @@ namespace SortLib
 
         private Node FindNode(TKey key, Node node = null)
         {
-            return FindNode(new KeyValuePair<TKey, TValue>(key, new TValue()), node);
+            return FindNode(KeyValuePair.Create(key), node);
         }
     }
 }

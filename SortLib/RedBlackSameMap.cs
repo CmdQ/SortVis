@@ -12,7 +12,7 @@ namespace SortLib
         {
             Node n = _root;
             Node parent = null;
-            var xp = new KeyValuePair<T, T>(x, new T());
+            var xp = KeyValuePair.Create(x);
 
             while (n != null)
             {
@@ -40,7 +40,7 @@ namespace SortLib
 
         public KeyValuePair<T, T>? Successor(T x)
         {
-            var found = Successor(new Node(new KeyValuePair<T, T>(x, new T())));
+            var found = Successor(new Node(KeyValuePair.Create(x)));
             if (found == null)
             {
                 return null;
