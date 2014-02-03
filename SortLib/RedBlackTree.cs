@@ -559,7 +559,7 @@ namespace SortLib
             if (node == null)
             {
                 inserted = true;
-                return new Node(item);
+                return item;
             }
 
 #if TREE234

@@ -55,6 +55,16 @@ namespace SortLib
             public T Item { get; set; }
 
             /// <summary>
+            /// Implicit conversion of the type <typeparamref name="T"/> to a Node.
+            /// </summary>
+            /// <param name="item">The item to convert.</param>
+            /// <returns>A new node with <paramref name="item"/> in <see cref="Item"/>.</returns>
+            public static implicit operator Node(T item)
+            {
+                return new Node(item);
+            }
+
+            /// <summary>
             /// Returns a <see cref="System.String" /> that represents this instance.
             /// </summary>
             /// <returns>

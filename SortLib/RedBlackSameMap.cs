@@ -40,7 +40,7 @@ namespace SortLib
 
         internal KeyValuePair<T, T>? Successor(T x)
         {
-            var found = Successor(new Node(KeyValuePair.Create(x)));
+            var found = Successor(KeyValuePair.Create(x));
             if (found == null)
             {
                 return null;
