@@ -5,7 +5,7 @@ using System.ComponentModel.Composition;
 namespace n
 {
     /// <summary>
-    /// Implementation of radix sort.
+    /// Implementation of radix sort. Optimized with http://stereopsis.com/radix.html.
     /// </summary>
     [Export(typeof(ISorter))]
     [ExportMetadata("Name", "Radix sort")]
@@ -68,12 +68,13 @@ namespace n
 
                 foreach (int i in temp)
                 {
-                    Write(i, ++b1[Eleven1(i)]);
+                    Write(Flip(i), ++b1[Eleven1(i)]);
                 }
 
                 foreach (int i in Numbers)
                 {
-                    temp[++b2[Eleven2(i)]] = i;
+                    var fi = Flip(i);
+                    temp[++b2[Eleven2(fi)]] = fi;
                 }
                 Writes += count;
 
@@ -82,7 +83,6 @@ namespace n
                     Write(Flip(temp[i]), i);
                 }
             }
-
         }
 
         private int Flip(int i)
