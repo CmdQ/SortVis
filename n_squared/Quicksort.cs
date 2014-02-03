@@ -138,7 +138,7 @@ namespace n_squared
                 {
                     // Left half is bigger, so recurse in smaller half...
                     SortIt(pivot, hi);
-                    _sortedRanges.Add(pivot, hi);
+                    AddSortedRange(hi, pivot);
                     // ... and sort smaller by resetting bounds.
                     hi = pivot;
                 }
@@ -151,7 +151,7 @@ namespace n_squared
                     }
                     // Right half is bigger, so recurse in smaller half.
                     SortIt(lo, pivot);
-                    _sortedRanges.Add(lo, pivot);
+                    AddSortedRange(lo, pivot);
                     // ... and sort smaller by resetting bounds.
                     lo = pivot;
                 }
@@ -161,6 +161,14 @@ namespace n_squared
                 // If the interval gets to small, we don't bother with quicksort and use insertion sort.
                 InsertionSort.Sort(Numbers, lo, hi, CompareNum, Shift, Write, Abort);
                 return;
+            }
+        }
+
+        private void AddSortedRange(int hi, int pivot)
+        {
+            if (SteppedExecution != null)
+            {
+                _sortedRanges.Add(pivot, hi);
             }
         }
 
@@ -257,7 +265,7 @@ namespace n_squared
                 return true;
             }
 
-            return _sortedRanges.Contains(i);
+            return SteppedExecution == null || _sortedRanges.Contains(i);
         }
     }
 }
