@@ -15,9 +15,11 @@ namespace SortVis
                 typename Iter::value_type const mask,
                 Iter & front, Iter & back)
             {
+                Iter::value_type const zero{};
+
                 for (; first != last; ++first)
                 {
-                    if ((*first & mask) == 0)
+                    if ((*first & mask) == zero)
                     {
                         *front++ = *first;
                     }
@@ -47,13 +49,15 @@ namespace SortVis
 
             vector<value_type> swaps(n);
 
+            value_type one = 1;
+
             // All "normal" bits starting with the least significant one (makes it a stable sort).
             for (int b = 0; b < bits; ++b)
             {
                 auto front = swaps.begin();
                 auto back = --swaps.end();
 
-                partition(first, last, 1 << b, front, back);
+                partition(first, last, one << b, front, back);
 
                 if (front == swaps.end())
                 {
