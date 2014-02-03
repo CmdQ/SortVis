@@ -36,20 +36,20 @@ namespace SortVis
             template<typename T>
             struct Translate : public TranslateBase<T>
             {
-                static T ALL_ONE()
+                static T FIRST_ONE()
                 {
-                    return ALL_ONE(std::integral_constant<bool, std::numeric_limits<T>::is_signed>());
+                    return FIRST_ONE(std::integral_constant<bool, std::numeric_limits<T>::is_signed>());
                 }
 
             private:
-                static T ALL_ONE(std::integral_constant<bool, true>)
+                static T FIRST_ONE(std::integral_constant<bool, true>)
                 {
-                    return -1;
+                    return std::numeric_limits<T>::lowest();
                 }
 
-                static T ALL_ONE(std::integral_constant<bool, false>)
+                static T FIRST_ONE(std::integral_constant<bool, false>)
                 {
-                    return std::numeric_limits<T>::max();
+                    throw "Should never be reached.";
                 }
             };
 
@@ -58,7 +58,7 @@ namespace SortVis
             {
                 typedef float value_type;
 
-                static mask_type ALL_ONE()
+                static mask_type FIRST_ONE()
                 {
                     return std::numeric_limits<mask_type>::lowest();
                 }
@@ -74,7 +74,7 @@ namespace SortVis
             {
                 typedef double value_type;
 
-                static mask_type ALL_ONE()
+                static mask_type FIRST_ONE()
                 {
                     return std::numeric_limits<mask_type>::lowest();
                 }
@@ -150,7 +150,7 @@ namespace SortVis
                 auto front = swaps.begin();
                 auto back = --swaps.end();
 
-                partition(first, last, Translate<value_type>::ALL_ONE(), front, back);
+                partition(first, last, Translate<value_type>::FIRST_ONE(), front, back);
 
                 if (front != swaps.end())
                 {
