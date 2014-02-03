@@ -59,6 +59,11 @@ int main()
     test(cast<int, long>(negative));
     test(cast<int, long long>(negative));
 
+    test(cast<int, float>(positive));
+    test(cast<int, double>(positive));
+    test(cast<int, float>(negative));
+    test(cast<int, double>(negative));
+
     cout << "Radix sort test done.\n";
     return 0;
 }

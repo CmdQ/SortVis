@@ -3,6 +3,8 @@
 #include <iterator>
 #include <limits>
 #include <vector>
+#include <cstdint>
+#include <type_traits>
 
 namespace SortVis
 {
@@ -10,16 +12,90 @@ namespace SortVis
     {
         namespace Details
         {
+            template<typename T>
+            struct TranslateBase
+            {
+                typedef T mask_type;
+
+                static mask_type ZERO()
+                {
+                    return mask_type{};
+                }
+
+                static mask_type ONE()
+                {
+                    return 1;
+                }
+
+                static mask_type BIT_AND(mask_type const a, mask_type const b)
+                {
+                    return a & b;
+                }
+            };
+
+            template<typename T>
+            struct Translate : public TranslateBase<T>
+            {
+                static T ALL_ONE()
+                {
+                    return ALL_ONE(std::integral_constant<bool, std::numeric_limits<T>::is_signed>());
+                }
+
+            private:
+                static T ALL_ONE(std::integral_constant<bool, true>)
+                {
+                    return -1;
+                }
+
+                static T ALL_ONE(std::integral_constant<bool, false>)
+                {
+                    return std::numeric_limits<T>::max();
+                }
+            };
+
+            template<>
+            struct Translate<float> : public TranslateBase<int32_t>
+            {
+                typedef float value_type;
+
+                static mask_type ALL_ONE()
+                {
+                    return std::numeric_limits<mask_type>::lowest();
+                }
+
+                static mask_type BIT_AND(value_type const a, mask_type const b)
+                {
+                    return *reinterpret_cast<mask_type const *>(&a)& b;
+                }
+            };
+
+            template<>
+            struct Translate<double> : public TranslateBase<int64_t>
+            {
+                typedef double value_type;
+
+                static mask_type ALL_ONE()
+                {
+                    return std::numeric_limits<mask_type>::lowest();
+                }
+
+                static mask_type BIT_AND(value_type const a, mask_type const b)
+                {
+                    return *reinterpret_cast<mask_type const *>(&a)& b;
+                }
+            };
+
             template<typename Iter>
             inline void partition(Iter first, Iter const last,
-                typename Iter::value_type const mask,
+                typename Translate<typename Iter::value_type>::mask_type const mask,
                 Iter & front, Iter & back)
             {
-                Iter::value_type const zero{};
+                typedef Translate<Iter::value_type> translate;
+                auto zero = translate::ZERO();
 
                 for (; first != last; ++first)
                 {
-                    if ((*first & mask) == zero)
+                    if (translate::BIT_AND(*first, mask) == zero)
                     {
                         *front++ = *first;
                     }
@@ -49,7 +125,7 @@ namespace SortVis
 
             vector<value_type> swaps(n);
 
-            value_type one = 1;
+            auto const one = Translate<value_type>::ONE();
 
             // All "normal" bits starting with the least significant one (makes it a stable sort).
             for (int b = 0; b < bits; ++b)
@@ -74,7 +150,7 @@ namespace SortVis
                 auto front = swaps.begin();
                 auto back = --swaps.end();
 
-                partition(first, last, numeric_limits<value_type>::lowest(), front, back);
+                partition(first, last, Translate<value_type>::ALL_ONE(), front, back);
 
                 if (front != swaps.end())
                 {
