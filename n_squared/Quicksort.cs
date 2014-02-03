@@ -99,7 +99,7 @@ namespace n_squared
 #elif MEDIAN_RAND
         private Random _rand;
 #endif
-        private readonly List<Tuple<int, int>> _sortedRanges;
+        private readonly Intervals<int> _sortedRanges;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QuickSort"/> class.
@@ -107,7 +107,7 @@ namespace n_squared
         public QuickSort()
         {
             ConsideredBig = 8;
-            _sortedRanges = new List<Tuple<int, int>>();
+            _sortedRanges = new Intervals<int>();
 #if MEDIAN_RAND
             _rand = new Random();
 #endif
@@ -138,7 +138,7 @@ namespace n_squared
                 {
                     // Left half is bigger, so recurse in smaller half...
                     SortIt(pivot, hi);
-                    _sortedRanges.Add(Tuple.Create(pivot, hi));
+                    _sortedRanges.Add(pivot, hi);
                     // ... and sort smaller by resetting bounds.
                     hi = pivot;
                 }
@@ -151,7 +151,7 @@ namespace n_squared
                     }
                     // Right half is bigger, so recurse in smaller half.
                     SortIt(lo, pivot);
-                    _sortedRanges.Add(Tuple.Create(lo, pivot));
+                    _sortedRanges.Add(lo, pivot);
                     // ... and sort smaller by resetting bounds.
                     lo = pivot;
                 }
@@ -257,8 +257,7 @@ namespace n_squared
                 return true;
             }
 
-            // TODO: This is highly inefficient!
-            return _sortedRanges.Exists(tup => i >= tup.Item1 && i < tup.Item2);
+            return _sortedRanges.Contains(i);
         }
     }
 }

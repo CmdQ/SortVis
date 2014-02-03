@@ -58,6 +58,7 @@ namespace SortLib
 
             if (completelyOverlapped.Length == Count)
             {
+                // Optimization.
                 Clear();
             }
             else

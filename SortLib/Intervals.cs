@@ -113,6 +113,14 @@ namespace SortLib
             return found.Key.CompareTo(x) <= 0 && x.CompareTo(found.Value) < 0;
         }
 
+        /// <summary>
+        /// Clears all intervals.
+        /// </summary>
+        public void Clear()
+        {
+            _map.Clear();
+        }
+
         internal int Count()
         {
             return _map.Count;
