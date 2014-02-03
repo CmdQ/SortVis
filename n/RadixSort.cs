@@ -11,61 +11,98 @@ namespace n
     [ExportMetadata("Name", "Radix sort")]
     public class RadixSort : SorterBase
     {
+        private const int ELEVEN = 0x7FF;
+
         /// <summary>
         /// Do the actual sorting work.
         /// </summary>
         protected override void SortIt()
         {
-            const int bits = sizeof(int) * 8;
-
-            int n = Numbers.Length;
-            var swap = new int[n];
-
-            // This runs through the bit positions, starting at the least significant one.
-            for (int b = 0; b < bits; ++b)
+            int count = Numbers.Length;
+            if (count < 2)
             {
-                // Two insertion pointers into our temporary array.
-                int front = 0;
-                int back = n - 1;
+                return;
+            }
 
-                int i;
-                for (i = 0; front <= back; ++i)
+            checked
+            {
+                const int hist = 1 << 11;
+                var b0 = new int[hist];
+                var b1 = new int[hist];
+                var b2 = new int[hist];
+
+                foreach (int i in Numbers)
                 {
-                    Abort.ThrowIfCancellationRequested();
-                    int mask = 1 << b;
-                    if ((Numbers[i] & mask) == (mask & int.MinValue))
-                    {
-                        // Write 0-masked elements to the left side...
-                        swap[front++] = Numbers[i];
-                    }
-                    else
-                    {
-                        // ... and 1-masked to the right (but growing to the left).
-                        swap[back--] = Numbers[i];
-                    }
-                    ++Writes;
+                    var fi = Flip(i);
+                    ++b0[Eleven0(fi)];
+                    ++b1[Eleven1(fi)];
+                    ++b2[Eleven2(fi)];
                 }
 
-                // We always had writes the the left, i.e. we basically copied the array.
-                if (front == n)
+                int sum = 0;
+                int sum0 = 0;
+                int sum1 = 0;
+                int sum2 = 0;
+                for (int i = 0; i < hist; ++i)
                 {
-                    // That means we don't have to copy back, and further iterations are not necessary.
-                    continue;
+                    sum = b0[i] + sum0;
+                    b0[i] = sum0 - 1;
+                    sum0 = sum;
+
+                    sum = b1[i] + sum1;
+                    b1[i] = sum1 - 1;
+                    sum1 = sum;
+
+                    sum = b2[i] + sum2;
+                    b2[i] = sum2 - 1;
+                    sum2 = sum;
                 }
 
-                // Fill array with values from the left...
-                for (i = 0; i < front; ++i)
+                var temp = new int[count];
+
+                foreach (int i in Numbers)
                 {
-                    Abort.ThrowIfCancellationRequested();
-                    Write(swap[i], i);
+                    temp[++b0[Eleven0(i)]] = Flip(i);
                 }
-                // ... and then from the right of the swap space
-                for (; i < n; ++i)
+                Writes += count;
+
+                foreach (int i in temp)
                 {
-                    Abort.ThrowIfCancellationRequested();
-                    Write(swap[n - (i - front) - 1], i);
+                    Write(i, ++b1[Eleven1(i)]);
+                }
+
+                foreach (int i in Numbers)
+                {
+                    temp[++b2[Eleven2(i)]] = i;
+                }
+                Writes += count;
+
+                for (int i = 0; i < count; ++i)
+                {
+                    Write(Flip(temp[i]), i);
                 }
             }
+
+        }
+
+        private int Flip(int i)
+        {
+            return i ^ int.MinValue;
+        }
+
+        private int Eleven0(int x)
+        {
+            return x & ELEVEN;
+        }
+
+        private int Eleven1(int x)
+        {
+            return (x >> 11) & ELEVEN;
+        }
+
+        private int Eleven2(int x)
+        {
+            return x >> 22 & ELEVEN;
         }
 
         /// <summary>
