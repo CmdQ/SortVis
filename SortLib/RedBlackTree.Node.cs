@@ -75,7 +75,7 @@ namespace SortLib
                 var left = DescribeChild(Left, "left");
                 var right = DescribeChild(Right, "right");
                 return string.Format("{{{0} {1} Node '{2}' with {3} and {4}}}",
-                    Left == null && Right == null ? "empty" : (Left != null ? "LL" : "wrong"),
+                    Left == null && Right == null ? "empty" : (Right == null ? "LL" : (Left == null ? "wrong" : "regular")),
                     DescribeColor(this),
                     Item.ToString(),
                     left,

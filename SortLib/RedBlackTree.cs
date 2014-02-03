@@ -517,6 +517,7 @@ namespace SortLib
             {
                 node.Right = RotateRight(node.Right);
                 node = RotateLeft(node);
+                ColorFlip(node);
 
 #if TREE234
                 if (IsRed(node.Right.Right))
@@ -536,6 +537,7 @@ namespace SortLib
             if (IsRed(node.Left.Left))
             {
                 node = RotateRight(node);
+                ColorFlip(node);
             }
 
             return node;
