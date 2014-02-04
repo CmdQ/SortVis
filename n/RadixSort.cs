@@ -31,31 +31,9 @@ namespace n
                 var b1 = new int[hist];
                 var b2 = new int[hist];
 
-                foreach (int i in Numbers)
+                if (!BuildHistograms(hist, b0, b1, b2))
                 {
-                    var fi = Flip(i);
-                    ++b0[Eleven0(fi)];
-                    ++b1[Eleven1(fi)];
-                    ++b2[Eleven2(fi)];
-                }
-
-                int sum = 0;
-                int sum0 = 0;
-                int sum1 = 0;
-                int sum2 = 0;
-                for (int i = 0; i < hist; ++i)
-                {
-                    sum = b0[i] + sum0;
-                    b0[i] = sum0 - 1;
-                    sum0 = sum;
-
-                    sum = b1[i] + sum1;
-                    b1[i] = sum1 - 1;
-                    sum1 = sum;
-
-                    sum = b2[i] + sum2;
-                    b2[i] = sum2 - 1;
-                    sum2 = sum;
+                    return;
                 }
 
                 var temp = new int[count];
@@ -83,6 +61,47 @@ namespace n
                     Write(Flip(temp[i]), i);
                 }
             }
+        }
+
+        private bool BuildHistograms(int length, int[] b0, int[] b1, int[] b2)
+        {
+            bool sorted = true;
+
+            int old = Numbers[0];
+            foreach (int i in Numbers)
+            {
+                sorted &= CompareNum(old, i) <= 0;
+                var fi = Flip(i);
+                ++b0[Eleven0(fi)];
+                ++b1[Eleven1(fi)];
+                ++b2[Eleven2(fi)];
+            }
+
+            if (sorted)
+            {
+                return false;
+            }
+
+            int sum = 0;
+            int sum0 = 0;
+            int sum1 = 0;
+            int sum2 = 0;
+            for (int i = 0; i < length; ++i)
+            {
+                sum = b0[i] + sum0;
+                b0[i] = sum0 - 1;
+                sum0 = sum;
+
+                sum = b1[i] + sum1;
+                b1[i] = sum1 - 1;
+                sum1 = sum;
+
+                sum = b2[i] + sum2;
+                b2[i] = sum2 - 1;
+                sum2 = sum;
+            }
+
+            return true;
         }
 
         private int Flip(int i)
