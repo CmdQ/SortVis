@@ -64,6 +64,9 @@ int main()
     test(cast<int, float>(negative));
     test(cast<int, double>(negative));
 
+    RadixSort::Details::RadixSorter<float> sorter;
+    sorter(positive.begin(), positive.end());
+
     cout << "Radix sort test done.\n";
     return 0;
 }

@@ -5,6 +5,10 @@
 #include <vector>
 #include <cstdint>
 #include <type_traits>
+#include <array>
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 namespace SortVis
 {
@@ -12,99 +16,43 @@ namespace SortVis
     {
         namespace Details
         {
-            template<typename T>
-            struct TranslateBase
+            template<int B>
+            struct Bits
             {
-                typedef T mask_type;
+                static std::size_t const RADIX = 8;
+                static std::size_t const HISTS = B / RADIX;
+                static std::size_t const HIST_SIZE = 1 << RADIX;
 
-                static mask_type ZERO()
-                {
-                    return mask_type{};
-                }
+                static_assert(B % RADIX == 0, "Cannot be divided evenly.");
+            };
 
-                static mask_type ONE()
-                {
-                    return 1;
-                }
-
-                static mask_type BIT_AND(mask_type const a, mask_type const b)
-                {
-                    return a & b;
-                }
+            template<>
+            struct Bits<32>
+            {
+                static std::size_t const RADIX = 11;
+                static std::size_t const HISTS = 3;
+                static std::size_t const HIST_SIZE = 1 << RADIX;
             };
 
             template<typename T>
-            struct Translate : public TranslateBase<T>
+            struct RadixSorter
             {
-                static T FIRST_ONE()
+                RadixSorter()
+                    : _histograms()
                 {
-                    return FIRST_ONE(std::integral_constant<bool, std::numeric_limits<T>::is_signed>());
+                }
+
+                template<typename Iter>
+                void operator()(Iter const first, Iter const last)
+                {
+                    using namespace std;
+                    cout << "Hello: " << _histograms[0][0] << endl;
                 }
 
             private:
-                static T FIRST_ONE(std::integral_constant<bool, true>)
-                {
-                    return std::numeric_limits<T>::lowest();
-                }
-
-                static T FIRST_ONE(std::integral_constant<bool, false>)
-                {
-                    throw "Should never be reached.";
-                }
+                typedef Bits<sizeof(T)* 8> bit_info;
+                std::array<std::array<std::size_t, bit_info::HIST_SIZE>, bit_info::HISTS> _histograms;
             };
-
-            template<>
-            struct Translate<float> : public TranslateBase<int32_t>
-            {
-                typedef float value_type;
-
-                static mask_type FIRST_ONE()
-                {
-                    return std::numeric_limits<mask_type>::lowest();
-                }
-
-                static mask_type BIT_AND(value_type const a, mask_type const b)
-                {
-                    return *reinterpret_cast<mask_type const *>(&a)& b;
-                }
-            };
-
-            template<>
-            struct Translate<double> : public TranslateBase<int64_t>
-            {
-                typedef double value_type;
-
-                static mask_type FIRST_ONE()
-                {
-                    return std::numeric_limits<mask_type>::lowest();
-                }
-
-                static mask_type BIT_AND(value_type const a, mask_type const b)
-                {
-                    return *reinterpret_cast<mask_type const *>(&a)& b;
-                }
-            };
-
-            template<typename Iter>
-            inline void partition(Iter first, Iter const last,
-                typename Translate<typename Iter::value_type>::mask_type const mask,
-                Iter & front, Iter & back)
-            {
-                typedef Translate<Iter::value_type> translate;
-                auto zero = translate::ZERO();
-
-                for (; first != last; ++first)
-                {
-                    if (translate::BIT_AND(*first, mask) == zero)
-                    {
-                        *front++ = *first;
-                    }
-                    else
-                    {
-                        *back-- = *first;
-                    }
-                }
-            }
         }
 
         template<typename Iter>
@@ -124,40 +72,6 @@ namespace SortVis
             }
 
             vector<value_type> swaps(n);
-
-            auto const one = Translate<value_type>::ONE();
-
-            // All "normal" bits starting with the least significant one (makes it a stable sort).
-            for (int b = 0; b < bits; ++b)
-            {
-                auto front = swaps.begin();
-                auto back = --swaps.end();
-
-                partition(first, last, one << b, front, back);
-
-                if (front == swaps.end())
-                {
-                    continue;
-                }
-
-                auto continueHere = move(swaps.begin(), front, first);
-                move(swaps.rbegin(), reverse_iterator<Iter>(front), continueHere);
-            }
-
-            // For twos-complement numbers, we have to do a special pass for the highest bit.
-            if (numeric_limits<value_type>::is_signed)
-            {
-                auto front = swaps.begin();
-                auto back = --swaps.end();
-
-                partition(first, last, Translate<value_type>::FIRST_ONE(), front, back);
-
-                if (front != swaps.end())
-                {
-                    auto continueHere = move(swaps.rbegin(), reverse_iterator<Iter>(front), first);
-                    move(swaps.begin(), front, continueHere);
-                }
-            }
         }
     }
 }
