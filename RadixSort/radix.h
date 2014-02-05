@@ -130,7 +130,7 @@ namespace SortVis
                 }
 
                 template<typename Iter>
-                void operator()(Iter const first, Iter const last, typename Iter::difference_type const n)
+                void operator()(Iter const & first, Iter const & last, typename Iter::difference_type const n)
                 {
                     using namespace std;
 
@@ -154,8 +154,9 @@ namespace SortVis
                         // Rest of the iterations. Save copying by swapping pointers.
                         auto one = temp.data();
                         auto two = reinterpret_cast<decltype(one)>(&*first);
-                        int const inner = bit_info::HISTS;
-                        for (size_t h = 1; h < inner; h++)
+                        int const rest = bit_info::HISTS;
+#pragma warning(suppress: 6294) // Only holds for single byte types. Compiler should optimize away.
+                        for (size_t h = 1; h < rest; h++)
                         {
                             for (int i = 0; i < n; ++i)
                             {
@@ -190,7 +191,7 @@ namespace SortVis
 
             private:
                 template<typename Iter>
-                bool histogram(Iter first, Iter const last)
+                bool histogram(Iter first, Iter const & last)
                 {
                     int const histograms = bit_info::HISTS;
 
