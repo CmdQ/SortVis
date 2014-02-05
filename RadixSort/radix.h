@@ -129,6 +129,17 @@ namespace SortVis
                 {
                 }
 
+                template<typename Cont>
+                void operator()(Cont & container)
+                {
+                    int const n = container.size();
+                    if (n >= 2)
+                    {
+                        RadixSorter<Cont::value_type> sorter;
+                        operator()(begin(container), end(container), n);
+                    }
+                }
+
                 template<typename Iter>
                 void operator()(Iter const & first, Iter const & last, typename Iter::difference_type const n)
                 {
@@ -237,18 +248,25 @@ namespace SortVis
         }
 
         template<typename Iter>
-        void sort(Iter const first, Iter const last)
+        void sort(Iter const & first, Iter const & last)
         {
-            using namespace std;
-            using namespace Details;
-
-            typedef Iter::value_type value_type;
-
-            auto const n = distance(first, last);
+            auto const n = std::distance(first, last);
 
             if (n >= 2)
             {
-                RadixSorter<value_type> sorter;
+                Details::RadixSorter<Iter::value_type> sorter;
+                sorter(first, last, n);
+            }
+        }
+
+        template<typename Cont>
+        void sort(Cont & container)
+        {
+            auto const n = std::distance(first, last);
+
+            if (n >= 2)
+            {
+                Details::RadixSorter<Iter::value_type> sorter;
                 sorter(first, last, n);
             }
         }
