@@ -133,7 +133,9 @@ namespace SortVis
                         return;
                     }
 
-                    vector<decltype(_flip(*first))> temp(n);
+                    // We need a vector that can hold the return values of that flip function.
+                    typedef vector<result_of<flip_type(T)>::type> intermediate_vector;
+                    intermediate_vector temp(n);
 
                     // First iteration that also flips values to bit malleable type.
                     for (auto iter = first; iter != last; ++iter)
@@ -173,7 +175,7 @@ namespace SortVis
                     }
 
                     // Flip values and write them back to the passed array.
-                    transform(temp.cbegin(), temp.cend(), first, [this](decltype(_flip(*first)) x)
+                    transform(temp.cbegin(), temp.cend(), first, [this](intermediate_vector::value_type x)
                     {
                         return _flip(x);
                     });
