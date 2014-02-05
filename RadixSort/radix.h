@@ -27,15 +27,18 @@ namespace SortVis
                 static_assert(B % RADIX == 0, "Cannot be divided evenly.");
 
                 template<typename T>
-                static T radix(T x, std::size_t n)
+                static std::size_t radix(T x, std::size_t n)
                 {
-                    static_assert((0xFF & ((signed char)-1)) == 0xFF
-                        && (0xFF & ((char)-1)) == 0xFF
-                        && (0xFF & ((unsigned char)255)) == 0xFF,
+                    static_assert((_mask & ((signed char)-1)) == 0xFF
+                        && (_mask & ((char)-1)) == 0xFF
+                        && (_mask & ((unsigned char)255)) == 0xFF,
                         "Mask doesn't work for values.");
                     assert(n < HISTS);
-                    return (x >> (n * RADIX)) & 0xFF;
+                    return (x >> (n * RADIX)) & _mask;
                 }
+
+            private:
+                static std::size_t const _mask = 0xFF;
             };
 
             template<>
@@ -46,7 +49,7 @@ namespace SortVis
                 static std::size_t const HIST_SIZE = 1 << RADIX;
 
                 template<typename T>
-                static T radix(T x, std::size_t n)
+                static std::size_t radix(T x, std::size_t n)
                 {
                     assert(n < HISTS);
                     return (x >> (n * RADIX)) & 0x7FF;
