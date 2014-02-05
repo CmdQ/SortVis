@@ -20,14 +20,16 @@ namespace SortVis
             template<int B>
             struct Bits
             {
-                static std::size_t const RADIX = 8;
-                static std::size_t const HISTS = B / RADIX;
-                static std::size_t const HIST_SIZE = 1 << RADIX;
+                typedef std::size_t size_type;
+
+                static size_type const RADIX = 8;
+                static size_type const HISTS = B / RADIX;
+                static size_type const HIST_SIZE = 1 << RADIX;
 
                 static_assert(B % RADIX == 0, "Cannot be divided evenly.");
 
                 template<typename T>
-                static std::size_t radix(T x, std::size_t n)
+                static size_type radix(T x, size_type n)
                 {
                     static_assert((_mask & ((signed char)-1)) == 0xFF
                         && (_mask & ((char)-1)) == 0xFF
@@ -38,18 +40,20 @@ namespace SortVis
                 }
 
             private:
-                static std::size_t const _mask = 0xFF;
+                static size_type const _mask = 0xFF;
             };
 
             template<>
             struct Bits<32>
             {
-                static std::size_t const RADIX = 11;
-                static std::size_t const HISTS = 3;
-                static std::size_t const HIST_SIZE = 1 << RADIX;
+                typedef Bits<0>::size_type size_type;
+
+                static size_type const RADIX = 11;
+                static size_type const HISTS = 3;
+                static size_type const HIST_SIZE = 1 << RADIX;
 
                 template<typename T>
-                static std::size_t radix(T x, std::size_t n)
+                static size_type radix(T x, size_type n)
                 {
                     assert(n < HISTS);
                     return (x >> (n * RADIX)) & 0x7FF;
@@ -97,7 +101,7 @@ namespace SortVis
                 }
 
             private:
-                const integer_type _mask = 0x80000000;
+                static const integer_type _mask = 0x80000000;
             };
 
             template <>
@@ -114,7 +118,7 @@ namespace SortVis
                 }
 
             private:
-                const integer_type _mask = 0x8000000000000000L;
+                static const integer_type _mask = 0x8000000000000000L;
             };
 
             template<typename T>
