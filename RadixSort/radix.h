@@ -4,12 +4,10 @@
 #include <limits>
 #include <vector>
 #include <cstdint>
-#include <cassert>
 #include <type_traits>
 #include <array>
-#ifdef _DEBUG
-#include <iostream>
-#endif
+#include <cassert>
+#include <cstring>
 
 namespace RadixSort
 {
@@ -118,7 +116,8 @@ namespace RadixSort
 
             integer_type operator()(float f) const
             {
-                auto asInt = *reinterpret_cast<integer_type*>(&f);
+                integer_type asInt;
+                std::memcpy(&asInt, &f, sizeof(f));
                 integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
                 return asInt ^ mask;
             }
@@ -127,7 +126,9 @@ namespace RadixSort
             {
                 integer_type const mask = ((i >> sign_shift) - 1) | _mask;
                 i ^= mask;
-                return *reinterpret_cast<float*>(&i);
+                float re;
+                std::memcpy(&re, &i, sizeof(float));
+                return re;
             }
 
         private:
@@ -145,7 +146,8 @@ namespace RadixSort
 
             integer_type operator()(double d) const
             {
-                auto asInt = *reinterpret_cast<integer_type*>(&d);
+                integer_type asInt;
+                std::memcpy(&asInt, &d, sizeof(d));
                 integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
                 return asInt ^ mask;
             }
@@ -154,7 +156,9 @@ namespace RadixSort
             {
                 integer_type const mask = ((i >> sign_shift) - 1) | _mask;
                 i ^= mask;
-                return *reinterpret_cast<double*>(&i);
+                double re;
+                std::memcpy(&re, &i, sizeof(double));
+                return re;
             }
 
         private:
