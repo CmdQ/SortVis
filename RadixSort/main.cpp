@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include "radix.h"
+#include "bench.h"
 
 using namespace std;
 
@@ -64,5 +65,32 @@ int main()
     r(positive);
 
     cout << "Radix sort test done.\n";
+
+    int const length = 999999;
+    {
+        cout << "Benchmarking float...\n";
+        auto res = benchmark<float>(length);
+        cout << "std::sort took " << res.first.count() << " s.\n";
+        cout << "radixsort took " << res.second.count() << " s.\n";
+    }
+    {
+        cout << "Benchmarking double...\n";
+        auto res = benchmark<double>(length);
+        cout << "std::sort took " << res.first.count() << " s.\n";
+        cout << "radixsort took " << res.second.count() << " s.\n";
+    }
+    {
+        cout << "Benchmarking uint...\n";
+        auto res = benchmark<uint32_t>(length);
+        cout << "std::sort took " << res.first.count() << " s.\n";
+        cout << "radixsort took " << res.second.count() << " s.\n";
+    }
+    {
+        cout << "Benchmarking int...\n";
+        auto res = benchmark<int32_t>(length);
+        cout << "std::sort took " << res.first.count() << " s.\n";
+        cout << "radixsort took " << res.second.count() << " s.\n";
+    }
+
     return 0;
 }

@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bench.h" />
     <ClInclude Include="radix.h" />
   </ItemGroup>
   <ItemGroup>
