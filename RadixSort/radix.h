@@ -68,7 +68,7 @@ namespace RadixSort
         {
             static const bool NECESSARRY = true;
 
-            T operator()(T x)
+            T operator()(T x) const
             {
                 return x ^ std::numeric_limits<T>::min();
             }
@@ -79,7 +79,7 @@ namespace RadixSort
         {
             static const bool NECESSARRY = false;
 
-            T operator()(T x)
+            T operator()(T x) const
             {
                 return x;
             }
@@ -92,7 +92,7 @@ namespace RadixSort
 
             static const bool NECESSARRY = true;
 
-            integer_type operator()(float x)
+            integer_type operator()(float x) const
             {
                 auto asInt = *reinterpret_cast<integer_type *>(&x);
                 return asInt ^ _mask;
@@ -109,7 +109,7 @@ namespace RadixSort
 
             static const bool NECESSARRY = true;
 
-            integer_type operator()(double x)
+            integer_type operator()(double x) const
             {
                 auto asInt = *reinterpret_cast<integer_type *>(&x);
                 return asInt ^ _mask;
@@ -149,7 +149,7 @@ namespace RadixSort
             bool histogram(Iter first, Iter const & last);
 
             typedef Bits<sizeof(T)* 8> bit_info;
-            std::array<std::vector<std::ptrdiff_t> const, bit_info::HISTS> _histograms;
+            std::array<std::vector<std::ptrdiff_t>, bit_info::HISTS> _histograms;
             typedef BitFlip<T, std::numeric_limits<T>::is_signed> flip_type;
             flip_type _flip;
         };
