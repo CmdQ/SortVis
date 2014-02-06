@@ -112,22 +112,26 @@ namespace RadixSort
         struct BitFlip<float, true>
         {
             typedef std::uint32_t integer_type;
+            typedef std::int32_t signed_int;
 
             static const bool NECESSARRY = true;
 
             integer_type operator()(float f) const
             {
                 auto asInt = *reinterpret_cast<integer_type*>(&f);
-                return asInt ^ _mask;
+                integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
+                return asInt ^ mask;
             }
 
             float back(integer_type i) const
             {
-                i ^= _mask;
+                integer_type const mask = ((i >> sign_shift) - 1) | _mask;
+                i ^= mask;
                 return *reinterpret_cast<float*>(&i);
             }
 
         private:
+            static const int sign_shift = std::numeric_limits<signed_int>::digits;
             static const integer_type _mask = 0x80000000;
         };
 
@@ -135,22 +139,26 @@ namespace RadixSort
         struct BitFlip<double, true>
         {
             typedef std::uint64_t integer_type;
+            typedef std::int64_t signed_int;
 
             static const bool NECESSARRY = true;
 
-            integer_type operator()(double x) const
+            integer_type operator()(double d) const
             {
-                auto asInt = *reinterpret_cast<integer_type *>(&x);
-                return asInt ^ _mask;
+                auto asInt = *reinterpret_cast<integer_type*>(&d);
+                integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
+                return asInt ^ mask;
             }
 
             double back(integer_type i) const
             {
-                i ^= _mask;
+                integer_type const mask = ((i >> sign_shift) - 1) | _mask;
+                i ^= mask;
                 return *reinterpret_cast<double*>(&i);
             }
 
         private:
+            static const int sign_shift = std::numeric_limits<signed_int>::digits;
             static const integer_type _mask = 0x8000000000000000L;
         };
 
