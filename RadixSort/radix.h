@@ -8,165 +8,12 @@
 #include <array>
 #include <cassert>
 #include <cstring>
+#include "bit_stuff.h"
 
 namespace RadixSort
 {
     namespace Details
     {
-        template<int B>
-        struct Bits
-        {
-            typedef std::size_t size_type;
-
-            static size_type const RADIX = 8;
-            static size_type const HISTS = B / RADIX;
-            static size_type const HIST_SIZE = 1 << RADIX;
-
-            static_assert(B % RADIX == 0, "Cannot be divided evenly.");
-
-            template<typename T>
-            static size_type radix(T x, size_type n)
-            {
-                static_assert((_mask & ((signed char)-1)) == 0xFF
-                    && (_mask & ((char)-1)) == 0xFF
-                    && (_mask & ((unsigned char)255)) == 0xFF,
-                    "Mask doesn't work for values.");
-                assert(n < HISTS);
-                return (x >> (n * RADIX)) & _mask;
-            }
-
-        private:
-            static size_type const _mask = 0xFF;
-        };
-
-        template<>
-        struct Bits<32>
-        {
-            typedef Bits<0>::size_type size_type;
-
-            static size_type const RADIX = 11;
-            static size_type const HISTS = 3;
-            static size_type const HIST_SIZE = 1 << RADIX;
-
-            template<typename T>
-            static size_type radix(T x, size_type n)
-            {
-                assert(n < HISTS);
-                return (x >> (n * RADIX)) & 0x7FF;
-            }
-        };
-
-        template<typename T, bool IS_SIGNED>
-        struct BitFlip
-        {
-        };
-
-        template<typename T>
-        struct BitFlip<T, true>
-        {
-            static const bool NECESSARRY = true;
-
-            T operator()(T x) const
-            {
-                return x ^ std::numeric_limits<T>::min();
-            }
-
-            T back(T x) const
-            {
-                // Symmetric operation.
-                return operator()(x);
-            }
-        };
-
-        template<typename T>
-        struct BitFlip<T, false>
-        {
-            static const bool NECESSARRY = false;
-
-            T operator()(T x) const
-            {
-                // noop operation.
-                return x;
-            }
-
-            T back(T x) const
-            {
-                // Symmetric noop operation.
-                return operator()(x);
-            }
-        };
-
-        template <>
-        struct BitFlip<float, true>
-        {
-            typedef std::uint32_t integer_type;
-            typedef std::int32_t signed_int;
-
-            static const bool NECESSARRY = true;
-
-            integer_type to_bits(float f) const
-            {
-                integer_type re;
-                std::memcpy(&re, &f, sizeof(float));
-                return re;
-            }
-
-            float from_bits(integer_type i) const
-            {
-                float re;
-                std::memcpy(&re, &i, sizeof(float));
-                return re;
-            }
-
-            integer_type operator()(float f) const
-            {
-                auto asInt = to_bits(f);
-                integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
-                return asInt ^ mask;
-            }
-
-            float back(integer_type i) const
-            {
-                integer_type const mask = ((i >> sign_shift) - 1) | _mask;
-                i ^= mask;
-                return from_bits(i);
-            }
-
-        private:
-            static const int sign_shift = std::numeric_limits<signed_int>::digits;
-            static const integer_type _mask = 0x80000000;
-        };
-
-        template <>
-        struct BitFlip<double, true>
-        {
-            typedef std::uint64_t integer_type;
-            typedef std::int64_t signed_int;
-
-            static const bool NECESSARRY = true;
-
-            integer_type operator()(double d) const
-            {
-                integer_type asInt;
-                std::memcpy(&asInt, &d, sizeof(d));
-                integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
-                return asInt ^ mask;
-            }
-
-            double back(integer_type i) const
-            {
-                integer_type const mask = ((i >> sign_shift) - 1) | _mask;
-                i ^= mask;
-                double re;
-                std::memcpy(&re, &i, sizeof(double));
-                return re;
-            }
-
-        private:
-            static const int sign_shift = std::numeric_limits<signed_int>::digits;
-            static const integer_type _mask = 0x8000000000000000L;
-        };
-
         template<typename T>
         struct RadixSorter
         {
@@ -198,7 +45,7 @@ namespace RadixSort
 
             typedef Bits<sizeof(T)* 8> bit_info;
             std::array<std::vector<std::ptrdiff_t>, bit_info::HISTS> _histograms;
-            typedef BitFlip<T, std::numeric_limits<T>::is_signed> flip_type;
+            typedef BitFlip<T, std::numeric_limits<T>::is_signed, std::numeric_limits<T>::is_iec559> flip_type;
             flip_type _flip;
         };
 

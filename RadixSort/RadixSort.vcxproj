@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="bench.h" />
+    <ClInclude Include="bit_stuff.h" />
     <ClInclude Include="radix.h" />
   </ItemGroup>
   <ItemGroup>
