@@ -37,6 +37,11 @@ namespace RadixSort
                 return (x >> (n * RADIX)) & _mask;
             }
 
+            static size_type radix(double x, size_type n)
+            {
+                return radix(*reinterpret_cast<uint64_t*>(&x), n);
+            }
+
         private:
             static size_type const _mask = 0xFF;
         };
@@ -56,6 +61,11 @@ namespace RadixSort
                 assert(n < HISTS);
                 return (x >> (n * RADIX)) & 0x7FF;
             }
+
+            static size_type radix(float x, size_type n)
+            {
+                return radix(*reinterpret_cast<uint32_t*>(&x), n);
+            }
         };
 
         template<typename T, bool IS_SIGNED>
@@ -72,6 +82,12 @@ namespace RadixSort
             {
                 return x ^ std::numeric_limits<T>::min();
             }
+
+            T back(T x) const
+            {
+                // Symmetric operation.
+                return operator()(x);
+            }
         };
 
         template<typename T>
@@ -81,7 +97,14 @@ namespace RadixSort
 
             T operator()(T x) const
             {
+                // noop operation.
                 return x;
+            }
+
+            T back(T x) const
+            {
+                // Symmetric noop operation.
+                return operator()(x);
             }
         };
 
@@ -92,10 +115,16 @@ namespace RadixSort
 
             static const bool NECESSARRY = true;
 
-            integer_type operator()(float x) const
+            integer_type operator()(float f) const
             {
-                auto asInt = *reinterpret_cast<integer_type *>(&x);
+                auto asInt = *reinterpret_cast<integer_type*>(&f);
                 return asInt ^ _mask;
+            }
+
+            float back(integer_type i) const
+            {
+                i ^= _mask;
+                return *reinterpret_cast<float*>(&i);
             }
 
         private:
@@ -113,6 +142,12 @@ namespace RadixSort
             {
                 auto asInt = *reinterpret_cast<integer_type *>(&x);
                 return asInt ^ _mask;
+            }
+
+            double back(integer_type i) const
+            {
+                i ^= _mask;
+                return *reinterpret_cast<double*>(&i);
             }
 
         private:
@@ -181,9 +216,8 @@ namespace RadixSort
                 // Rest of the iterations. Save copying by swapping pointers.
                 auto one = temp.data();
                 auto two = reinterpret_cast<decltype(one)>(&*first);
-                int const rest = bit_info::HISTS;
 #pragma warning(suppress: 6294) // Only holds for single byte types. Compiler should optimize away.
-                for (size_t h = 1; h < rest; h++)
+                for (size_t h = 1; h < bit_info::HISTS; h++)
                 {
                     for (int i = 0; i < n; ++i)
                     {
@@ -212,7 +246,7 @@ namespace RadixSort
             // Flip values and write them back to the passed array.
             transform(temp.cbegin(), temp.cend(), first, [this](intermediate_vector::value_type x)
             {
-                return _flip(x);
+                return _flip.back(x);
             });
         }
 
