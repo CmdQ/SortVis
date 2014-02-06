@@ -35,11 +35,6 @@ namespace RadixSort
                 return (x >> (n * RADIX)) & _mask;
             }
 
-            static size_type radix(double x, size_type n)
-            {
-                return radix(*reinterpret_cast<uint64_t*>(&x), n);
-            }
-
         private:
             static size_type const _mask = 0xFF;
         };
@@ -58,11 +53,6 @@ namespace RadixSort
             {
                 assert(n < HISTS);
                 return (x >> (n * RADIX)) & 0x7FF;
-            }
-
-            static size_type radix(float x, size_type n)
-            {
-                return radix(*reinterpret_cast<uint32_t*>(&x), n);
             }
         };
 
