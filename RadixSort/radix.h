@@ -123,8 +123,11 @@ namespace RadixSort
         struct RadixSorter
         {
             RadixSorter()
-                : _histograms{}
             {
+                for (std::size_t i = 0; i < bit_info::HISTS; ++i)
+                {
+                    _histograms[i] = std::vector<std::ptrdiff_t>(bit_info::HIST_SIZE);
+                }
             }
 
             template<typename Cont>
@@ -146,7 +149,7 @@ namespace RadixSort
             bool histogram(Iter first, Iter const & last);
 
             typedef Bits<sizeof(T)* 8> bit_info;
-            std::array<std::array<std::ptrdiff_t, bit_info::HIST_SIZE>, bit_info::HISTS> _histograms;
+            std::array<std::vector<std::ptrdiff_t> const, bit_info::HISTS> _histograms;
             typedef BitFlip<T, std::numeric_limits<T>::is_signed> flip_type;
             flip_type _flip;
         };
