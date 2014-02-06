@@ -5,39 +5,34 @@
 
 using namespace std;
 
-namespace SortVis
+template<typename F, typename T>
+vector<T> cast(vector<F> const & src)
 {
-    template<typename F, typename T>
-    vector<T> cast(vector<F> const & src)
+    vector<T> re(src.size());
+    transform(src.cbegin(), src.cend(), re.begin(), [](F in)
     {
-        vector<T> re(src.size());
-        transform(src.cbegin(), src.cend(), re.begin(), [](F in)
-        {
-            return static_cast<T>(in);
-        });
-        return re;
-    }
+        return static_cast<T>(in);
+    });
+    return re;
+}
 
-    template<typename T>
-    void test(vector<T> nums)
+template<typename T>
+void test(vector<T> nums)
+{
+    RadixSort::sort(nums.begin(), nums.end());
+
+    if (!is_sorted(nums.begin(), nums.end()))
     {
-        RadixSort::sort(nums.begin(), nums.end());
-
-        if (!is_sorted(nums.begin(), nums.end()))
+        for (auto iter : nums)
         {
-            for (auto iter : nums)
-            {
-                cout << iter << "   ";
-            }
-            cout << endl;
+            cout << iter << "   ";
         }
+        cout << endl;
     }
 }
 
 int main()
 {
-    using namespace SortVis;
-
     vector<char> empty;
     vector<char> tiny(1);
     vector<int> positive{ 541, 212, 5125, 6342, 61, 243, 15, 99, 1234, 123, 1524 };
@@ -48,7 +43,7 @@ int main()
     test(cast<int, unsigned short>(positive));
     test(cast<int, short>(positive));
     test(cast<int, unsigned int>(positive));
-    test(negative);
+    test(positive);
     test(cast<int, unsigned long>(positive));
     test(cast<int, long>(positive));
     test(cast<int, unsigned long long>(positive));
@@ -64,8 +59,8 @@ int main()
     test(cast<int, float>(negative));
     test(cast<int, double>(negative));
 
-    RadixSort::Details::RadixSorter<float> sorter;
-    sorter(positive.begin(), positive.end());
+    RadixSort::Details::RadixSorter<int> r;
+    RadixSort::sort(positive);
 
     cout << "Radix sort test done.\n";
     return 0;
