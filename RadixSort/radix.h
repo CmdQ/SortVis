@@ -104,10 +104,23 @@ namespace RadixSort
 
             static const bool NECESSARRY = true;
 
+            integer_type to_bits(float f) const
+            {
+                integer_type re;
+                std::memcpy(&re, &f, sizeof(float));
+                return re;
+            }
+
+            float from_bits(integer_type i) const
+            {
+                float re;
+                std::memcpy(&re, &i, sizeof(float));
+                return re;
+            }
+
             integer_type operator()(float f) const
             {
-                integer_type asInt;
-                std::memcpy(&asInt, &f, sizeof(f));
+                auto asInt = to_bits(f);
                 integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
                 return asInt ^ mask;
             }
@@ -116,9 +129,7 @@ namespace RadixSort
             {
                 integer_type const mask = ((i >> sign_shift) - 1) | _mask;
                 i ^= mask;
-                float re;
-                std::memcpy(&re, &i, sizeof(float));
-                return re;
+                return from_bits(i);
             }
 
         private:
