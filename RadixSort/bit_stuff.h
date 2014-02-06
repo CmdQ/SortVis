@@ -9,6 +9,36 @@ namespace RadixSort
 {
     namespace Details
     {
+        template<typename T>
+        struct FloatBits
+        {
+            static const bool FLOAT_32BIT = std::is_same<T, float>::value;
+            static_assert(FLOAT_32BIT || std::is_same<T, double>::value, "This only works for float and double.");
+
+            static const bool NECESSARRY = true;
+
+            static const auto MASK = std::conditional<FLOAT_32BIT,
+                std::integral_constant<uint32_t, 0x80000000>,
+                std::integral_constant<uint64_t, 0x8000000000000000L >> ::type::value;
+            typedef typename std::remove_cv<decltype(MASK)>::type integer_type;
+            typedef typename std::make_signed<integer_type>::type signed_integer_type;
+            static const int SIGN_SHIFT = std::numeric_limits<signed_integer_type>::digits;
+
+            static integer_type to_bits(T f)
+            {
+                integer_type re;
+                std::memcpy(&re, &f, sizeof(T));
+                return re;
+            }
+
+            static T from_bits(integer_type i)
+            {
+                T re;
+                std::memcpy(&re, &i, sizeof(T));
+                return re;
+            }
+        };
+
         template<int B>
         struct Bits
         {
@@ -23,16 +53,22 @@ namespace RadixSort
             template<typename T>
             static size_type radix(T x, size_type n)
             {
-                static_assert((_mask & ((signed char)-1)) == 0xFF
-                    && (_mask & ((char)-1)) == 0xFF
-                    && (_mask & ((unsigned char)255)) == 0xFF,
+                static_assert((MASK & ((signed char)-1)) == 0xFF
+                    && (MASK & ((char)-1)) == 0xFF
+                    && (MASK & ((unsigned char)255)) == 0xFF,
                     "Mask doesn't work for values.");
                 assert(n < HISTS);
-                return (x >> (n * RADIX)) & _mask;
+                return (x >> (n * RADIX)) & MASK;
+            }
+
+            static size_type radix(double x, size_type n)
+            {
+                assert(n < HISTS);
+                return (FloatBits<double>::to_bits(x) >> (n * RADIX)) & 0x7FF;
             }
 
         private:
-            static size_type const _mask = 0xFF;
+            static size_type const MASK = 0xFF;
         };
 
         template<>
@@ -50,33 +86,21 @@ namespace RadixSort
                 assert(n < HISTS);
                 return (x >> (n * RADIX)) & 0x7FF;
             }
-        };
 
-        template<typename T, typename integer_type>
-        struct FloatBits
-        {
-            integer_type to_bits(T f) const
+            static size_type radix(float x, size_type n)
             {
-                integer_type re;
-                std::memcpy(&re, &f, sizeof(T));
-                return re;
-            }
-
-            T from_bits(integer_type i) const
-            {
-                T re;
-                std::memcpy(&re, &i, sizeof(T));
-                return re;
+                assert(n < HISTS);
+                return (FloatBits<float>::to_bits(x) >> (n * RADIX)) & 0x7FF;
             }
         };
 
         template<typename T, bool IS_SIGNED, bool IS_IEC559>
-        struct BitFlip
+        struct BitFlipSwitch
         {
         };
 
         template<typename T>
-        struct BitFlip<T, true, false>
+        struct BitFlipSwitch<T, true, false>
         {
             static const bool NECESSARRY = true;
 
@@ -93,7 +117,7 @@ namespace RadixSort
         };
 
         template<typename T>
-        struct BitFlip<T, false, false>
+        struct BitFlipSwitch<T, false, false>
         {
             static const bool NECESSARRY = false;
 
@@ -110,58 +134,31 @@ namespace RadixSort
             }
         };
 
-        template <>
-        struct BitFlip<float, true, true> : private FloatBits<float, std::uint32_t>
+        template <typename T>
+        struct BitFlipSwitch<T, true, true> : public FloatBits<T>
         {
-            typedef std::uint32_t integer_type;
-            typedef std::int32_t signed_int;
+            typedef FloatBits<T> base_type;
+            typedef typename base_type::integer_type integer_type;
+            typedef typename base_type::signed_integer_type signed_integer_type;
 
-            static const bool NECESSARRY = true;
-
-            integer_type operator()(float f) const
+            integer_type operator()(T f) const
             {
                 auto asInt = to_bits(f);
-                integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
+                integer_type mask = -static_cast<signed_integer_type>(asInt >> SIGN_SHIFT) | MASK;
                 return asInt ^ mask;
             }
 
-            float back(integer_type i) const
+            T back(integer_type i) const
             {
-                integer_type const mask = ((i >> sign_shift) - 1) | _mask;
+                integer_type const mask = ((i >> SIGN_SHIFT) - 1) | MASK;
                 i ^= mask;
                 return from_bits(i);
             }
-
-        private:
-            static const int sign_shift = std::numeric_limits<signed_int>::digits;
-            static const integer_type _mask = 0x80000000;
         };
 
-        template <>
-        struct BitFlip<double, true, true> : private FloatBits<double, std::uint64_t>
+        template<typename T>
+        struct BitFlip : public BitFlipSwitch<T, std::numeric_limits<T>::is_signed, std::numeric_limits<T>::is_iec559>
         {
-            typedef std::uint64_t integer_type;
-            typedef std::int64_t signed_int;
-
-            static const bool NECESSARRY = true;
-
-            integer_type operator()(double d) const
-            {
-                auto asInt = to_bits(d);
-                integer_type mask = -static_cast<signed_int>(asInt >> sign_shift) | _mask;
-                return asInt ^ mask;
-            }
-
-            double back(integer_type i) const
-            {
-                integer_type const mask = ((i >> sign_shift) - 1) | _mask;
-                i ^= mask;
-                return from_bits(i);
-            }
-
-        private:
-            static const int sign_shift = std::numeric_limits<signed_int>::digits;
-            static const integer_type _mask = 0x8000000000000000L;
         };
     }
 }

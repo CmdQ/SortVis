@@ -45,8 +45,7 @@ namespace RadixSort
 
             typedef Bits<sizeof(T)* 8> bit_info;
             std::array<std::vector<std::ptrdiff_t>, bit_info::HISTS> _histograms;
-            typedef BitFlip<T, std::numeric_limits<T>::is_signed, std::numeric_limits<T>::is_iec559> flip_type;
-            flip_type _flip;
+            BitFlip<T> _flip;
         };
 
         template<typename T>
@@ -63,7 +62,7 @@ namespace RadixSort
             }
 
             // We need a vector that can hold the return values of that flip function.
-            typedef vector<result_of<flip_type(T)>::type> intermediate_vector;
+            typedef vector<result_of<BitFlip<T>(T)>::type> intermediate_vector;
             intermediate_vector temp(n);
 
             // First iteration that also flips values to bit malleable type.
