@@ -1,4 +1,5 @@
 #ifndef _RADIX_H_
+#define _RADIX_H_
 
 #include <iterator>
 #include <limits>
@@ -175,5 +176,4 @@ namespace RadixSort
     }
 }
 
-#define _RADIX_H_
 #endif//_RADIX_H_
