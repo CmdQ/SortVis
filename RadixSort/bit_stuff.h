@@ -64,7 +64,7 @@ namespace RadixSort
             static size_type radix(double x, size_type n)
             {
                 assert(n < HISTS);
-                return (FloatBits<double>::to_bits(x) >> (n * RADIX)) & 0x7FF;
+                return (FloatBits<double>::to_bits(x) >> (n * RADIX)) & MASK;
             }
 
         private:
@@ -84,14 +84,17 @@ namespace RadixSort
             static size_type radix(T x, size_type n)
             {
                 assert(n < HISTS);
-                return (x >> (n * RADIX)) & 0x7FF;
+                return (x >> (n * RADIX)) & MASK;
             }
 
             static size_type radix(float x, size_type n)
             {
                 assert(n < HISTS);
-                return (FloatBits<float>::to_bits(x) >> (n * RADIX)) & 0x7FF;
+                return (FloatBits<float>::to_bits(x) >> (n * RADIX)) & MASK;
             }
+
+        private:
+            static size_type const MASK = 0x7FF;
         };
 
         template<typename T, bool IS_SIGNED, bool IS_IEC559>
